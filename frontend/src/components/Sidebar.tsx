@@ -5,10 +5,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
 function Sidebar() {
   const [inputValue, setInputValue] = useState("");
-  const handleInputChange = (e:any) => {
+  const handleInputChange = (e: any) => {
     setInputValue(e.target.value);
-    console.log(e.target.value)
-  }
+    console.log(e.target.value);
+  };
   const items = [
     { name: "プロフィール", path: "myprofile" },
     { name: "会話相手を探す", path: "findchat" },
@@ -19,7 +19,9 @@ function Sidebar() {
   return (
     <div className={Styles.sidebar}>
       <div className={Styles.header}>
-        <p> LearnWithStrangers! </p>
+        <Link to="/myprofile">
+          <p>LearnWithStrangers!</p>
+        </Link>
       </div>
 
       <div className={Styles.list}>
