@@ -18,6 +18,7 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
+
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Myprofile />} />
             <Route path="myprofile" element={<Myprofile />} />

@@ -1,8 +1,14 @@
+import { useState } from "react";
 import { Input, Stack } from "@chakra-ui/react";
 import Styles from "../styles/Sidebar.module.scss";
 import SearchIcon from "@mui/icons-material/Search";
 import { Link } from "react-router-dom";
 function Sidebar() {
+  const [inputValue, setInputValue] = useState("");
+  const handleInputChange = (e:any) => {
+    setInputValue(e.target.value);
+    console.log(e.target.value)
+  }
   const items = [
     { name: "プロフィール", path: "myprofile" },
     { name: "会話相手を探す", path: "findchat" },
@@ -32,6 +38,8 @@ function Sidebar() {
               size="sm"
               width="140px"
               borderRadius="10px"
+              value={inputValue}
+              onChange={handleInputChange}
             />
           </Stack>
           <SearchIcon />
