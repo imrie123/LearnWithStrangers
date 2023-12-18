@@ -6,6 +6,7 @@ import Findgroup from "./components/Findgroup";
 import Findpost from "./components/Findpost";
 import Seepost from "./components/Seepost";
 import Findchat from "./components/Findchat";
+import Login from "./components/Login";
 import {
   BrowserRouter as Router,
   Routes,
@@ -18,7 +19,7 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Myprofile />} />
             <Route path="myprofile" element={<Myprofile />} />
