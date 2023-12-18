@@ -1,25 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Sidebar from "./components/Sidebar";
+import Myprofile from "./components/Myprofile";
+import Findgroup from "./components/Findgroup";
+import Findpost from "./components/Findpost";
+import Seepost from "./components/Seepost";
+import Findchat from "./components/Findchat";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Outlet,
+} from "react-router-dom";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Routes>
+
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<Myprofile />} />
+            <Route path="myprofile" element={<Myprofile />} />
+            <Route path="findgroup" element={<Findgroup />} />
+            <Route path="findpost" element={<Findpost />} />
+            <Route path="seepost" element={<Seepost />} />
+            <Route path="findchat" element={<Findchat />} />
+          </Route>
+        </Routes>
+      </Router>
     </div>
+  );
+}
+
+function MainLayout() {
+  return (
+    <>
+      <Sidebar />
+      <div className="page-content">
+        <Outlet />
+      </div>
+    </>
   );
 }
 
