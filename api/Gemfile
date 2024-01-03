@@ -4,6 +4,7 @@ ruby "3.2.2"
 
 gem "rest-client"
 gem "dotenv-rails"
+gem "ridgepole"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.2"
 

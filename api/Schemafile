@@ -1,0 +1,13 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "email", default: "", null: false
+    t.date "birthday", null: true
+    t.string "image", default: "default.jpg", null: false
+    t.string "spoken_language", default: "English", null: false
+    t.string "learning_language", default: "Japanese", null: false
+    t.string "residence", default: "Japan", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+end

@@ -5,6 +5,7 @@ class SignUp
     @password = password
   end
 
+
   def call
     begin
       response = RestClient.post "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=#{ENV['FIREBASE_API_KEY']}", { email: email, password: password, returnSecureToken: true }.to_json, { content_type: :json }
