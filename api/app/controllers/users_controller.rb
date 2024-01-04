@@ -24,6 +24,7 @@ class UsersController < ApplicationController
     Firebase::SignOut.new(session[:token]).call
     render json: { message: "Signed out successfully" }
   end
+
   private
 
   def user_params
