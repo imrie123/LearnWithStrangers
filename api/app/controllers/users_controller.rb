@@ -19,6 +19,11 @@ class UsersController < ApplicationController
       render json: { error: response["error"]["message"] }, status: :unauthorized
     end
   end
+
+  def sign_out
+    Firebase::SignOut.new(session[:token]).call
+    render json: { message: "Signed out successfully" }
+  end
   private
 
   def user_params

@@ -7,7 +7,9 @@ Rails.application.routes.draw do
   resources :users, only: [:create] do
     collection do
       post "sign_in"
+      post "sign_out"
     end
+
   end
 
   # Defines the root path route ("/")
