@@ -25,6 +25,8 @@ class UsersController < ApplicationController
     render json: { message: "Signed out successfully" }
   end
 
+
+
   private
 
   def user_params
