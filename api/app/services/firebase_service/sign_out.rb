@@ -1,6 +1,6 @@
 require 'rest-client'
 
-module Firebase
+module FirebaseService
   class SignOut
     def initialize(id_token)
       @id_token = id_token

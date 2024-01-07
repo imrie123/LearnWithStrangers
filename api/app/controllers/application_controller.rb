@@ -1,21 +1,25 @@
-require_relative '../../lib/firebase/auth/sign_up'
-require_relative '../../lib/firebase/auth/sign_in'
-require_relative '../../lib/firebase/auth/sign_out'
+
+
+
 class ApplicationController < ActionController::API
-  # include FirebaseAdmin::Auth::VerifyIdToken
+  include ActionController::Cookies
 
-  # private
+  require 'jwt'
 
-  # def authenticate_user!
-  #   token = request.headers['Authorization']&.split&.last
-  #   begin
-  #     decoded_token = verify_id_token(token)
-  #     @current_user = User.find_by(uid: decoded_token['uid'])
-  #     raise 'User not found' unless @current_user
-  #   rescue => e
-  #     render json: { error: e.message }, status: :unauthorized
-  #
-  #   end
-  # end
+  def verify_firebase_token(token)
+    public_keys = FirebaseService::fetch_firebase_public_keys
+    # HeaderからキーIDを取得し、対応する公開鍵を見つけます
+    header = JWT.decode(token, nil, false)[1]
+    kid = header['kid']
+    public_key = OpenSSL::X509::Certificate.new(public_keys[kid]).public_key
+        # トークンを検証
+    decoded_token = JWT.decode(token, public_key, true, { algorithm: 'RS256' })
+    console.log(decoded_token)
+    # ここでdecoded_tokenを使った処理
+  rescue => e
+      Rails.logger.error "JWT Verification Error: #{e.message}"
+      render json: { error: 'Invalid token' }, status: :unauthorized
+  end
+
 
 end

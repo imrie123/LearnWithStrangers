@@ -1,6 +1,6 @@
 require 'rest-client'
 
-module Firebase
+module FirebaseService
   class SignUp
     def initialize(email, password)
       @email = email
