@@ -14,11 +14,22 @@ class ApplicationController < ActionController::API
     public_key = OpenSSL::X509::Certificate.new(public_keys[kid]).public_key
         # トークンを検証
     decoded_token = JWT.decode(token, public_key, true, { algorithm: 'RS256' })
-    console.log(decoded_token)
+    user_id = decoded_token['user_id']
+    cookies[:user_id] = { value: user_id,httponly: true, expires: 1.week.from_now, secure: true}
+
+
+    render json: { success: 'Valid token', user_id: user_id}
+
+
     # ここでdecoded_tokenを使った処理
+
   rescue => e
       Rails.logger.error "JWT Verification Error: #{e.message}"
       render json: { error: 'Invalid token' }, status: :unauthorized
+  end
+
+  def cookie
+    cookies[:user_id] = { value: response["firebase_uid"],httponly: true, expires: 1.week.from_now, secure: true}
   end
 
 

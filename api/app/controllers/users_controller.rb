@@ -4,8 +4,8 @@ class UsersController < ApplicationController
     if response["idToken"]
       user = User.create!(email: user_params[:email], name: user_params[:name], birthday: user_params[:birthday])
 
-      cookies[:jwt] = { value: response["idToken"],httponly: true, expires: 1.week.from_now, secure: true}
-      console.log( "Cookie set: #{cookies[:jwt]}")
+      cookies[:user_id] = { value: response["idToken"], httponly: true, expires: 1.week.from_now, secure: true }
+      console.log("Cookie set: #{cookies[:user_id]}")
 
       render json: { token: response["idToken"], name: user.name }
     else
@@ -16,7 +16,6 @@ class UsersController < ApplicationController
   def sign_in
     response = FirebaseService::SignIn.new(user_params[:email], user_params[:password]).call
     if response["idToken"]
-      cookies[:jwt] = { value: response["idToken"],httponly: true, expires: 1.week.from_now,secure: true}
       render json: { token: response["idToken"] }
     else
       # 失敗した場合、エラーメッセージを返す
@@ -29,11 +28,9 @@ class UsersController < ApplicationController
     render json: { message: "Signed out successfully" }
   end
 
-
-
   private
 
   def user_params
-    params.require(:user).permit(:email, :password, :name, :birthday,:firebase_uid)
+    params.require(:user).permit(:email, :password, :name, :birthday, :user_id)
   end
 end

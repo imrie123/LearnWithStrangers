@@ -8,7 +8,7 @@ create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force
     t.string "spoken_language", default: "English", null: false
     t.string "learning_language", default: "Japanese", null: false
     t.string "residence", default: "Japan", null: false
-    t.string "firebase_uid", null: false
+    t.string "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
 end
