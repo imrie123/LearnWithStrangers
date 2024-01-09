@@ -1,13 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import styles from '../styles/Login.module.scss';
 import {Tabs, TabList, TabPanels, Tab, TabPanel} from '@chakra-ui/react'
 import {Input} from "@chakra-ui/react"
 import {Button} from "@chakra-ui/react"
-import {Flex} from "@chakra-ui/react"
+import {useDispatch} from "react-redux";
+import {setToken} from "../redux/authSlice";
 
 
 const Login: React.FC = () => {
+    const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
@@ -34,6 +36,8 @@ const Login: React.FC = () => {
             });
             console.log(response.data);
             localStorage.setItem('token', response.data.token);
+            dispatch(setToken(response.data.token));
+
             return response.data;
         } catch (error) {
 
@@ -52,6 +56,7 @@ const Login: React.FC = () => {
             });
             console.log(response.data);
             localStorage.setItem('token', response.data.token)
+            dispatch(setToken(response.data.token));
             return response.data;
         } catch (error) {
 
@@ -59,6 +64,14 @@ const Login: React.FC = () => {
 
         }
     }
+    useEffect(() => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                dispatch(setToken(token));
+            }
+        }
+        , [dispatch]);
+
 
     return (
         <div>
