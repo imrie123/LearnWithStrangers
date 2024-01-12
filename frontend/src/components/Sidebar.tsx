@@ -24,6 +24,9 @@ function Sidebar() {
     };
     const logout = () => {
         dispatch(clearToken());
+        auth.signOut();
+        localStorage.removeItem('token');
+
 
     }
 

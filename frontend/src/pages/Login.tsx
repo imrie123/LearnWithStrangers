@@ -74,7 +74,7 @@ const Login: React.FC = () => {
 
 
     return (
-        <div>
+        <div className={styles.login_page}>
             <div className={styles.formContainer}>
 
                 <Tabs isFitted variant='enclosed'>

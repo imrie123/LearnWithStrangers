@@ -13,6 +13,7 @@ module FirebaseService
                                    { email: email, password: password, returnSecureToken: true }.to_json,
                                    { content_type: :json }
         JSON.parse(response)
+
       rescue RestClient::ExceptionWithResponse => e
         e.response
       end
