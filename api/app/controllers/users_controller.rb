@@ -41,6 +41,7 @@ class UsersController < ApplicationController
 
         if user
           render json: { success: 'Valid token', user: user.as_json }
+
         else
 
           render json: { error: 'Token missing' }, status: :unprocessable_entity
@@ -49,9 +50,29 @@ class UsersController < ApplicationController
     end
   end
 
+  def update
+    token = params[:token]
+
+    if token.present?
+      decoded_token = verify_firebase_token(token)
+      email = decoded_token[0]["email"]
+
+      if email
+        user = User.find_by(email: email)
+        user.update!(user_params)
+        render json: { success: 'Updated user', user: user.as_json }
+
+      else
+        render json: { error: 'Update Error' }, status: :unprocessable_entity
+      end
+
+    end
+
+  end
+
   private
 
   def user_params
-    params.require(:user).permit(:email, :password, :name, :birthday)
+    params.require(:user).permit(:email, :password, :name, :birthday, :spoken_language, :learning_language, :introduction,:residence)
   end
 end

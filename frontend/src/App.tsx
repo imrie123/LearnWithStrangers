@@ -14,10 +14,16 @@ import SeepostPage from "./pages/SeepostPage";
 import FindgroupPage from "./pages/FindgroupPage";
 import Login from "./pages/Login";
 import {setToken} from "./redux/authSlice";
+import SettingPages from "./pages/SettingPages";
+import {useState} from "react";
+import axios from "axios";
 
 function App() {
     const dispatch = useDispatch();
     const token = useSelector((state: RootState) => state.auth.token);
+    const [user, setUser] = useState(null);
+
+
 
     useEffect(() => {
             const token = localStorage.getItem('token');
@@ -53,14 +59,19 @@ function App() {
     );
 }
 
+
+
+
+
 function AuthenticatedRoutes() {
     return (
         <Routes>
-            <Route path="*" element={<MyprofilePage/>}/>
-            <Route path="/Findchat" element={<FindchatPage/>}/>
-            <Route path="/Findpost" element={<FindpostPage/>}/>
-            <Route path="/Seepost" element={<SeepostPage/>}/>
-            <Route path="/Findgroup" element={<FindgroupPage/>}/>
+            <Route path="*" element={<MyprofilePage />}/>
+            <Route path="/findchat" element={<FindchatPage/>}/>
+            <Route path="/findpost" element={<FindpostPage/>}/>
+            <Route path="/seepost" element={<SeepostPage/>}/>
+            <Route path="/findgroup" element={<FindgroupPage/>}/>
+            <Route path="/setting" element={<SettingPages/>}/>
 
         </Routes>
     )
