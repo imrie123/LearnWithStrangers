@@ -31,7 +31,7 @@ function Sidebar() {
     }
 
     const items = [
-        {name: "プロフィール", path: ""},
+        {name: "プロフィール", path: "/"},
         {name: "会話相手を探す", path: "/findchat"},
         {name: "グループチャットに参加する", path: "/findgroup"},
         {name: "みんなの投稿を見る", path: "/findpost"}
@@ -48,7 +48,7 @@ function Sidebar() {
                 <ul>
                     {items.map((item, index) => (
                         <li key={index}>
-                            <Link to={`/${item.path}`}>{item.name}</Link>
+                            <Link to={`${item.path}`}>{item.name}</Link>
                         </li>
                     ))}
                 </ul>
@@ -64,7 +64,7 @@ function Sidebar() {
                             onChange={handleInputChange}
                         />
                     </Stack>
-                    <SearchIcon/>
+
                     <button onClick={logout}>ログアウト</button>
                 </div>
             </div>

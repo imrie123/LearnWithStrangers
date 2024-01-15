@@ -2,11 +2,13 @@
   width: 20%;
   height: 100vh;
   border-right: 1px solid lightgrey;
+
   .header {
     padding: 20px;
     font-weight: bold;
     cursor: pointer;
   }
+
   .list {
     padding-top: 10px;
     display: flex;
@@ -14,16 +16,30 @@
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
+
     .search {
-      padding: 50px;
+      padding-top: 150px;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+
+      input {
+        width: 100%;
+
+
+        padding-left: 10px;
+      }
+
+      button {
+        padding-top: 50px;
+      }
     }
+
     ul {
       display: flex;
       flex-direction: column;
       gap: 100px;
     }
+
     li {
       list-style: none;
     }

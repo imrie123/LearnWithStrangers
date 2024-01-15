@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import {useNavigate} from "react-router-dom";
+
 
 function SettingPages() {
     const [name, setName] = useState('');
@@ -9,8 +11,13 @@ function SettingPages() {
     const [introduction, setIntroduction] = useState('');
     const [user, setUser] = useState(null);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         const token = localStorage.getItem('token');
+
+
+
 
         if (token) {
             axios.post('http://127.0.0.1:3000/users/show', { token })
@@ -42,6 +49,7 @@ function SettingPages() {
             .then((response) => {
                 setUser(response.data.user);
                 console.log(response.data.user);
+                navigate("/myprofile");
             })
             .catch((error) => {
                 console.error("Error:", error);
