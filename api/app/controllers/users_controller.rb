@@ -62,6 +62,7 @@ class UsersController < ApplicationController
         user.update!(user_params)
         render json: { success: 'Updated user', user: user.as_json }
 
+
       else
         render json: { error: 'Update Error' }, status: :unprocessable_entity
       end
