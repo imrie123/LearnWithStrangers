@@ -9,7 +9,7 @@ create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force
     t.string "learning_language", default: "Japanese", null: false
     t.string "residence", default: "Japan", null: false
     t.string "introduction", default: "Hello,I'm new here!", null: true
-    t.string "user_id", null: false
+    t.string "user_id", null: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
 

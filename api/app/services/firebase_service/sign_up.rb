@@ -14,6 +14,7 @@ module FirebaseService
         puts JSON.parse(response)
         JSON.parse(response)
 
+
       rescue RestClient::ExceptionWithResponse => e
         e.response
       end

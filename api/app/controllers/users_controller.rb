@@ -1,10 +1,16 @@
 class UsersController < ApplicationController
   def create
+
     response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
     if response["idToken"]
+
       user = User.create!(email: user_params[:email], name: user_params[:name], birthday: user_params[:birthday])
 
-      render json: { token: response["idToken"], name: user.name }
+      render json: { token: response["idToken"], name: user.name
+
+      }
+
+
     else
       render json: { error: response["error"]["message"] }, status: :bad_request
     end
@@ -70,6 +76,9 @@ class UsersController < ApplicationController
     end
 
   end
+
+
+
 
   private
 

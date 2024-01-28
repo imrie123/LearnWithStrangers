@@ -62,6 +62,8 @@ function Setting() {
     };
 
 
+
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // フォームのデフォルトの動作を防止（ページのリロードを防ぐ）
 
@@ -80,7 +82,8 @@ function Setting() {
                         <div className={styles.introduce}>
 
 
-                            <img src="https://source.unsplash.com/random" alt="プロフィール画像"/>
+                            <img src="https://source.unsplash.com/random" alt="プロフィール画像" />
+
 
                             <div className={styles.info}>
                                 <div className={styles.follow}>

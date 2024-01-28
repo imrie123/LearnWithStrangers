@@ -3,7 +3,7 @@ import {Input, Stack} from "@chakra-ui/react";
 import Styles from "../styles/Sidebar.module.scss";
 import SearchIcon from "@mui/icons-material/Search";
 import {Link} from "react-router-dom";
-import {auth} from "../firebase";
+// import {auth} from "../firebase";
 import Login from "../pages/Login";
 import {Logout} from "@mui/icons-material";
 import {Navigate} from "react-router-dom";
@@ -24,7 +24,7 @@ function Sidebar() {
     };
     const logout = () => {
         dispatch(clearToken());
-        auth.signOut();
+
         localStorage.removeItem('token');
 
 

@@ -18,6 +18,18 @@ module Api
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
 
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins 'http://localhost:3001'
+        resource '*',
+          headers: :any,
+          credentials: true,
+          methods: [:get, :post, :patch, :delete, :options, :head]
+      end
+
+    end
   end
+
+
 
 end
