@@ -15,6 +15,9 @@ gem "mysql2"
 gem "puma", ">= 5.0"
 gem "rack-cors"
 gem "byebug", platforms: %i[ mri mingw x64_mingw ]
+gem 'google-cloud-storage'
+gem 'firebase'
+
 
 group :development, :test do
   gem "debug", platforms: %i[ mri ]

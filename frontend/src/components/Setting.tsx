@@ -12,11 +12,47 @@ function Setting() {
     const [residence, setResidence] = useState('');
     const [introduction, setIntroduction] = useState('');
     const [user, setUser] = useState(null);
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [title, setTitle] = useState('');
     const residenceOptions = ["japan", "korea", "china", "usa", "uk", "france", "germany", "italy", "spain", "russia", "india", "brazil", "canada", "australia", "other"];
     const learningLanguageOptions = ["japanese", "korean", "chinese", "english", "french", "german", "italian", "spanish", "russian", "hindi", "portuguese", "other"];
     const spokenLanguageOptions = ["japanese", "korean", "chinese", "english", "french", "german", "italian", "spanish", "russian", "hindi", "portuguese", "other"];
 
+
+
     const navigate = useNavigate();
+
+    const createPost = (formData: FormData) => {
+        axios.post('http://127.0.0.1:3000/posts/avatar', formData)
+        .then((response) => {
+            console.log(response);
+            resetForm();
+
+        })
+        .catch((error) => {
+            console.error("Error:", error.response);
+        });
+    }
+const setImage =(e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setImageFile(e.target.files[0]);
+            console.log(e.target.files[0]);
+        }
+}
+const upload = () => {
+    const formData = new FormData();
+    formData.append('title', title);
+    if (imageFile !== null) {
+        formData.append('image', imageFile);
+    }
+    createPost(formData);
+
+
+}
+const resetForm = () => {
+    setImageFile(null);
+    setTitle('');
+}
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -31,6 +67,7 @@ function Setting() {
                     setSpokenLanguage(userData.spoken_language);
                     setResidence(userData.residence);
                     setIntroduction(userData.introduction);
+                    setImage(userData.image)
                     console.log(userData);
                 })
                 .catch((error) => {
@@ -69,6 +106,7 @@ function Setting() {
 
         // フォームデータをサーバーに送信
         update();
+        upload();
     };
 
     return (
@@ -82,7 +120,7 @@ function Setting() {
                         <div className={styles.introduce}>
 
 
-                            <img src="https://source.unsplash.com/random" alt="プロフィール画像" />
+                            <img src="" alt="avatar" />
 
 
                             <div className={styles.info}>
@@ -116,6 +154,7 @@ function Setting() {
             <form onSubmit={handleSubmit}>
 
                 <div>
+                    <input type="file" accept="image/*" onChange={setImage} />
 
                     <label> 名前:</label>
                     <Input

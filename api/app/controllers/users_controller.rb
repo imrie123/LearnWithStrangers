@@ -19,8 +19,11 @@ class UsersController < ApplicationController
   def sign_in
     response = FirebaseService::SignIn.new(user_params[:email], user_params[:password]).call
 
+
     if response["idToken"]
+
       render json: { token: response["idToken"] }
+
     else
       # 失敗した場合、エラーメッセージを返す
       render json: { error: response["error"]["message"] }, status: :unauthorized
@@ -66,7 +69,7 @@ class UsersController < ApplicationController
       if email
         user = User.find_by(email: email)
         user.update!(user_params)
-        render json: { success: 'Updated user', user: user.as_json }
+        render json: { success: 'Updated user', user: user.as_json },methods: :avatar_url
 
 
       else
@@ -76,6 +79,31 @@ class UsersController < ApplicationController
     end
 
   end
+  def index
+    render json: avatar.all,methods: :avatar_url
+  end
+  def avatar
+    token = params[:token]
+    if token.present?
+      decoded_token = verify_firebase_token(token)
+      email = decoded_token[0]["email"]
+
+
+      if email
+        user = User.find_by(email: email)
+        user.update!(user_params[:avatar])
+
+
+            if avatar.present?
+              user.avatar.attach(avatar_url)
+              render json: { success: 'Updated profile image', user: user.as_json },methods: :avatar_url
+            else
+              render json: { error: 'Update Error' }, status: :unprocessable_entity
+            end
+          end
+
+      end
+    end
 
 
 
@@ -83,6 +111,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:email, :password, :name, :birthday, :spoken_language, :learning_language, :introduction,:residence)
+    params.require(:user).permit(:email, :password, :name, :birthday, :spoken_language, :learning_language, :introduction,:avatar)
   end
 end

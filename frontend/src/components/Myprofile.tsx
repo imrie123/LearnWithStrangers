@@ -12,6 +12,7 @@ function MyProfile() {
     const [user, setUser] = useState({name: 'Loading...', learning_language: 'Loading...', spoken_language: 'Loading...', residence: 'Loading...', introduction: 'Loading...'});
 
 
+
     useEffect(() => {
         const token = localStorage.getItem('token');
 
@@ -37,6 +38,7 @@ function MyProfile() {
 
 
                         <img src="https://source.unsplash.com/random" alt="プロフィール画像"/>
+
 
                         <div className={styles.info}>
                             <div className={styles.follow}>

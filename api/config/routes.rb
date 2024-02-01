@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       post "sign_out"
       post "show"
       post "update"
+      post "avatar"
     end
 
   end
