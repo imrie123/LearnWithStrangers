@@ -1,0 +1,21 @@
+.myprofile{
+
+  padding-left: 20px ;
+  .follow{
+    display: flex;
+   gap: 20px;
+  }
+  .introduce{
+    display: flex;
+    padding-top: 20px;
+
+p{
+  font-weight: bold;
+}
+
+  }
+  .user{
+    padding: 20px;
+
+  }
+}

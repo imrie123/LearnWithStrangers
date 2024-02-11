@@ -1,2 +1,18 @@
 class ApplicationController < ActionController::API
+  include ActionController::Cookies
+
+  require 'jwt'
+
+  def verify_firebase_token(token)
+    public_keys = FirebaseService::fetch_firebase_public_keys
+    jwt_header = JWT.decode(token, nil, false)[1]
+    kid = jwt_header['kid']
+    public_key = OpenSSL::X509::Certificate.new(public_keys[kid]).public_key
+    # トークンを検証
+    JWT.decode(token, public_key, true, { algorithm: 'RS256' })
+
+  rescue => e
+    Rails.logger.error "JWT Verification Error: #{e.message}"
+    render json: { error: 'Invalid token' }, status: :unauthorized
+  end
 end

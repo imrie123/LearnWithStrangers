@@ -1,47 +1,89 @@
-import React from "react";
+import React, {useEffect} from "react";
 import "./App.css";
-import Sidebar from "./components/Sidebar";
-import Myprofile from "./components/Myprofile";
-import Findgroup from "./components/Findgroup";
-import Findpost from "./components/Findpost";
-import Seepost from "./components/Seepost";
-import Findchat from "./components/Findchat";
+import MyprofilePage from "./pages/MyprofilePage";
+import FindchatPage from "./pages/FindchatPage";
+import {useDispatch, useSelector} from "react-redux";
 import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Outlet,
+    Routes,
+    Route,
+    BrowserRouter,
 } from "react-router-dom";
+import {RootState} from "./redux/store";
+import FindpostPage from "./pages/FindpostPage";
+import SeepostPage from "./pages/SeepostPage";
+import FindgroupPage from "./pages/FindgroupPage";
+import Login from "./pages/Login";
+import {setToken} from "./redux/authSlice";
+import SettingPages from "./pages/SettingPages";
+import {useState} from "react";
+import axios from "axios";
 
 function App() {
-  return (
-    <div className="App">
-      <Router>
+    const dispatch = useDispatch();
+    const token = useSelector((state: RootState) => state.auth.token);
+    const [user, setUser] = useState(null);
+
+
+
+    useEffect(() => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                dispatch(setToken(token));
+
+            }
+
+
+        }
+        , [dispatch])
+
+
+    return (
+
+        <BrowserRouter>
+
+            <Routes>
+                {token ? (
+                    <>
+                        <Route path="*" element={<AuthenticatedRoutes/>}/>
+                    </>
+                ) : (
+                    <Route path="*" element={<UnauthenticatedRoutes/>}/>
+                )}
+
+
+            </Routes>
+
+        </BrowserRouter>
+
+
+    );
+}
+
+
+
+
+
+function AuthenticatedRoutes() {
+    return (
         <Routes>
+            <Route path="*" element={<MyprofilePage />}/>
+            <Route path="/findchat" element={<FindchatPage/>}/>
+            <Route path="/findpost" element={<FindpostPage/>}/>
+            <Route path="/seepost" element={<SeepostPage/>}/>
+            <Route path="/findgroup" element={<FindgroupPage/>}/>
+            <Route path="/setting" element={<SettingPages/>}/>
 
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Myprofile />} />
-            <Route path="myprofile" element={<Myprofile />} />
-            <Route path="findgroup" element={<Findgroup />} />
-            <Route path="findpost" element={<Findpost />} />
-            <Route path="seepost" element={<Seepost />} />
-            <Route path="findchat" element={<Findchat />} />
-          </Route>
         </Routes>
-      </Router>
-    </div>
-  );
+    )
 }
 
-function MainLayout() {
-  return (
-    <>
-      <Sidebar />
-      <div className="page-content">
-        <Outlet />
-      </div>
-    </>
-  );
+function UnauthenticatedRoutes() {
+    return (
+        <Routes>
+            <Route path="/" element={<Login/>}/>
+        </Routes>
+    )
 }
+
 
 export default App;

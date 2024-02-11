@@ -1,0 +1,38 @@
+div{
+  h1{
+    font-size: 20px;
+    font-weight: bold;
+    padding: 20px;
+  }
+img{
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
+  .myprofile{
+
+    padding-left: 20px ;
+    .follow{
+      display: flex;
+      gap: 20px;
+    }
+    .introduce{
+      display: flex;
+      padding-top: 20px;
+
+      p{
+        font-weight: bold;
+      }
+
+    }
+    .user{
+      padding: 20px;
+
+    }
+
+  }
+.update{
+  width: 400px;
+}
+
+}

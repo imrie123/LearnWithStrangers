@@ -1,0 +1,43 @@
+// Forms.module.scss
+.login_page{
+  display: flex;
+flex-direction: column;
+align-items: center;
+  padding-top: 30px;
+
+
+}
+.formContainer {
+
+  border: lightgray 1px solid;
+ border-radius: 20px;
+
+
+
+  width: 400px;
+  height: 600px;
+  p{
+    font-weight: bold;
+
+  }
+.Input{
+  padding-top: 20px;
+  width: 300px;
+
+}
+
+  .tab_panel{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+
+.button{
+margin-top: 20px;
+}
+  }
+
+}
+
+

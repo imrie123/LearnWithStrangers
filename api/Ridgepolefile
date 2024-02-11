@@ -1,0 +1,12 @@
+require 'ridgepole'
+
+config = {
+  adapter: 'mysql2',
+  database: 'learnwithstrangers',
+  username: 'root',
+  password: '212121Ab',
+  host: 'localhost',
+  port: 3306,
+}
+
+Ridgepole::Config.write(config, 'Ridgepolefile')
