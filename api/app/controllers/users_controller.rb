@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   def create
 
     response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
+
     if response["idToken"]
 
       user = User.create!(email: user_params[:email], name: user_params[:name], birthday: user_params[:birthday])
@@ -49,7 +50,8 @@ class UsersController < ApplicationController
         user = User.find_by(email: email)
 
         if user
-          render json: { success: 'Valid token', user: user.as_json }
+          render json: { success: 'Valid token', user: user.as_json(except: [:avatar]) }
+
 
         else
 
@@ -67,43 +69,44 @@ class UsersController < ApplicationController
       email = decoded_token[0]["email"]
 
       if email
+
         user = User.find_by(email: email)
+        user.avatar.attach(params[:avatar])
         user.update!(user_params)
-        render json: { success: 'Updated user', user: user.as_json },methods: :avatar_url
 
-
+        render json: { success: 'Updated user', user: user.as_json }, methods: :avatar_url
       else
         render json: { error: 'Update Error' }, status: :unprocessable_entity
       end
-
     end
-
   end
-  def index
-    render json: avatar.all,methods: :avatar_url
-  end
-  def avatar
-    token = params[:token]
-    if token.present?
-      decoded_token = verify_firebase_token(token)
-      email = decoded_token[0]["email"]
 
+  # def index
+  #   render json: avatar.all,methods: :avatar_url
+  # end
+  # def avatar
+  #   token = params[:token]
+  #   if token.present?
+  #     decoded_token = verify_firebase_token(token)
+  #     email = decoded_token[0]["email"]
+  #
+  #     if email
+  #       user = User.find_by(email: email)
+  #       user.update!(avatar: user_params[:avatar]) # user_params を使用して avatar を更新
+  #
+  #       if user.avatar.attached? # ユーザーがアバターを持っているかどうかを確認
+  #         render json: { success: 'Updated profile image', user: user.as_json.merge(avatar_url: url_for(user.avatar)) }
+  #       else
+  #         render json: { error: 'Update Error: Avatar not attached' }, status: :unprocessable_entity
+  #       end
+  #     else
+  #       render json: { error: 'Update Error: Email not found' }, status: :unprocessable_entity
+  #     end
+  #   else
+  #     render json: { error: 'Update Error: Token not present' }, status: :unprocessable_entity
+  #   end
+  # end
 
-      if email
-        user = User.find_by(email: email)
-        user.update!(user_params[:avatar])
-
-
-            if avatar.present?
-              user.avatar.attach(avatar_url)
-              render json: { success: 'Updated profile image', user: user.as_json },methods: :avatar_url
-            else
-              render json: { error: 'Update Error' }, status: :unprocessable_entity
-            end
-          end
-
-      end
-    end
 
 
 
