@@ -1,39 +1,44 @@
 class UsersController < ApplicationController
   def create
+    binding.pry
+    @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
 
-    response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
+    if @response["idToken"]
 
-    if response["idToken"]
+      @user = User.create!(user_params)
 
-      user = User.create!(email: user_params[:email], name: user_params[:name], birthday: user_params[:birthday])
+      render "create", status: :created
 
-      render json: { token: response["idToken"], name: user.name
 
-      }
+
 
 
     else
-      render json: { error: response["error"]["message"] }, status: :bad_request
+     @error = @response["error"]["message"]
+      render "create", status: :bad_request
     end
   end
 
   def sign_in
-    response = FirebaseService::SignIn.new(user_params[:email], user_params[:password]).call
+    @response = FirebaseService::SignIn.new(user_params[:email], user_params[:password]).call
+    @user = User.find_by(email: user_params[:email])
 
 
-    if response["idToken"]
 
-      render json: { token: response["idToken"] }
+    if @response["idToken"]
+      @user = User.find_by(email: user_params[:email])
+      render "sign_in", formats: :json, handlers: :jbuilder, status: :ok
 
     else
       # 失敗した場合、エラーメッセージを返す
-      render json: { error: response["error"]["message"] }, status: :unauthorized
+      @error = @response["error"]["message"]
+      render "error", formats: :json, handlers: :jbuilder, status: :unauthorized
     end
   end
 
   def sign_out
     FirebaseService::SignOut.new(session[:token]).call
-    render json: { message: "Signed out successfully" }
+    render "sign_out", status: :ok
   end
 
   def show
@@ -47,15 +52,15 @@ class UsersController < ApplicationController
 
       if email
 
-        user = User.find_by(email: email)
+        @user = User.find_by(email: email)
 
-        if user
-          render json: { success: 'Valid token', user: user.as_json(except: [:avatar]) }
+        if @user
+          render "show", formats: :json, handlers: :jbuilder, status: :ok
 
 
         else
 
-          render json: { error: 'Token missing' }, status: :unprocessable_entity
+          render "error", status: :unprocessable_entity
         end
       end
     end
@@ -70,13 +75,14 @@ class UsersController < ApplicationController
 
       if email
 
-        user = User.find_by(email: email)
-        user.avatar.attach(params[:avatar])
-        user.update!(user_params)
+        @user = User.find_by(email: email)
+        @user.avatar.attach(params[:avatar])
+        @user.update!(user_params)
 
-        render json: { success: 'Updated user', user: user.as_json }, methods: :avatar_url
+        render "update", status: :ok
       else
-        render json: { error: 'Update Error' }, status: :unprocessable_entity
+        @error = "Update Error"
+        render "error", status: :unprocessable_entity
       end
     end
   end
