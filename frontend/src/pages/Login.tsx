@@ -6,9 +6,11 @@ import {Input} from "@chakra-ui/react"
 import {Button} from "@chakra-ui/react"
 import {useDispatch} from "react-redux";
 import {setToken} from "../redux/authSlice";
+import {useNavigate} from "react-router-dom"
 
 
 const Login: React.FC = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -38,7 +40,7 @@ const Login: React.FC = () => {
             localStorage.setItem('token', response.data.token);
             dispatch(setToken(response.data.token));
 
-            return response.data;
+            // 成功したらページをリダイレクトする。
         } catch (error) {
 
             console.error("Error axios", error);
@@ -55,8 +57,8 @@ const Login: React.FC = () => {
                 }
             });
             console.log(response.data);
-            localStorage.setItem('token', response.data.token)
-            dispatch(setToken(response.data.token));
+            localStorage.setItem('token', response.data.auth_token)
+            dispatch(setToken(response.data.auth_token));
             return response.data;
         } catch (error) {
 

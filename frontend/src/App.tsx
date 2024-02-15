@@ -19,22 +19,7 @@ import {useState} from "react";
 import axios from "axios";
 
 function App() {
-    const dispatch = useDispatch();
     const token = useSelector((state: RootState) => state.auth.token);
-    const [user, setUser] = useState(null);
-
-
-
-    useEffect(() => {
-            const token = localStorage.getItem('token');
-            if (token) {
-                dispatch(setToken(token));
-
-            }
-
-
-        }
-        , [dispatch])
 
 
     return (

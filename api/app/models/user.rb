@@ -6,9 +6,9 @@ class User < ApplicationRecord
   has_one_attached :avatar
   def avatar_url
     if avatar.attached?
-      url_for(avatar)
+      Rails.application.routes.url_helpers.rails_blob_url(avatar)
     else
-      nil
+      ActionController::Base.helpers.asset_path("default_avatar.png")
     end
   end
 
