@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def create
-    binding.pry
+
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
 
     if @response["idToken"]
@@ -68,7 +68,7 @@ class UsersController < ApplicationController
 
       if email
         @user = User.find_by(email: email)
-        render "me",formats: :json, handlers: :jbuilder, status: :ok
+        render "me", formats: :json, handlers: :jbuilder, status: :ok
       else
         @error = "Me Error"
         render "error", status: :unprocessable_entity
@@ -89,7 +89,7 @@ class UsersController < ApplicationController
         @user.avatar.attach(params[:avatar])
         @user.update!(user_params)
 
-        render "update", status: :ok
+        render "update", formats: :json, handlers: :jbuilder, status: :ok
       else
         @error = "Update Error"
         render "error", status: :unprocessable_entity
@@ -104,24 +104,27 @@ class UsersController < ApplicationController
 
   def avatar
     token = params[:token]
+
     if token.present?
       decoded_token = verify_firebase_token(token)
       email = decoded_token[0]["email"]
 
       if email
-        user = User.find_by(email: email)
-        user.update!(avatar: user_params[:avatar]) # user_params を使用して avatar を更新
 
-        if user.avatar.attached? # ユーザーがアバターを持っているかどうかを確認
-          render "avatar", formats: :json, handlers: :jbuilder, status: :ok
-        else
-          render json: { error: 'Update Error: Avatar not attached' }, status: :unprocessable_entity
-        end
+        @user = User.find_by(email: email)
+
+        @user.update(avatar: params[:user][:avatar]) # user_params を使用して avatar を更新
+        avatar_url = @user.avatar.attached? ? url_for(@user.avatar) : nil
+
+        @avatar_url = avatar_url
+
+
+
+
+        render "avatar", formats: :json, handlers: :jbuilder, status: :ok
       else
         render json: { error: 'Update Error: Email not found' }, status: :unprocessable_entity
       end
-    else
-      render json: { error: 'Update Error: Token not present' }, status: :unprocessable_entity
     end
   end
 

@@ -17,24 +17,9 @@ import {setToken} from "./redux/authSlice";
 import SettingPages from "./pages/SettingPages";
 import {useState} from "react";
 import axios from "axios";
-
+import AddpostPage from "./pages/AddpostPage";
 function App() {
-    const dispatch = useDispatch();
     const token = useSelector((state: RootState) => state.auth.token);
-    const [user, setUser] = useState(null);
-
-
-
-    useEffect(() => {
-            const token = localStorage.getItem('token');
-            if (token) {
-                dispatch(setToken(token));
-
-            }
-
-
-        }
-        , [dispatch])
 
 
     return (
@@ -72,6 +57,7 @@ function AuthenticatedRoutes() {
             <Route path="/seepost" element={<SeepostPage/>}/>
             <Route path="/findgroup" element={<FindgroupPage/>}/>
             <Route path="/setting" element={<SettingPages/>}/>
+            <Route path="/addpost" element={<AddpostPage/>}/>
 
         </Routes>
     )
