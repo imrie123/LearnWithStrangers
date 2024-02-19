@@ -1,21 +1,24 @@
-.myprofile{
-
-  padding-left: 20px ;
-  .follow{
-    display: flex;
-   gap: 20px;
+.myprofile {
+  .avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
   }
-  .introduce{
+  padding-left: 20px;
+  .follow {
+    display: flex;
+    gap: 20px;
+  }
+  .introduce {
     display: flex;
     padding-top: 20px;
 
-p{
-  font-weight: bold;
-}
-
+    p {
+      font-weight: bold;
+    }
   }
-  .user{
+  .user {
     padding: 20px;
-
   }
+
 }

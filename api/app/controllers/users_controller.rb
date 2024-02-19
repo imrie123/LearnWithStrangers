@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def create
-    binding.pry
+
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
 
     if @response["idToken"]

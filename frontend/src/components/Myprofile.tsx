@@ -5,13 +5,44 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import {Link} from "react-router-dom";
 import styles from "../styles/Myprofile.module.scss";
 import {Button} from "@chakra-ui/react";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
+import {Avatar, Box, Flex, Heading, IconButton, Image, Text} from '@chakra-ui/react'
+import {BiChat, BiLike, BiShare} from 'react-icons/bi'
+import { BsThreeDotsVertical } from 'react-icons/bs';
 
 
 
+interface Post {
+    id: number;
+    content: string;
+    image_url?: string;
+    created_at: string;
+}
 function MyProfile() {
     const [user, setUser] = useState({name: 'Loading...', learning_language: 'Loading...', spoken_language: 'Loading...', residence: 'Loading...', introduction: 'Loading...', avatar_url: 'Loading...'});
     const [avatar_url, setAvatarUrl] = useState();
+    const [posts, setPosts] = useState<Post[]>([]);
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const user_id = localStorage.getItem('id');
+
+        if (token) {
+            axios.get(`http://127.0.0.1:3000/users/:user_id/posts?token=${token}`)
+                .then((response) => {
+
+                    console.log(response.data.posts);
+                    console.log(response.data);
+                    setPosts(response.data.posts);
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                }
+                );
+        }
+    }
+    , []);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -38,7 +69,7 @@ function MyProfile() {
 
                     <div className={styles.introduce}>
 
-                        <img src={`http://localhost:3000${user.avatar_url}`} alt="avatar"/>
+                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`} alt="avatar"　/>
 
 
                         <div className={styles.info}>
@@ -58,9 +89,51 @@ function MyProfile() {
                                 <p>自己紹介:{user.introduction}</p>
 
                             </div>
-                            <Button>
-                                フォロー
-                            </Button>
+
+
+
+
+
+                            <div className={styles.user_posts}>
+                                {posts.map(post => (
+                                    <Card key={post.id} maxW='md' mb={4}>
+                                        <Flex direction="column" align="center" justify="center" p={4}>
+                                            <Flex align="flex-start" mb={4}>
+                                                <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4} />
+                                                <Text fontWeight='bold'>{user.name}</Text>
+                                            </Flex>
+                                            <Image
+                                                objectFit='cover'
+                                                src={post.image_url}
+                                                alt='Post Image'
+                                            />
+                                            <CardBody>
+                                                <Text>{post.content}</Text>
+
+                                            </CardBody>
+                                            <CardFooter
+                                                display='flex'
+                                                justifyContent='space-between'
+                                                p={4}
+                                            >
+                                                <Button variant='ghost' leftIcon={<BiLike />}>
+                                                    いいね
+                                                </Button>
+                                                <Button variant='ghost' leftIcon={<BiChat />}>
+                                                    コメント
+                                                </Button>
+                                                <Button variant='ghost' leftIcon={<BiShare />}>
+                                                    シェア
+                                                </Button>
+                                            </CardFooter>
+                                        </Flex>
+                                    </Card>
+                                ))}
+
+
+                            </div>
+
+
                         </div>
 
 

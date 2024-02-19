@@ -157,7 +157,7 @@ function Setting() {
                         <div className={styles.introduce}>
 
 
-                            <img src={`http://localhost:3000${avatar_url}`} alt="avatar"/>
+                            <img className={styles.avatar} src={`http://localhost:3000${avatar_url}`} alt="avatar"/>
 
 
                             <div className={styles.info}>
