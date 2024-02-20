@@ -12,7 +12,9 @@ Rails.application.routes.draw do
       post "avatar"
       get "me"
     end
-    resources :posts, only: [:create, :index]
+
+    resources :posts, only: [:create, :index, :update,:destroy]
+
   end
 
   # Defines the root path route ("/")
