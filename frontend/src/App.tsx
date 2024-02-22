@@ -18,6 +18,7 @@ import SettingPages from "./pages/SettingPages";
 import {useState} from "react";
 import axios from "axios";
 import AddpostPage from "./pages/AddpostPage";
+import EditpostPage from "./pages/EditpostPage";
 function App() {
     const token = useSelector((state: RootState) => state.auth.token);
 
@@ -58,6 +59,7 @@ function AuthenticatedRoutes() {
             <Route path="/findgroup" element={<FindgroupPage/>}/>
             <Route path="/setting" element={<SettingPages/>}/>
             <Route path="/addpost" element={<AddpostPage/>}/>
+            <Route path='/editpost/:post_id' element={<EditpostPage/>}/>
 
         </Routes>
     )

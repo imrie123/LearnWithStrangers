@@ -64,7 +64,7 @@ class PostsController < ApplicationController
 
         if @post
           if @post.update(post_params)
-            render "index", formats: :json, handlers: :jbuilder, status: :ok
+            render json: @post,  status: :ok
           else
             render json: @post.errors, status: :unprocessable_entity
           end

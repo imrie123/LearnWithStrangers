@@ -10,7 +10,7 @@ import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import {Avatar, Box, Flex, Heading, IconButton, Image, Text} from '@chakra-ui/react'
 import {BiChat, BiLike, BiShare} from 'react-icons/bi'
 import { BsThreeDotsVertical } from 'react-icons/bs';
-
+import EditIcon from '@mui/icons-material/Edit';
 
 
 interface Post {
@@ -24,6 +24,10 @@ function MyProfile() {
     const [user, setUser] = useState({name: 'Loading...', learning_language: 'Loading...', spoken_language: 'Loading...', residence: 'Loading...', introduction: 'Loading...', avatar_url: 'Loading...'});
     const [avatar_url, setAvatarUrl] = useState();
     const [posts, setPosts] = useState<Post[]>([]);
+    const [editingPost, setEditingPost] = useState({});
+
+
+
 
     useEffect(() => {
             const token = localStorage.getItem('token');
@@ -68,7 +72,6 @@ function MyProfile() {
             axios.delete(`http://127.0.0.1:3000/users/:user_id/posts/${post_id}?token=${token}`)
                 .then((response) => {
                     console.log(response.data);
-                    // 投稿が正常に削除された後、最新のデータを取得してUIを更新します
                     axios.get(`http://127.0.0.1:3000/users/:user_id/posts?token=${token}`)
                         .then((response) => {
                             setPosts(response.data.posts);
@@ -147,6 +150,10 @@ function MyProfile() {
                                                     justifyContent='space-between'
                                                     p={4}
                                                 >
+                                                    <Link to={`/editpost/${post.post_id}`}>
+                                                        <EditIcon/>
+                                                    </Link>
+
                                                     <Button variant='ghost' leftIcon={<BiLike />}>
                                                         いいね
                                                     </Button>
