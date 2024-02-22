@@ -33,41 +33,7 @@ function Setting() {
     };
 
     const navigate = useNavigate();
-    //
-    // const createPost = (formData: FormData) => {
-    //     axios.post('http://127.0.0.1:3000/posts/avatar', formData)
-    //         .then((response) => {
-    //             console.log(response);
-    //             resetForm();
-    //
-    //         })
-    //         .catch((error) => {
-    //             console.error("Error:", error.response);
-    //         });
-    // }
 
-    // const setImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     console.log("うんこ",e.target.files);
-    //     if (e.target.files && e.target.files.length > 0) { // ファイルが選択されているかどうかをチェック
-    //         setImageFile(e.target.files[0]);
-    //         console.log(e.target.files[0]);
-    //     }
-    // }
-    //
-    // const upload = () => {
-    //     const formData = new FormData();
-    //     formData.append('title', title);
-    //     if (imageFile !== null) {
-    //         formData.append('image', imageFile);
-    //     }
-    //     createPost(formData);
-    //
-    //
-    // }
-    // const resetForm = () => {
-    //     setImageFile(null);
-    //     setTitle('');
-    // }
 
     useEffect(() => {
         const token = localStorage.getItem('token');
