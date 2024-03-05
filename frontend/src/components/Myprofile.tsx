@@ -1,14 +1,24 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {useState} from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import styles from "../styles/Myprofile.module.scss";
-import {Button} from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
-import {Avatar, Box, Flex, Heading, IconButton, Image, Text} from '@chakra-ui/react'
-import {BiChat, BiLike, BiShare} from 'react-icons/bi'
+import {
+    Card,
+    CardHeader,
+    CardBody,
+    CardFooter,
+    Avatar,
+    Box,
+    Flex,
+    Heading,
+    IconButton,
+    Image,
+    Text
+} from '@chakra-ui/react'
+import { BiChat, BiLike, BiShare } from 'react-icons/bi'
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -20,34 +30,39 @@ interface Post {
     created_at: string;
     post_id: number;
 }
+
 function MyProfile() {
-    const [user, setUser] = useState({name: 'Loading...', learning_language: 'Loading...', spoken_language: 'Loading...', residence: 'Loading...', introduction: 'Loading...', avatar_url: 'Loading...'});
+    const [user, setUser] = useState({
+        name: 'Loading...',
+        learning_language: 'Loading...',
+        spoken_language: 'Loading...',
+        residence: 'Loading...',
+        introduction: 'Loading...',
+        avatar_url: 'Loading...',
+        custom_id: 'Loading...'
+    });
     const [avatar_url, setAvatarUrl] = useState();
     const [posts, setPosts] = useState<Post[]>([]);
     const [editingPost, setEditingPost] = useState({});
 
 
-
-
     useEffect(() => {
-            const token = localStorage.getItem('token');
-            const user_id = localStorage.getItem('id');
+        const token = localStorage.getItem('token');
+        const user_id = localStorage.getItem('id');
 
-            if (token) {
-                axios.get(`http://127.0.0.1:3000/users/:user_id/posts?token=${token}`)
-                    .then((response) => {
+        if (token) {
+            axios.get(`http://127.0.0.1:3000/users/:user_id/posts?token=${token}`)
+                .then((response) => {
 
-                        console.log(response.data.posts);
-                        console.log(response.data);
-                        setPosts(response.data.posts);
-                    })
-                    .catch((error) => {
-                            console.error("Error:", error);
-                        }
-                    );
-            }
+                    console.log(response.data.posts);
+                    console.log(response.data);
+                    setPosts(response.data.posts);
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
         }
-        , []);
+    }, []);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -95,9 +110,8 @@ function MyProfile() {
 
                         <div className={styles.introduce}>
 
-                            <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`} alt="avatar"　/>
-
-
+                            <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`}
+                                 alt="avatar"/>
                             <div className={styles.info}>
                                 <div className={styles.follow}>
                                     <p>フォロー:100</p>
@@ -109,6 +123,7 @@ function MyProfile() {
                                 </div>
                                 <div className={styles.user}>
                                     <p>{user.name}</p>
+                                    <p>@{user.custom_id}</p>
                                     <p>話せる言語:{user.spoken_language}</p>
                                     <p>学びたい言語:{user.learning_language}</p>
                                     <p>住んでいる国:{user.residence}</p>
@@ -120,20 +135,16 @@ function MyProfile() {
                                 </Link>
 
 
-
-
-
-
                                 <div className={styles.user_posts}>
                                     {posts.map(post => (
                                         <Card key={post.id} maxW='md' mb={4}>
 
                                             <Flex direction="column" align="center" justify="center" p={4}>
                                                 <Flex align="flex-start" mb={4}>
-                                                    <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4} />
+                                                    <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4}/>
                                                     <Text fontWeight='bold'>{user.name}</Text>
                                                 </Flex>
-                                                <Button colorScheme='red' onClick={() => deletePost(post.post_id)} >
+                                                <Button colorScheme='red' onClick={() => deletePost(post.post_id)}>
                                                     削除
                                                 </Button>
                                                 <Image
@@ -154,13 +165,13 @@ function MyProfile() {
                                                         <EditIcon/>
                                                     </Link>
 
-                                                    <Button variant='ghost' leftIcon={<BiLike />}>
+                                                    <Button variant='ghost' leftIcon={<BiLike/>}>
                                                         いいね
                                                     </Button>
-                                                    <Button variant='ghost' leftIcon={<BiChat />}>
+                                                    <Button variant='ghost' leftIcon={<BiChat/>}>
                                                         コメント
                                                     </Button>
-                                                    <Button variant='ghost' leftIcon={<BiShare />}>
+                                                    <Button variant='ghost' leftIcon={<BiShare/>}>
                                                         シェア
                                                     </Button>
                                                 </CardFooter>

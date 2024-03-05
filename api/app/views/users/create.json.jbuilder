@@ -1,42 +1,22 @@
+json.user do
+  json.id @user.id
+  json.name @user.name
+  json.custom_id @user.custom_id
+  json.email @user.email
+  json.birthday @user.birthday
+  json.image @user.image
+  json.spoken_language @user.spoken_language
+  json.learning_language @user.learning_language
+  json.residence @user.residence
+  json.introduction @user.introduction
+  json.created_at @user.created_at
+  json.updated_at @user.updated_at
+  json.avatar_url url_for(@user.avatar) if @user.avatar.attached?
+end
 
-
-if user.persisted?
-  json.token response["idToken"]
-  json.name user.name
+if @response["idToken"]
+  json.auth_token @response["idToken"]
 else
-  json.error response["error"]["message"]
+  json.error @error
 end
 
-if response["idToken"]
-  json.token response["idToken"]
-else
-  json.error response["error"]["message"]
-end
-
-json.message "Signed out successfully"
-
-if user
-  json.success 'Valid token'
-  json.user user.as_json(except: [:avatar])
-else
-  json.error 'Token missing'
-end
-
-if user
-  json.success "Valid token"
-  json.user do
-    json.extract! user,  :id, :name, :email, :birthday, :image, :spoken_language, :learning_language, :residence, :introduction, :created_at, :updated_at
-    json.avatar_url url_for(user.avatar) if user.avatar.attached?
-  end
-end
-
-if user.errors.any?
-  json.error "Update Error"
-  json.details user.errors.full_messages
-else
-  json.success "Updated user"
-  json.user do
-    json.extract! user, :id, :name, :email, :birthday, :image, :spoken_language, :learning_language, :residence, :introduction, :created_at, :updated_at
-    json.avatar_url url_for(user.avatar) if user.avatar.attached?
-  end
-end

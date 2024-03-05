@@ -78,6 +78,7 @@ GEM
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     base64 (0.2.0)
+    bcrypt (3.1.20)
     bigdecimal (3.1.6)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
@@ -324,6 +325,7 @@ PLATFORMS
   arm64-darwin-23
 
 DEPENDENCIES
+  bcrypt
   bootsnap
   byebug
   debug

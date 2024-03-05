@@ -1,30 +1,28 @@
 class UsersController < ApplicationController
   def create
-
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
 
     if @response["idToken"]
-
-      @user = User.create!(user_params)
-
-      render "create", status: :created
-
+      if User.exists?(custom_id: user_params[:custom_id])
+        @error = "Custom ID already exists"
+        render "error", formats: :json, handlers: :jbuilder, status: :unauthorized
+      else
+        @user = User.create!(user_params)
+        render json: { id: @user.id, name: @user.name, email: @user.email, birthday: @user.birthday, custom_id: @user.custom_id }, status: :created
+      end
     else
       @error = @response["error"]["message"]
-      render "create", status: :bad_request
+      render "error", formats: :json, handlers: :jbuilder, status: :unauthorized
     end
   end
 
   def sign_in
     @response = FirebaseService::SignIn.new(user_params[:email], user_params[:password]).call
-    @user = User.find_by(email: user_params[:email])
 
     if @response["idToken"]
       @user = User.find_by(email: user_params[:email])
       render "sign_in", formats: :json, handlers: :jbuilder, status: :ok
-
     else
-      # 失敗した場合、エラーメッセージを返す
       @error = @response["error"]["message"]
       render "error", formats: :json, handlers: :jbuilder, status: :unauthorized
     end
@@ -36,26 +34,16 @@ class UsersController < ApplicationController
   end
 
   def show
-    # localStorageからトークンを取得
-    token = params[:token] # リクエストパラメータからトークンを取得する例
+    @user = User.find(params[:id])
+    render json: @user
+  end
 
-    if token.present?
-      # トークンを検証
-      decoded_token = verify_firebase_token(token)
-      email = decoded_token[0]["email"]
-
-      if email
-
-        @user = User.find_by(email: email)
-
-        if @user
-          render "show", formats: :json, handlers: :jbuilder, status: :ok
-
-        else
-
-          render "error", status: :unprocessable_entity
-        end
-      end
+  def show_by_custom_id
+    @user = User.find_by(custom_id: params[:custom_id])
+    if @user
+      render "show_by_custom_id", formats: :json, handlers: :jbuilder, status: :ok
+    else
+      render json: { error: 'User not found' }, status: :not_found
     end
   end
 
@@ -68,7 +56,17 @@ class UsersController < ApplicationController
 
       if email
         @user = User.find_by(email: email)
-        render "me", formats: :json, handlers: :jbuilder, status: :ok
+
+        unless @user.present?
+          @user = User.find_by(custom_id: params[:custom_id])
+        end
+
+        if @user.present?
+          render "me", formats: :json, handlers: :jbuilder, status: :ok
+        else
+          @error = "User not found"
+          render "error", status: :not_found
+        end
       else
         @error = "Me Error"
         render "error", status: :unprocessable_entity
@@ -84,7 +82,6 @@ class UsersController < ApplicationController
       email = decoded_token[0]["email"]
 
       if email
-
         @user = User.find_by(email: email)
         @user.avatar.attach(params[:avatar])
         @user.update!(user_params)
@@ -110,16 +107,11 @@ class UsersController < ApplicationController
       email = decoded_token[0]["email"]
 
       if email
-
         @user = User.find_by(email: email)
-
-        @user.update(avatar: params[:user][:avatar]) # user_params を使用して avatar を更新
+        @user.update(avatar: params[:user][:avatar])
         avatar_url = @user.avatar.attached? ? url_for(@user.avatar) : nil
 
         @avatar_url = avatar_url
-
-
-
 
         render "avatar", formats: :json, handlers: :jbuilder, status: :ok
       else
@@ -128,9 +120,14 @@ class UsersController < ApplicationController
     end
   end
 
+  def random
+    @random_users = User.all.sample(5)
+    render "random", formats: :json, handlers: :jbuilder, status: :ok
+  end
+
   private
 
   def user_params
-    params.require(:user).permit(:id, :email, :password, :name, :birthday, :spoken_language, :learning_language, :introduction, :avatar)
+    params.require(:user).permit(:id, :email, :password, :name, :birthday, :spoken_language, :learning_language, :introduction, :avatar, :custom_id)
   end
 end
