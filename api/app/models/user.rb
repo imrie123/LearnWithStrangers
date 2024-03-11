@@ -8,7 +8,8 @@ class User < ApplicationRecord
   validates :birthday, presence: true, format: { with: /\d{4}-\d{2}-\d{2}/, message: "must be in the following format: yyyy-mm-dd" }
 
   has_one_attached :avatar
-  has_many :posts
+  has_many :posts, dependent: :destroy
+  has_many :likes, dependent: :destroy
 
   has_secure_password
 

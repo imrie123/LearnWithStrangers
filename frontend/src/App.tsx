@@ -10,12 +10,25 @@ import SettingPages from "./pages/SettingPages";
 import AddpostPage from "./pages/AddpostPage";
 import EditpostPage from "./pages/EditpostPage";
 import OtherUserProfilePage from "./pages/OtherUserProfilePage";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { RootState } from "./redux/store";
+import { useEffect } from "react";
+import { setToken } from "./redux/authSlice";
 
 function App() {
     const token = useSelector((state: RootState) => state.auth.token);
+    const dispatch = useDispatch();
+    
+    useEffect(() => {
+        if (!token) {
+            // tokenがなかったら、localStorageから取得して、dispatchでstoreに保存する
+            const localToken = localStorage.getItem("token");
+            if (localToken) {
+                dispatch(setToken(localToken));
+            }
+        }
+    }, [token]);
 
     return (
         <BrowserRouter>

@@ -21,6 +21,7 @@ gem "ruby-vips"
 gem "image_processing"
 gem 'mini_magick'
 gem "bcrypt"
+gem "counter_culture"
 
 
 

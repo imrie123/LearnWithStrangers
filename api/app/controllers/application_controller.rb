@@ -15,4 +15,6 @@ class ApplicationController < ActionController::API
     Rails.logger.error "JWT Verification Error: #{e.message}"
     render json: { error: 'Invalid token' }, status: :unauthorized
   end
+
+
 end
