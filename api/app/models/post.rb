@@ -4,6 +4,7 @@ class Post < ApplicationRecord
   validates :content, presence: true
   has_many :likes, counter_cache:true,dependent: :destroy
 
+
   def image_url
     if image.attached?
       Rails.application.routes.url_helpers.rails_blob_url(image)

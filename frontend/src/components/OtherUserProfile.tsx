@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import styles from '../styles/Myprofile.module.scss';
-import { Card, CardBody, CardFooter, Flex, Text, Button, Image, Avatar } from '@chakra-ui/react';
-import { BiChat, BiShare } from 'react-icons/bi';
+import {Card, CardBody, CardFooter, Flex, Text, Button, Image, Avatar} from '@chakra-ui/react';
+import {BiChat, BiShare} from 'react-icons/bi';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 
@@ -36,7 +36,7 @@ const OtherUserProfile = () => {
     const [postLikes, setPostLikes] = useState<{ [post_id: number]: number }>({});
     const [id, setId] = useState<number | null>();
 
-    const { custom_id } = useParams<{ custom_id: string }>();
+    const {custom_id} = useParams<{ custom_id: string }>();
 
     const handleLike = (post_id: number) => {
         const token = localStorage.getItem('token');
@@ -107,13 +107,12 @@ const OtherUserProfile = () => {
     }, [custom_id]);
 
 
-
     return (
         <div className={styles.myprofile}>
             <div className={styles.component}>
                 <div className={styles.top}>
                     <div className={styles.introduce}>
-                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`} alt="avatar" />
+                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`} alt="avatar"/>
                         <div className={styles.info}>
                             <div className={styles.follow}>
                                 <p>フォロー:100</p>
@@ -130,13 +129,13 @@ const OtherUserProfile = () => {
                             </div>
                             <div className={styles.user_posts}>
                                 {posts.map(post => (
-                                    <Card key={post.post_id} maxW='md' mb={4}>
+                                    <Card key={post.post_id} maxW='4xl' mb={4}>
                                         <Flex direction="column" align="center" justify="center" p={4}>
                                             <Flex align="flex-start" mb={4}>
-                                                <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4} />
+                                                <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4}/>
                                                 <Text fontWeight='bold'>{user.name}</Text>
                                             </Flex>
-                                            <Image objectFit='cover' src={post.image_url} alt='Post Image' />
+                                            <Image objectFit='cover' src={post.image_url} alt='Post Image'/>
                                             <CardBody>
                                                 <Text>{post.content}</Text>
                                             </CardBody>
@@ -146,12 +145,12 @@ const OtherUserProfile = () => {
                                                     colorScheme={post.liked_by_current_user ? "red" : "gray"} // レスポンスに基づいて色を設定
                                                     onClick={() => post.liked_by_current_user ? handleUnlike(post.post_id) : handleLike(post.post_id)} // レスポンスに基づいて処理を実行
                                                 >
-                                                    <FavoriteIcon />
+                                                    <FavoriteIcon/>
                                                     {postLikes[post.post_id] ?? post.likes_count}
                                                 </Button>
 
-                                                <Button variant='ghost' leftIcon={<BiChat />}>コメント</Button>
-                                                <Button variant='ghost' leftIcon={<BiShare />}>シェア</Button>
+                                                <Button variant='ghost' leftIcon={<BiChat/>}>コメント</Button>
+                                                <Button variant='ghost' leftIcon={<BiShare/>}>シェア</Button>
                                             </CardFooter>
                                         </Flex>
                                     </Card>

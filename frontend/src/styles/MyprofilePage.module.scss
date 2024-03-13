@@ -1,4 +1,8 @@
 .my_profile{
   display: flex;
+  .main-content {
+    margin-left: 250px; /* サイドバーの幅に合わせてメインコンテンツをオフセットする */
+    padding: 20px; /* メインコンテンツの余白 */
+  }
 
 }

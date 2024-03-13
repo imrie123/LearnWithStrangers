@@ -1,5 +1,5 @@
 class LikesController < ApplicationController
-  before_action :verify_token, only: [:create, :destroy, :toggle_like, :index]
+  before_action :verify_token, only: [:create, :destroy, :toggle_like, :index, :liked_posts]
   before_action :set_post, only: [:create, :destroy, :toggle_like]
 
   def create
@@ -21,6 +21,12 @@ class LikesController < ApplicationController
     else
       render json: { error: "Like not found" }, status: :not_found
     end
+  end
+
+  def liked_posts
+
+    @liked_posts = @current_user.liked_posts
+    render "liked_posts", formats: :json, handlers: :jbuilder, status: :ok
   end
 
   def toggle_like

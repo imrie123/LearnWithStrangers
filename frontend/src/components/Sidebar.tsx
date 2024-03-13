@@ -4,14 +4,12 @@ import Styles from "../styles/Sidebar.module.scss";
 import {Link,useNavigate} from "react-router-dom";
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../redux/store";
 import {clearToken} from "../redux/authSlice";
 
 
 function Sidebar() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    // const token = useSelector((state: RootState) => state.auth.token);
     const [inputValue, setInputValue] = useState("");
     const [user, setUser] = useState({
         name: 'Loading...',
@@ -61,7 +59,7 @@ function Sidebar() {
     return (
         <div className={Styles.sidebar}>
             <div className={Styles.header}>
-                <Link to={`/user/${user.custom_id}`}>
+                <Link to={`/`}>
                     <p>LearnWithStrangers!</p>
                 </Link>
             </div>

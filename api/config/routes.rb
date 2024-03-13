@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
-
+  resources :likes, only: [] do
+    get 'liked_posts', to: 'likes#liked_posts', on: :collection
+  end
 
   resources :users, only: [:create, :show, :index] do
     collection do
@@ -14,7 +16,6 @@ Rails.application.routes.draw do
     end
 
     resources :posts, only: [:create, :index, :update, :destroy]
-
   end
 
   scope 'users/custom/:custom_id' do
@@ -30,12 +31,15 @@ Rails.application.routes.draw do
         get :show_likes, on: :member  # いいねのためのカスタムエンドポイントを定義
         post :toggle_like, on: :collection
         get :index, on: :collection
+
       end
       get 'show_likes', to: 'posts#show_likes', on: :member
       post 'toggle_like', to: 'likes#toggle_like'
+
     end
   end
   get '/posts/:id/show_likes', to: 'posts#show_likes', as: 'show_post_likes'
+
 
 
 

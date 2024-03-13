@@ -5,4 +5,6 @@ json.posts @posts do |post|
   json.image post.image
   json.created_at post.created_at
 json.image_url post.image_url
+  json.avatar_url post.user.avatar_url
+  json.likes_count post.likes.count
 end
