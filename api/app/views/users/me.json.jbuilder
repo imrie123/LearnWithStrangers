@@ -3,6 +3,7 @@ json.user do
   json.name @user.name
   json.email @user.email
   json.birthday @user.birthday
+  json.custom_id @user.custom_id
   json.image @user.image
   json.spoken_language @user.spoken_language
   json.learning_language @user.learning_language

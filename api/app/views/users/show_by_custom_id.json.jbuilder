@@ -1,9 +1,7 @@
 json.user do
-  json.id @user.id
-  json.name @user.name
-  json.custom_id @user.custom_id
   json.email @user.email
   json.birthday @user.birthday
+  json.custom_id @user.custom_id
   json.image @user.image
   json.spoken_language @user.spoken_language
   json.learning_language @user.learning_language
@@ -13,10 +11,3 @@ json.user do
   json.updated_at @user.updated_at
   json.avatar_url url_for(@user.avatar) if @user.avatar.attached?
 end
-
-if @response["idToken"]
-  json.auth_token @response["idToken"]
-else
-  json.error @error
-end
-

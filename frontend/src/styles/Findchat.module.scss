@@ -1,8 +1,4 @@
 .myprofile {
-.post_top{
-  display: flex;
-  justify-content: space-between;
-}
   .avatar {
     width: 200px;
     height: 200px;
@@ -27,13 +23,6 @@
 
   .user {
     padding: 20px;
-  }
-
-  .myprofile_footer {
-    display: flex;
-    align-items: flex-end;
-    padding-bottom: 20px;
-
   }
 
 }
