@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+
   def create
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
 
@@ -38,7 +39,36 @@ class UsersController < ApplicationController
     render json: @user
   end
 
+  def show_room
+    @user = User.find(params[:id])
+    @current_user_entry = Entry.where(user_id: current_user.id)
+    @user_entry = Entry.where(user_id: @user.id)
+    if @user.id == @current_user.id
+    else
+      @current_user_entry.each do |cu|
+        @user_entry.each do |u|
+          if cu.room_id == u.room_id then
+            @is_room = true
+            @room_id = cu.room_id
+          end
+        end
+      end
+      unless @is_room
+        @room = Room.new
+        @entry = Entry.new
+      end
+    end
+
+    render json: @room
+  end
+
   def show_by_custom_id
+    token = params[:token]
+    if token.present?
+      decoded_token = verify_firebase_token(token)
+      email = decoded_token[0]["email"]
+      @current_user = User.find_by(email: email)
+    end
     @user = User.find_by(custom_id: params[:custom_id])
     if @user
       render "show_by_custom_id", formats: :json, handlers: :jbuilder, status: :ok
@@ -49,18 +79,14 @@ class UsersController < ApplicationController
 
   def me
     token = params[:token]
-
     if token.present?
       decoded_token = verify_firebase_token(token)
       email = decoded_token[0]["email"]
-
       if email
         @user = User.find_by(email: email)
-
         unless @user.present?
           @user = User.find_by(custom_id: params[:custom_id])
         end
-
         if @user.present?
           render "me", formats: :json, handlers: :jbuilder, status: :ok
         else
@@ -76,11 +102,9 @@ class UsersController < ApplicationController
 
   def update
     token = params[:token]
-
     if token.present?
       decoded_token = verify_firebase_token(token)
       email = decoded_token[0]["email"]
-
       if email
         @user = User.find_by(email: email)
         @user.avatar.attach(params[:avatar])
@@ -123,6 +147,17 @@ class UsersController < ApplicationController
   def random
     @random_users = User.all.sample(5)
     render "random", formats: :json, handlers: :jbuilder, status: :ok
+  end
+
+  def verify_token
+    token = params[:token]
+    if token.present?
+      decoded_token = verify_firebase_token(token)
+      email = decoded_token[0]["email"]
+      @current_user = User.find_by(email: email)
+
+      raise "User not found" unless @current_user
+    end
   end
 
   private
