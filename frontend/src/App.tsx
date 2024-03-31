@@ -10,16 +10,17 @@ import SettingPages from "./pages/SettingPages";
 import AddpostPage from "./pages/AddpostPage";
 import EditpostPage from "./pages/EditpostPage";
 import OtherUserProfilePage from "./pages/OtherUserProfilePage";
-import { useSelector, useDispatch } from "react-redux";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { RootState } from "./redux/store";
-import { useEffect } from "react";
-import { setToken } from "./redux/authSlice";
+import {useSelector, useDispatch} from "react-redux";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {RootState} from "./redux/store";
+import {useEffect} from "react";
+import {setToken} from "./redux/authSlice";
+import ChatPage from "./pages/ChatPage";
 
 function App() {
     const token = useSelector((state: RootState) => state.auth.token);
     const dispatch = useDispatch();
-    
+
     useEffect(() => {
         if (!token) {
             // tokenがなかったら、localStorageから取得して、dispatchでstoreに保存する
@@ -34,9 +35,9 @@ function App() {
         <BrowserRouter>
             <Routes>
                 {token ? (
-                    <Route path="*" element={<AuthenticatedRoutes />} />
+                    <Route path="*" element={<AuthenticatedRoutes/>}/>
                 ) : (
-                    <Route path="*" element={<UnauthenticatedRoutes />} />
+                    <Route path="*" element={<UnauthenticatedRoutes/>}/>
                 )}
             </Routes>
         </BrowserRouter>
@@ -46,15 +47,16 @@ function App() {
 function AuthenticatedRoutes() {
     return (
         <Routes>
-            <Route path="*" element={<MyprofilePage />} />
-            <Route path="/findchat" element={<FindchatPage />} />
-            <Route path="/findpost" element={<FindpostPage />} />
-            <Route path="/seepost" element={<SeepostPage />} />
-            <Route path="/findgroup" element={<FindgroupPage />} />
-            <Route path="/setting" element={<SettingPages />} />
-            <Route path="/addpost" element={<AddpostPage />} />
-            <Route path="/editpost/:post_id" element={<EditpostPage />} />
-            <Route path="/user/:custom_id" element={<OtherUserProfilePage />} />
+            <Route path="*" element={<MyprofilePage/>}/>
+            <Route path="/findchat" element={<FindchatPage/>}/>
+            <Route path="/findpost" element={<FindpostPage/>}/>
+            <Route path="/seepost" element={<SeepostPage/>}/>
+            <Route path="/findgroup" element={<FindgroupPage/>}/>
+            <Route path="/setting" element={<SettingPages/>}/>
+            <Route path="/addpost" element={<AddpostPage/>}/>
+            <Route path="/editpost/:post_id" element={<EditpostPage/>}/>
+            <Route path="/user/:custom_id" element={<OtherUserProfilePage/>}/>\
+            <Route path="/:custom_id/:id/:name" element={<ChatPage/>}/>
         </Routes>
     );
 }
@@ -62,7 +64,7 @@ function AuthenticatedRoutes() {
 function UnauthenticatedRoutes() {
     return (
         <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<Login/>}/>
         </Routes>
     );
 }

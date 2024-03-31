@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {useParams} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 import styles from '../styles/Myprofile.module.scss';
 import {Card, CardBody, CardFooter, Flex, Text, Button, Image, Avatar} from '@chakra-ui/react';
 import {BiChat, BiShare} from 'react-icons/bi';
@@ -36,7 +36,21 @@ const OtherUserProfile = () => {
     const [postLikes, setPostLikes] = useState<{ [post_id: number]: number }>({});
     const [id, setId] = useState<number | null>();
     const {custom_id} = useParams<{ custom_id: string }>();
+    const navigate = useNavigate();
 
+
+    const handleStartChat = () => {
+        const token = localStorage.getItem('token');
+        axios.post(`http://127.0.0.1:3000/users/${custom_id}/room?token=${token}`)
+            .then((response) => {
+                console.log(response.data);
+                navigate(`/${custom_id}/${response.data.id}/${response.data.name}`);
+
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
     const handleFollow = () => {
         const token = localStorage.getItem('token');
 
@@ -141,6 +155,7 @@ const OtherUserProfile = () => {
                                 <p>フォロー:100</p>
                                 <p>フォロワー:100</p>
                                 <p>投稿:20</p>
+                                <Button onClick={handleStartChat}>メッセージを送信する</Button>
                             </div>
                             <div className={styles.user}>
                                 <p>{user.name}</p>
@@ -151,6 +166,7 @@ const OtherUserProfile = () => {
                                 <p>自己紹介:{user.introduction}</p>
                                 <Button onClick={user.followed_by_current_user ? handleUnFollow : handleFollow}
                                         colorScheme={user.followed_by_current_user ? "gray" : "blue"}>フォローする</Button>
+
                             </div>
 
                             <div className={styles.user_posts}>

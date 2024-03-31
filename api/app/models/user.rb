@@ -22,20 +22,17 @@ class User < ApplicationRecord
   has_many :followings, through: :relationships, source: :followed
   has_many :followers, through: :reverse_of_relationships, source: :follower
 
-
-
-
   def follow(user)
     relationships.create(followed_id: user.id)
   end
+
   def unfollow(user)
-    relationships.find_by(followed_id: user.id,follower_id: id).destroy
+    relationships.find_by(followed_id: user.id, follower_id: id).destroy
   end
 
   def followed_by?(user)
     relationships.find_by(follower_id: id, followed_id: user.id).present?
   end
-
 
   has_secure_password
 
@@ -47,7 +44,7 @@ class User < ApplicationRecord
     end
   end
 
-  def self.random_users(number)
-    order(Arel.sql('RAND()')).limit(number)
+  def self.random_users
+    all.order(Arel.sql('RAND()'))
   end
 end

@@ -1,5 +1,3 @@
-# app/views/likes/index.json.jbuilder
-
 json.likes @likes do |like|
   json.id like.id
   json.post do

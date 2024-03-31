@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     get 'liked_posts', to: 'likes#liked_posts', on: :collection
   end
 
-  resources :users, only: [:create,  :index] do
+  resources :users, only: [:create, :index] do
     collection do
       post "sign_in"
       post "sign_out"
@@ -20,10 +20,12 @@ Rails.application.routes.draw do
   scope 'users/:custom_id' do
     get '/', to: 'users#show_by_custom_id', as: 'user_by_custom_id'
     get '/posts', to: 'posts#other_user_posts', as: 'other_user_posts'
-      resource :relationships, only: [:create, :destroy]
-      get 'followings' => 'relationships#followings', as: 'followings'
-      get 'followers' => 'relationships#followers', as: 'followers'
-
+    resource :relationships, only: [:create, :destroy]
+    get 'followings' => 'relationships#followings', as: 'followings'
+    get 'followers' => 'relationships#followers', as: 'followers'
+    resources :room, only: [:create, :show] do
+      resources :message, only: [:create, :index]
+    end
 
     resources :posts, only: [] do
       resources :likes, only: [:create, :destroy], controller: 'likes' do

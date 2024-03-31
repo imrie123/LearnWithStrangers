@@ -3,7 +3,6 @@ class LikesController < ApplicationController
   before_action :set_post, only: [:create, :destroy, :toggle_like]
 
   def create
-
     @like = @current_user.likes.new(post_id: @post.id)
     if @like.save
       render "create", formats: :json, handlers: :jbuilder, status: :created
@@ -13,7 +12,6 @@ class LikesController < ApplicationController
   end
 
   def destroy
-
     @like = @current_user.likes.find_by(user_id: @current_user.id, post_id: @post.id)
     if @like
       @like.destroy
@@ -24,7 +22,6 @@ class LikesController < ApplicationController
   end
 
   def liked_posts
-
     @liked_posts = @current_user.liked_posts
     render "liked_posts", formats: :json, handlers: :jbuilder, status: :ok
   end
@@ -43,7 +40,6 @@ class LikesController < ApplicationController
   def index
     @likes = @user.likes
     render "index", formats: :json, handlers: :jbuilder, status: :ok
-
   end
 
   private

@@ -12,5 +12,4 @@ json.array! @random_users do |user|
   json.created_at user.created_at
   json.updated_at user.updated_at
   json.avatar_url url_for(user.avatar) if user.avatar.attached?
-
 end
