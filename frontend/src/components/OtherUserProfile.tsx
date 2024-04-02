@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {useParams} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 import styles from '../styles/Myprofile.module.scss';
 import {Card, CardBody, CardFooter, Flex, Text, Button, Image, Avatar} from '@chakra-ui/react';
 import {BiChat, BiShare} from 'react-icons/bi';
@@ -17,7 +17,6 @@ interface Post {
     likes_count: number;
     liked_by_current_user: boolean;
     liked_by_current_user_id: number;
-
 }
 
 const OtherUserProfile = () => {
@@ -30,14 +29,52 @@ const OtherUserProfile = () => {
         avatar_url: 'Loading...',
         custom_id: 'Loading...',
         user_id: null,
+        followed_by_current_user: false,
     });
 
     const [posts, setPosts] = useState<Post[]>([]);
     const [postLikes, setPostLikes] = useState<{ [post_id: number]: number }>({});
     const [id, setId] = useState<number | null>();
-
     const {custom_id} = useParams<{ custom_id: string }>();
+    const navigate = useNavigate();
 
+
+    const handleStartChat = () => {
+        const token = localStorage.getItem('token');
+        axios.post(`http://127.0.0.1:3000/users/${custom_id}/room?token=${token}`)
+            .then((response) => {
+                console.log(response.data);
+                navigate(`/${custom_id}/${response.data.id}/${response.data.name}`);
+
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+    const handleFollow = () => {
+        const token = localStorage.getItem('token');
+
+        axios.post(`http://127.0.0.1:3000/users/${custom_id}/relationships?token=${token}`)
+            .then((response) => {
+                console.log(response.data);
+                setUser({...user, followed_by_current_user: true});
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+    const handleUnFollow = () => {
+        const token = localStorage.getItem('token');
+
+        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/relationships?token=${token}`)
+            .then((response) => {
+                console.log(response.data);
+                setUser({...user, followed_by_current_user: false});
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
     const handleLike = (post_id: number) => {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -45,7 +82,7 @@ const OtherUserProfile = () => {
             return;
         }
 
-        axios.post(`http://127.0.0.1:3000/users/custom/${custom_id}/posts/${post_id}/likes?token=${token}`)
+        axios.post(`http://127.0.0.1:3000/users/${custom_id}/posts/${post_id}/likes?token=${token}`)
             .then((response) => {
                 const likedPostIndex = posts.findIndex((post: Post) => post.post_id === post_id);
                 posts[likedPostIndex].liked_by_current_user = true;
@@ -69,7 +106,7 @@ const OtherUserProfile = () => {
             return;
         }
 
-        axios.delete(`http://127.0.0.1:3000/users/custom/${custom_id}/posts/${post_id}/likes/${id}?token=${token}`)
+        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/posts/${post_id}/likes/${id}?token=${token}`)
             .then(() => {
                 const unlikedPostIndex = posts.findIndex((post: Post) => post.post_id === post_id);
                 posts[unlikedPostIndex].liked_by_current_user = false;
@@ -87,7 +124,7 @@ const OtherUserProfile = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get(`http://127.0.0.1:3000/users/custom/${custom_id}`)
+        axios.get(`http://127.0.0.1:3000/users/${custom_id}?token=${token}`)
             .then((response) => {
                 setUser(response.data.user);
                 console.log(response.data.user);
@@ -96,7 +133,7 @@ const OtherUserProfile = () => {
                 console.error('Error:', error);
             });
 
-        axios.get(`http://127.0.0.1:3000/users/custom/${custom_id}/posts?token=${token}`)
+        axios.get(`http://127.0.0.1:3000/users/${custom_id}/posts?token=${token}`)
             .then((response) => {
                 setPosts(response.data.posts);
                 console.log(response.data.posts);
@@ -118,6 +155,7 @@ const OtherUserProfile = () => {
                                 <p>フォロー:100</p>
                                 <p>フォロワー:100</p>
                                 <p>投稿:20</p>
+                                <Button onClick={handleStartChat}>メッセージを送信する</Button>
                             </div>
                             <div className={styles.user}>
                                 <p>{user.name}</p>
@@ -126,7 +164,11 @@ const OtherUserProfile = () => {
                                 <p>学びたい言語:{user.learning_language}</p>
                                 <p>住んでいる国:{user.residence}</p>
                                 <p>自己紹介:{user.introduction}</p>
+                                <Button onClick={user.followed_by_current_user ? handleUnFollow : handleFollow}
+                                        colorScheme={user.followed_by_current_user ? "gray" : "blue"}>フォローする</Button>
+
                             </div>
+
                             <div className={styles.user_posts}>
                                 {posts.map(post => (
                                     <Card key={post.post_id} maxW='4xl' mb={4}>

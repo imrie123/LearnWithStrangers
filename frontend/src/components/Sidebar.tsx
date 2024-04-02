@@ -1,10 +1,12 @@
 import {useState, useEffect} from "react";
 import {Input, Stack} from "@chakra-ui/react";
 import Styles from "../styles/Sidebar.module.scss";
-import {Link,useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import {clearToken} from "../redux/authSlice";
+import {Icon} from "@chakra-ui/react";
+import {MdQuestionAnswer} from "react-icons/md";
 
 
 function Sidebar() {
@@ -51,7 +53,7 @@ function Sidebar() {
 
 
     const items = [
-        {name: "プロフィール", path: `/`},
+        {name: "プロフィール", path: `/`, icon: <Icon as={MdQuestionAnswer}/>},
         {name: "会話相手を探す", path: "/findchat"},
         {name: "グループチャットに参加する", path: "/findgroup"},
         {name: "みんなの投稿を見る", path: "/findpost"}
