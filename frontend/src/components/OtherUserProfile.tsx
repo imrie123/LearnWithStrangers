@@ -17,6 +17,7 @@ interface Post {
     likes_count: number;
     liked_by_current_user: boolean;
     liked_by_current_user_id: number;
+
 }
 
 const OtherUserProfile = () => {
@@ -41,7 +42,9 @@ const OtherUserProfile = () => {
 
     const handleStartChat = () => {
         const token = localStorage.getItem('token');
-        axios.post(`http://127.0.0.1:3000/users/${custom_id}/room?token=${token}`)
+        axios.post(`http://127.0.0.1:3000/users/${custom_id}/room`, {}, {
+            headers: {Authorization: `Bearer ${token}`}
+        })
             .then((response) => {
                 console.log(response.data);
                 navigate(`/${custom_id}/${response.data.id}/${response.data.name}`);
@@ -54,7 +57,11 @@ const OtherUserProfile = () => {
     const handleFollow = () => {
         const token = localStorage.getItem('token');
 
-        axios.post(`http://127.0.0.1:3000/users/${custom_id}/relationships?token=${token}`)
+        axios.post(
+            `http://127.0.0.1:3000/users/${custom_id}/relationships`,
+            {},
+            {headers: {Authorization: `Bearer ${token}`}} // ヘッダー情報
+        )
             .then((response) => {
                 console.log(response.data);
                 setUser({...user, followed_by_current_user: true});
@@ -63,10 +70,13 @@ const OtherUserProfile = () => {
                 console.error('Error:', error);
             });
     }
+
     const handleUnFollow = () => {
         const token = localStorage.getItem('token');
 
-        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/relationships?token=${token}`)
+        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/relationships`, {
+            headers: {Authorization: `Bearer ${token}`},
+        })
             .then((response) => {
                 console.log(response.data);
                 setUser({...user, followed_by_current_user: false});
@@ -82,7 +92,9 @@ const OtherUserProfile = () => {
             return;
         }
 
-        axios.post(`http://127.0.0.1:3000/users/${custom_id}/posts/${post_id}/likes?token=${token}`)
+        axios.post(`http://127.0.0.1:3000/users/${custom_id}/posts/${post_id}/likes`, {
+            headers: {Authorization: `Bearer ${token}`},
+        })
             .then((response) => {
                 const likedPostIndex = posts.findIndex((post: Post) => post.post_id === post_id);
                 posts[likedPostIndex].liked_by_current_user = true;
@@ -106,7 +118,9 @@ const OtherUserProfile = () => {
             return;
         }
 
-        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/posts/${post_id}/likes/${id}?token=${token}`)
+        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/posts/${post_id}/likes/${id}`, {
+            headers: {Authorization: `Bearer ${token}`},
+        })
             .then(() => {
                 const unlikedPostIndex = posts.findIndex((post: Post) => post.post_id === post_id);
                 posts[unlikedPostIndex].liked_by_current_user = false;
@@ -124,19 +138,13 @@ const OtherUserProfile = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get(`http://127.0.0.1:3000/users/${custom_id}?token=${token}`)
+        axios.get(`http://127.0.0.1:3000/users/${custom_id}`, {
+            headers: {Authorization: `Bearer ${token}`},
+        })
             .then((response) => {
                 setUser(response.data.user);
+                setPosts(response.data.user.posts);
                 console.log(response.data.user);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-
-        axios.get(`http://127.0.0.1:3000/users/${custom_id}/posts?token=${token}`)
-            .then((response) => {
-                setPosts(response.data.posts);
-                console.log(response.data.posts);
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -154,7 +162,7 @@ const OtherUserProfile = () => {
                             <div className={styles.follow}>
                                 <p>フォロー:100</p>
                                 <p>フォロワー:100</p>
-                                <p>投稿:20</p>
+                                <p>投稿:100</p>
                                 <Button onClick={handleStartChat}>メッセージを送信する</Button>
                             </div>
                             <div className={styles.user}>
@@ -170,39 +178,44 @@ const OtherUserProfile = () => {
                             </div>
 
                             <div className={styles.user_posts}>
-                                {posts.map(post => (
-                                    <Card key={post.post_id} maxW='4xl' mb={4}>
-                                        <Flex direction="column" align="center" justify="center" p={4}>
-                                            <Flex align="flex-start" mb={4}>
-                                                <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4}/>
-                                                <Text fontWeight='bold'>{user.name}</Text>
-                                            </Flex>
-                                            <Image objectFit='cover' src={post.image_url} alt='Post Image'/>
-                                            <CardBody>
-                                                <Text>{post.content}</Text>
-                                            </CardBody>
-                                            <CardFooter display='flex' justifyContent='space-between' p={4}>
-                                                <Button
-                                                    variant='ghost'
-                                                    colorScheme={post.liked_by_current_user ? "red" : "gray"} // レスポンスに基づいて色を設定
-                                                    onClick={() => post.liked_by_current_user ? handleUnlike(post.post_id) : handleLike(post.post_id)} // レスポンスに基づいて処理を実行
-                                                >
-                                                    <FavoriteIcon/>
-                                                    {postLikes[post.post_id] ?? post.likes_count}
-                                                </Button>
+                                {posts.length > 0 && (
+                                    <div className={styles.user_posts}>
+                                        {posts.map(post => (
+                                            <Card key={post.id} maxW='4xl' mb={4}>
+                                                <Flex direction="column" align="center" justify="center" p={4}>
+                                                    <Flex align="flex-start" mb={4}>
+                                                        <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4}/>
+                                                        <Text fontWeight='bold'>{user.name}</Text>
+                                                    </Flex>
+                                                    <Image objectFit='cover' src={post.image_url} alt='Post Image'/>
+                                                    <CardBody>
+                                                        <Text>{post.content}</Text>
+                                                    </CardBody>
+                                                    <CardFooter display='flex' justifyContent='space-between' p={4}>
+                                                        <Button
+                                                            variant='ghost'
+                                                            colorScheme={post.liked_by_current_user ? "red" : "gray"} // レスポンスに基づいて色を設定
+                                                            onClick={() => post.liked_by_current_user ? handleUnlike(post.post_id) : handleLike(post.post_id)} // レスポンスに基づいて処理を実行
+                                                        >
+                                                            <FavoriteIcon/>
+                                                            {postLikes[post.post_id] ?? post.likes_count}
+                                                        </Button>
 
-                                                <Button variant='ghost' leftIcon={<BiChat/>}>コメント</Button>
-                                                <Button variant='ghost' leftIcon={<BiShare/>}>シェア</Button>
-                                            </CardFooter>
-                                        </Flex>
-                                    </Card>
-                                ))}
+                                                        <Button variant='ghost' leftIcon={<BiChat/>}>コメント</Button>
+                                                        <Button variant='ghost' leftIcon={<BiShare/>}>シェア</Button>
+                                                    </CardFooter>
+                                                </Flex>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     );
 }
 

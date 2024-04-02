@@ -11,4 +11,15 @@ json.user do
   json.updated_at @user.updated_at
   json.avatar_url url_for(@user.avatar) if @user.avatar.attached?
   json.followed_by_current_user @current_user.followed_by?(@user) if @user.present?
+
+
+  json.posts @posts do |post|
+    json.id post.id
+    json.content post.content
+    json.image_url post.image_url
+    json.created_at post.created_at
+    json.updated_at post.updated_at
+    json.likes_count post.likes.count
+    json.liked_by_current_user post.liked_by?(@current_user) if @current_user.present?
+  end
 end

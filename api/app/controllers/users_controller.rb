@@ -63,7 +63,7 @@ class UsersController < ApplicationController
   end
 
   def show_by_custom_id
-    token = params[:token]
+    token = request.headers['Authorization']&.split(' ')&.last
     if token.present?
       decoded_token = verify_firebase_token(token)
       email = decoded_token[0]["email"]
@@ -71,6 +71,7 @@ class UsersController < ApplicationController
     end
     @user = User.find_by(custom_id: params[:custom_id])
     if @user
+      @posts = @user.posts
       render "show_by_custom_id", formats: :json, handlers: :jbuilder, status: :ok
     else
       render json: { error: 'User not found' }, status: :not_found
@@ -78,7 +79,7 @@ class UsersController < ApplicationController
   end
 
   def me
-    token = params[:token]
+    token = request.headers['Authorization']&.split(' ')&.last
     if token.present?
       decoded_token = verify_firebase_token(token)
       email = decoded_token[0]["email"]
@@ -101,7 +102,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    token = params[:token]
+    token = request.headers['Authorization']&.split(' ')&.last
     if token.present?
       decoded_token = verify_firebase_token(token)
       email = decoded_token[0]["email"]
@@ -124,7 +125,7 @@ class UsersController < ApplicationController
   end
 
   def avatar
-    token = params[:token]
+    token = request.headers['Authorization']&.split(' ')&.last
 
     if token.present?
       decoded_token = verify_firebase_token(token)
@@ -150,7 +151,7 @@ class UsersController < ApplicationController
   end
 
   def verify_token
-    token = params[:token]
+    token = request.headers['Authorization']&.split(' ')&.last
     if token.present?
       decoded_token = verify_firebase_token(token)
       email = decoded_token[0]["email"]
