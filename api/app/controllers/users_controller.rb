@@ -89,6 +89,10 @@ class UsersController < ApplicationController
           @user = User.find_by(custom_id: params[:custom_id])
         end
         if @user.present?
+          @current_user = User.find_by(email: email)
+          @user_posts = @user.posts
+          @following_user_posts = @user.following_user_posts
+          @all_posts = @user_posts + @following_user_posts
           render "me", formats: :json, handlers: :jbuilder, status: :ok
         else
           @error = "User not found"
