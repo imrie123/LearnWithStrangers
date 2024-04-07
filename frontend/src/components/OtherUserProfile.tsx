@@ -38,6 +38,7 @@ const OtherUserProfile = () => {
     const [id, setId] = useState<number | null>();
     const {custom_id} = useParams<{ custom_id: string }>();
     const navigate = useNavigate();
+    const [likeData, setLikeData] = useState<{ post_id?: number | null } | null>(null);
 
 
     const handleStartChat = () => {
@@ -60,7 +61,7 @@ const OtherUserProfile = () => {
         axios.post(
             `http://127.0.0.1:3000/users/${custom_id}/relationships`,
             {},
-            {headers: {Authorization: `Bearer ${token}`}} // ヘッダー情報
+            {headers: {Authorization: `Bearer ${token}`}}
         )
             .then((response) => {
                 console.log(response.data);
@@ -92,14 +93,14 @@ const OtherUserProfile = () => {
             return;
         }
 
-        axios.post(`http://127.0.0.1:3000/users/${custom_id}/posts/${post_id}/likes`, {
+        axios.post(`http://127.0.0.1:3000/users/${custom_id}/posts/${id}/likes`, {}, {
             headers: {Authorization: `Bearer ${token}`},
         })
             .then((response) => {
                 const likedPostIndex = posts.findIndex((post: Post) => post.post_id === post_id);
                 posts[likedPostIndex].liked_by_current_user = true;
                 setPosts(() => posts);
-                setId(response.data.id);
+                setLikeData(response.data);
                 setPostLikes(prevPostLikes => ({
                     ...prevPostLikes,
                     [post_id]: (prevPostLikes[post_id] || 0) + 1
@@ -110,15 +111,24 @@ const OtherUserProfile = () => {
                 console.error('Error:', error);
             });
     };
-
     const handleUnlike = (post_id: number) => {
         const token = localStorage.getItem('token');
         if (!token) {
             console.error('Token is missing');
             return;
         }
+        if (!likeData || !likeData.post_id) {
+            console.error('likeData or post_id is missing');
+            return;
+        }
 
-        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/posts/${post_id}/likes/${id}`, {
+        const post = posts.find(post => post.post_id === post_id);
+        if (!post) {
+            console.error('Post not found');
+            return;
+        }
+
+        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/posts/${likeData.post_id}/likes/${id}`, {
             headers: {Authorization: `Bearer ${token}`},
         })
             .then(() => {
@@ -135,7 +145,6 @@ const OtherUserProfile = () => {
             });
     };
 
-
     useEffect(() => {
         const token = localStorage.getItem('token');
         axios.get(`http://127.0.0.1:3000/users/${custom_id}`, {
@@ -144,6 +153,7 @@ const OtherUserProfile = () => {
             .then((response) => {
                 setUser(response.data.user);
                 setPosts(response.data.user.posts);
+                setId(response.data.user.posts[0].id);
                 console.log(response.data.user);
             })
             .catch((error) => {
@@ -184,7 +194,8 @@ const OtherUserProfile = () => {
                                             <Card key={post.id} maxW='4xl' mb={4}>
                                                 <Flex direction="column" align="center" justify="center" p={4}>
                                                     <Flex align="flex-start" mb={4}>
-                                                        <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4}/>
+                                                        <Avatar src={`http://localhost:3000${user.avatar_url}`}
+                                                                mr={4}/>
                                                         <Text fontWeight='bold'>{user.name}</Text>
                                                     </Flex>
                                                     <Image objectFit='cover' src={post.image_url} alt='Post Image'/>
@@ -201,8 +212,10 @@ const OtherUserProfile = () => {
                                                             {postLikes[post.post_id] ?? post.likes_count}
                                                         </Button>
 
-                                                        <Button variant='ghost' leftIcon={<BiChat/>}>コメント</Button>
-                                                        <Button variant='ghost' leftIcon={<BiShare/>}>シェア</Button>
+                                                        <Button variant='ghost'
+                                                                leftIcon={<BiChat/>}>コメント</Button>
+                                                        <Button variant='ghost'
+                                                                leftIcon={<BiShare/>}>シェア</Button>
                                                     </CardFooter>
                                                 </Flex>
                                             </Card>

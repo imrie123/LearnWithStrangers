@@ -34,12 +34,13 @@ Rails.application.routes.draw do
         get :show_likes, on: :member
         post :toggle_like, on: :collection
         get :index, on: :collection
+        get :following_user_posts, on: :collection
       end
 
       get 'show_likes', to: 'posts#show_likes', on: :member
       post 'toggle_like', to: 'likes#toggle_like'
     end
   end
-
+  get '/following_user_posts', to: 'posts#following_user_posts', as: 'following_user_posts'
   get '/posts/:id/show_likes', to: 'posts#show_likes', as: 'show_post_likes'
 end
