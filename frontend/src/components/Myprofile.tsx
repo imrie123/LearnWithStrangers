@@ -34,6 +34,7 @@ interface Post {
     likes_count: number;
     liked_by_current_user: boolean;
     avatar_url: string;
+
 }
 
 function MyProfile() {
@@ -52,7 +53,9 @@ function MyProfile() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/likes/liked_posts?token=${token}`)
+            axios.get(`http://127.0.0.1:3000/likes/liked_posts`, {
+                headers: {Authorization: `Bearer ${token}`}
+            })
                 .then((response) => {
                     console.log(response.data);
                     setLikedPosts(response.data);
@@ -66,9 +69,12 @@ function MyProfile() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me/posts?token=${token}`)
+            axios.get(`http://127.0.0.1:3000/users/me`, {
+                headers: {Authorization: `Bearer ${token}`}
+            })
                 .then((response) => {
-                    setPosts(response.data.posts);
+                    console.log(response.data)
+                    setPosts(response.data.user.user_posts);
                 })
                 .catch((error) => {
                     console.error("Error fetching posts:", error);
@@ -79,9 +85,12 @@ function MyProfile() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me?token=${token}`)
+            axios.get(`http://127.0.0.1:3000/users/me`, {
+                headers: {Authorization: `Bearer ${token}`}
+            })
                 .then((response) => {
                     setUser(response.data.user);
+                    setPosts(response.data.user.user_posts);
                 })
                 .catch((error) => {
                     console.error("Error fetching user data:", error);
@@ -89,18 +98,26 @@ function MyProfile() {
         }
     }, []);
 
-    const deletePost = (post_id: number) => {
+    const deletePost = (id: number) => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.delete(`http://127.0.0.1:3000/users/me/posts/${post_id}?token=${token}`)
-                .then(() => {
-                    setPosts(prevPosts => prevPosts.filter(post => post.post_id !== post_id));
+            const postToDelete = posts.find(post => post.post_id === id);
+            if (postToDelete) {
+                axios.delete(`http://127.0.0.1:3000/posts/${postToDelete.id}`, { // postToDelete.id を使用する
+                    headers: {Authorization: `Bearer ${token}`},
                 })
-                .catch((error) => {
-                    console.error("Error deleting post:", error);
-                });
+                    .then(() => {
+                        setPosts(prevPosts => prevPosts.filter(post => post.post_id !== id));
+                    })
+                    .catch((error) => {
+                        console.error("Error deleting post:", error);
+                    });
+            } else {
+                console.warn("Post with id", id, "not found");
+            }
         }
     };
+
 
     return (
         <div className={styles.myprofile}>

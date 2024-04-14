@@ -9,9 +9,10 @@ function AddpostPage() {
 
     const upload = (formData: FormData) => {
         const token = localStorage.getItem('token');
-        axios.post(`http://127.0.0.1:3000/users/:user_id/posts?token=${token}`, formData, {
+        axios.post(`http://127.0.0.1:3000/users/:user_id/posts`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
+                'authorization': `Bearer ${token}`,
             },
         })
             .then((response) => {
