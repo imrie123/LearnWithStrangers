@@ -5,9 +5,11 @@ import styles from '../styles/FindpostPage.module.scss'
 
 function FindpostPage() {
   return (
-    <div className={styles.findpost}>
+    <div className={styles.findpostPage}>
       <Sidebar/>
+        <div className={styles.findpost}>
       <Findpost/>
+    </div>
     </div>
   )
 }

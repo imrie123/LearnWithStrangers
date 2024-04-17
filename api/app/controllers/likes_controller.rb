@@ -1,5 +1,5 @@
 class LikesController < ApplicationController
-  before_action :verify_token, only: [:create, :destroy, :toggle_like, :index, :liked_posts]
+  before_action :verify_token
   before_action :set_post, only: [:create, :destroy, :toggle_like]
 
   def create

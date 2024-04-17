@@ -1,0 +1,21 @@
+.findpostPage {
+  display: flex;
+
+  .findpost {
+    width: 80%;
+    margin: 0 auto;
+    //align-items: center;
+
+    .posts {
+      display: flex;
+      flex-direction: column;
+      //justify-content: center;
+
+
+      .user_posts {
+        width: 100%;
+      }
+
+    }
+  }
+}
