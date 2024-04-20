@@ -4,7 +4,6 @@ json.user do
   json.email @user.email
   json.birthday @user.birthday
   json.custom_id @user.custom_id
-  json.image @user.image
   json.spoken_language @user.spoken_language
   json.learning_language @user.learning_language
   json.residence @user.residence
@@ -14,6 +13,7 @@ json.user do
   json.avatar_url url_for(@user.avatar) if @user.avatar.attached?
   json.followed_by_current_user @current_user.followed_by?(@user) if @user.present?
 
+  # user_posts に関する情報
   json.user_posts @user_posts do |post|
     json.id post.id
     json.user_id post.user_id
@@ -22,10 +22,12 @@ json.user do
     json.image_url post.image_url
     json.created_at post.created_at
     json.updated_at post.updated_at
-    json.likes_count post.likes.count
+    json.likes_count post.likes_count
     json.liked_by_current_user post.liked_by?(@current_user) if @current_user.present?
+    json.comments post.comments
   end
 
+  # following_user_posts に関する情報
   json.following_user_posts @following_user_posts do |post|
     json.id post.id
     json.user_id post.user_id
@@ -33,8 +35,9 @@ json.user do
     json.image_url post.image_url
     json.created_at post.created_at
     json.updated_at post.updated_at
-    json.likes_count post.likes.count
+    json.likes_count post.likes_count
     json.liked_by_current_user post.liked_by?(@current_user) if @current_user.present?
     json.custom_id post.user.custom_id
+    json.comments post.comments
   end
 end

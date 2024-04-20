@@ -22,6 +22,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import styles from '../styles/Myprofile.module.scss';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddpostButton from './AddpostButton';
+import AddCommentButton from './AddCommentButton';
+
 
 interface Post {
     id: number;
@@ -34,6 +36,8 @@ interface Post {
     likes_count: number;
     liked_by_current_user: boolean;
     avatar_url: string;
+    comments: [];
+
 
 }
 
@@ -49,6 +53,7 @@ function MyProfile() {
     });
     const [posts, setPosts] = useState<Post[]>([]);
     const [likedPosts, setLikedPosts] = useState<Post[]>([]);
+
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -103,7 +108,7 @@ function MyProfile() {
         if (token) {
             const postToDelete = posts.find(post => post.post_id === id);
             if (postToDelete) {
-                axios.delete(`http://127.0.0.1:3000/posts/${postToDelete.id}`, { // postToDelete.id を使用する
+                axios.delete(`http://127.0.0.1:3000/posts/${postToDelete.id}`, {
                     headers: {Authorization: `Bearer ${token}`},
                 })
                     .then(() => {
@@ -195,9 +200,13 @@ function MyProfile() {
                                                     <FavoriteIcon/>
                                                     {post.likes_count}
                                                 </Button>
-                                                <Button variant='ghost' leftIcon={<BiChat/>}>
-                                                    コメント
-                                                </Button>
+                                                <div><AddCommentButton post_id={post.id}/></div>
+                                                <div>
+                                                    {post.comments.map((comment: any, index: number) => (
+                                                        <p key={index}>{comment.content}</p>
+                                                    ))}
+                                                </div>
+
                                                 <Button variant='ghost' leftIcon={<BiShare/>}>
                                                     シェア
                                                 </Button>
@@ -235,7 +244,7 @@ function MyProfile() {
 
                                                 <Button
                                                     variant='ghost'
-                                                    colorScheme={post.liked_by_current_user ? "red" : "gray"} // レスポンスに基づいて色を設定
+                                                    colorScheme={post.liked_by_current_user ? "red" : "gray"}
 
                                                 >
                                                     <FavoriteIcon/>
@@ -244,6 +253,7 @@ function MyProfile() {
                                                 <Button variant='ghost' leftIcon={<BiChat/>}>
                                                     コメント
                                                 </Button>
+
                                                 <Button variant='ghost' leftIcon={<BiShare/>}>
                                                     シェア
                                                 </Button>

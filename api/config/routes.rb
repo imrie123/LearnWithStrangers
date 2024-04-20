@@ -1,12 +1,15 @@
 Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # いいねに関するルート
   resources :likes, only: [] do
     get 'liked_posts', to: 'likes#liked_posts', on: :collection
   end
-
-  resources :posts, only: [:create, :index, :update, :destroy]
-
+  # 投稿に関するルート
+  resources :posts, only: [:create, :index, :update, :destroy] do
+    resources :comments, only: [:create, :destroy]
+  end
+  # ユーザーに関するルート
   resources :users, only: [:create, :index] do
     collection do
       post "sign_in"
@@ -18,7 +21,7 @@ Rails.application.routes.draw do
     end
 
   end
-
+  # ユーザーごとのルート
   scope 'users/:custom_id' do
     get '/', to: 'users#show_by_custom_id', as: 'user_by_custom_id'
     get '/posts', to: 'posts#other_user_posts', as: 'other_user_posts'
@@ -29,7 +32,7 @@ Rails.application.routes.draw do
     resources :room, only: [:create, :show] do
       resources :message, only: [:create, :index]
     end
-
+    # ユーザーの投稿に関するルート
     resources :posts, only: [] do
       resources :likes, only: [:create, :destroy], controller: 'likes' do
         post :custom_likes, on: :collection
@@ -39,11 +42,13 @@ Rails.application.routes.draw do
         get :index, on: :collection
         get :following_user_posts, on: :collection
       end
-
+      # フォロー中のユーザーに関するルート
       get 'show_likes', to: 'posts#show_likes', on: :member
       post 'toggle_like', to: 'likes#toggle_like'
     end
   end
+  # フォロー中のユーザーの投稿に関するルート
   get '/following_user_posts', to: 'posts#following_user_posts', as: 'following_user_posts'
+  # 特定の投稿のいいねを表示するルート
   get '/posts/:id/show_likes', to: 'posts#show_likes', as: 'show_post_likes'
 end

@@ -3,8 +3,9 @@ import axios from 'axios';
 import {useParams, useNavigate} from 'react-router-dom';
 import styles from '../styles/Myprofile.module.scss';
 import {Card, CardBody, CardFooter, Flex, Text, Button, Image, Avatar} from '@chakra-ui/react';
-import {BiChat, BiShare} from 'react-icons/bi';
+import { BiShare} from 'react-icons/bi';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import AddCommentButton from './AddCommentButton';
 
 
 interface Post {
@@ -17,6 +18,9 @@ interface Post {
     likes_count: number;
     liked_by_current_user: boolean;
     liked_by_current_user_id: number;
+    comments: string[];
+    contents: string[];
+
 
 }
 
@@ -39,7 +43,7 @@ const OtherUserProfile = () => {
     const {custom_id} = useParams<{ custom_id: string }>();
     const navigate = useNavigate();
     const [likeData, setLikeData] = useState<{ post_id?: number | null } | null>(null);
-
+    const [comment, setComment] = useState('');
 
     const handleStartChat = () => {
         const token = localStorage.getItem('token');
@@ -155,19 +159,24 @@ const OtherUserProfile = () => {
                 setPosts(response.data.user.posts);
                 setId(response.data.user.posts[0].id);
                 console.log(response.data.user);
+                setComment(response.data.posts.comments)
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
     }, [custom_id]);
 
+    const handleAddComment = () => {
+
+    }
 
     return (
         <div className={styles.myprofile}>
             <div className={styles.component}>
                 <div className={styles.top}>
                     <div className={styles.introduce}>
-                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`} alt="avatar"/>
+                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`}
+                             alt="avatar"/>
                         <div className={styles.info}>
                             <div className={styles.follow}>
                                 <p>フォロー:100</p>
@@ -212,8 +221,13 @@ const OtherUserProfile = () => {
                                                             {postLikes[post.post_id] ?? post.likes_count}
                                                         </Button>
 
-                                                        <Button variant='ghost'
-                                                                leftIcon={<BiChat/>}>コメント</Button>
+                                                        <div><AddCommentButton post_id={post.id}/></div>
+                                                        <div>
+                                                            {post.comments.map((comment: any, index: number) => (
+                                                                <p key={index}>{comment.content}</p>
+                                                            ))}
+                                                        </div>
+
                                                         <Button variant='ghost'
                                                                 leftIcon={<BiShare/>}>シェア</Button>
                                                     </CardFooter>
