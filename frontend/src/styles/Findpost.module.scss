@@ -1,0 +1,49 @@
+.container {
+  margin: 0 auto;
+
+  .posts {
+    display: flex;
+
+    .date {
+      font-size: 15px;
+      color: gray;
+    }
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .comment_button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 0;
+      margin: 0;
+      -webkit-justify-content: unset;
+      font-weight: bold;
+    }
+
+    .button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 0;
+
+    }
+  }
+
+  .comment_component {
+    overflow-y: auto;
+    height: 200px;
+
+    .comment_avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+  }
+
+}

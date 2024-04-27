@@ -38,7 +38,9 @@ function Sidebar() {
         const token = localStorage.getItem('token');
 
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me?token=${token}`)
+            axios.get(`http://127.0.0.1:3000/users/me`,{
+                headers: {Authorization: `Bearer ${token}`}
+            })
                 .then((response) => {
                     setUser(response.data.user);
                     console.log(response.data.user);
@@ -56,7 +58,7 @@ function Sidebar() {
         {name: "プロフィール", path: `/`, icon: <Icon as={MdQuestionAnswer}/>},
         {name: "会話相手を探す", path: "/findchat"},
         {name: "グループチャットに参加する", path: "/findgroup"},
-        {name: "みんなの投稿を見る", path: "/findpost"}
+        {name: "フォローしているユーザーの投稿", path: "/findpost"}
     ];
     return (
         <div className={Styles.sidebar}>

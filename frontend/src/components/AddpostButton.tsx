@@ -23,8 +23,9 @@ function InitialFocus() {
 
     const upload = (formData: FormData) => {
         const token = localStorage.getItem('token');
-        axios.post(`http://127.0.0.1:3000/users/:user_id/posts?token=${token}`, formData, {
+        axios.post(`http://127.0.0.1:3000/posts`, formData, {
             headers: {
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
             },
         })
@@ -51,7 +52,6 @@ function InitialFocus() {
     return (
         <>
             <Button onClick={onOpen}>投稿する</Button>
-
             <Modal
                 initialFocusRef={initialRef}
                 finalFocusRef={finalRef}

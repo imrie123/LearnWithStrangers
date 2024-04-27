@@ -3,9 +3,11 @@ import axios from 'axios';
 import {useParams, useNavigate} from 'react-router-dom';
 import styles from '../styles/Myprofile.module.scss';
 import {Card, CardBody, CardFooter, Flex, Text, Button, Image, Avatar} from '@chakra-ui/react';
-import {BiChat, BiShare} from 'react-icons/bi';
+import {BiShare} from 'react-icons/bi';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-
+import AddCommentButton from './AddCommentButton';
+import style from '../styles/OtherUserProfile.module.scss';
+import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
 
 interface Post {
     id: number;
@@ -17,6 +19,10 @@ interface Post {
     likes_count: number;
     liked_by_current_user: boolean;
     liked_by_current_user_id: number;
+    comments: string[];
+    contents: string[];
+
+
 }
 
 const OtherUserProfile = () => {
@@ -37,11 +43,14 @@ const OtherUserProfile = () => {
     const [id, setId] = useState<number | null>();
     const {custom_id} = useParams<{ custom_id: string }>();
     const navigate = useNavigate();
-
+    const [likeData, setLikeData] = useState<{ post_id?: number | null } | null>(null);
+    const [comment, setComment] = useState('');
 
     const handleStartChat = () => {
         const token = localStorage.getItem('token');
-        axios.post(`http://127.0.0.1:3000/users/${custom_id}/room?token=${token}`)
+        axios.post(`http://127.0.0.1:3000/users/${custom_id}/room`, {}, {
+            headers: {Authorization: `Bearer ${token}`}
+        })
             .then((response) => {
                 console.log(response.data);
                 navigate(`/${custom_id}/${response.data.id}/${response.data.name}`);
@@ -54,7 +63,11 @@ const OtherUserProfile = () => {
     const handleFollow = () => {
         const token = localStorage.getItem('token');
 
-        axios.post(`http://127.0.0.1:3000/users/${custom_id}/relationships?token=${token}`)
+        axios.post(
+            `http://127.0.0.1:3000/users/${custom_id}/relationships`,
+            {},
+            {headers: {Authorization: `Bearer ${token}`}}
+        )
             .then((response) => {
                 console.log(response.data);
                 setUser({...user, followed_by_current_user: true});
@@ -63,10 +76,13 @@ const OtherUserProfile = () => {
                 console.error('Error:', error);
             });
     }
+
     const handleUnFollow = () => {
         const token = localStorage.getItem('token');
 
-        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/relationships?token=${token}`)
+        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/relationships`, {
+            headers: {Authorization: `Bearer ${token}`},
+        })
             .then((response) => {
                 console.log(response.data);
                 setUser({...user, followed_by_current_user: false});
@@ -82,12 +98,14 @@ const OtherUserProfile = () => {
             return;
         }
 
-        axios.post(`http://127.0.0.1:3000/users/${custom_id}/posts/${post_id}/likes?token=${token}`)
+        axios.post(`http://127.0.0.1:3000/users/${custom_id}/posts/${id}/likes`, {}, {
+            headers: {Authorization: `Bearer ${token}`},
+        })
             .then((response) => {
                 const likedPostIndex = posts.findIndex((post: Post) => post.post_id === post_id);
                 posts[likedPostIndex].liked_by_current_user = true;
                 setPosts(() => posts);
-                setId(response.data.id);
+                setLikeData(response.data);
                 setPostLikes(prevPostLikes => ({
                     ...prevPostLikes,
                     [post_id]: (prevPostLikes[post_id] || 0) + 1
@@ -98,15 +116,26 @@ const OtherUserProfile = () => {
                 console.error('Error:', error);
             });
     };
-
     const handleUnlike = (post_id: number) => {
         const token = localStorage.getItem('token');
         if (!token) {
             console.error('Token is missing');
             return;
         }
+        if (!likeData || !likeData.post_id) {
+            console.error('likeData or post_id is missing');
+            return;
+        }
 
-        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/posts/${post_id}/likes/${id}?token=${token}`)
+        const post = posts.find(post => post.post_id === post_id);
+        if (!post) {
+            console.error('Post not found');
+            return;
+        }
+
+        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/posts/${likeData.post_id}/likes/${id}`, {
+            headers: {Authorization: `Bearer ${token}`},
+        })
             .then(() => {
                 const unlikedPostIndex = posts.findIndex((post: Post) => post.post_id === post_id);
                 posts[unlikedPostIndex].liked_by_current_user = false;
@@ -121,40 +150,39 @@ const OtherUserProfile = () => {
             });
     };
 
-
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get(`http://127.0.0.1:3000/users/${custom_id}?token=${token}`)
+        axios.get(`http://127.0.0.1:3000/users/${custom_id}`, {
+            headers: {Authorization: `Bearer ${token}`},
+        })
             .then((response) => {
                 setUser(response.data.user);
+                setPosts(response.data.user.posts);
+                setId(response.data.user.posts[0].id);
                 console.log(response.data.user);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-
-        axios.get(`http://127.0.0.1:3000/users/${custom_id}/posts?token=${token}`)
-            .then((response) => {
-                setPosts(response.data.posts);
-                console.log(response.data.posts);
+                setComment(response.data.posts.comments)
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
     }, [custom_id]);
 
+    const handleAddComment = () => {
+
+    }
 
     return (
         <div className={styles.myprofile}>
             <div className={styles.component}>
                 <div className={styles.top}>
                     <div className={styles.introduce}>
-                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`} alt="avatar"/>
+                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`}
+                             alt="avatar"/>
                         <div className={styles.info}>
                             <div className={styles.follow}>
                                 <p>フォロー:100</p>
                                 <p>フォロワー:100</p>
-                                <p>投稿:20</p>
+                                <p>投稿:100</p>
                                 <Button onClick={handleStartChat}>メッセージを送信する</Button>
                             </div>
                             <div className={styles.user}>
@@ -170,39 +198,79 @@ const OtherUserProfile = () => {
                             </div>
 
                             <div className={styles.user_posts}>
-                                {posts.map(post => (
-                                    <Card key={post.post_id} maxW='4xl' mb={4}>
-                                        <Flex direction="column" align="center" justify="center" p={4}>
-                                            <Flex align="flex-start" mb={4}>
-                                                <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4}/>
-                                                <Text fontWeight='bold'>{user.name}</Text>
-                                            </Flex>
-                                            <Image objectFit='cover' src={post.image_url} alt='Post Image'/>
-                                            <CardBody>
-                                                <Text>{post.content}</Text>
-                                            </CardBody>
-                                            <CardFooter display='flex' justifyContent='space-between' p={4}>
-                                                <Button
-                                                    variant='ghost'
-                                                    colorScheme={post.liked_by_current_user ? "red" : "gray"} // レスポンスに基づいて色を設定
-                                                    onClick={() => post.liked_by_current_user ? handleUnlike(post.post_id) : handleLike(post.post_id)} // レスポンスに基づいて処理を実行
-                                                >
-                                                    <FavoriteIcon/>
-                                                    {postLikes[post.post_id] ?? post.likes_count}
-                                                </Button>
+                                {posts.length > 0 && (
+                                    <div className={styles.user_posts}>
+                                        {posts.map(post => (
+                                            <Card key={post.id} maxW='4xl' mb={4} padding={15}>
+                                                <Flex direction="column" justify="center" p={10}>
+                                                    <Flex align="flex-start" mb={5}>
+                                                        <Avatar src={`http://localhost:3000${user.avatar_url}`}
+                                                                mr={4} className={style.avatar}/>
+                                                        <div>
+                                                            <Text fontWeight='bold'>{user.name}</Text>
+                                                            @{user.custom_id}
+                                                        </div>
 
-                                                <Button variant='ghost' leftIcon={<BiChat/>}>コメント</Button>
-                                                <Button variant='ghost' leftIcon={<BiShare/>}>シェア</Button>
-                                            </CardFooter>
-                                        </Flex>
-                                    </Card>
-                                ))}
+                                                    </Flex>
+                                                    <div className={style.post_image_comments}>
+                                                        <Image objectFit='cover' src={post.image_url} alt='Post Image'/>
+
+                                                    </div>
+
+                                                    <CardBody>
+                                                        <Text>{post.content}</Text>
+                                                    </CardBody>
+                                                    <div className={style.footer}>
+                                                        <Button
+                                                            variant='ghost'
+                                                            colorScheme={post.liked_by_current_user ? "red" : "gray"} // レスポンスに基づいて色を設定
+                                                            onClick={() => post.liked_by_current_user ? handleUnlike(post.post_id) : handleLike(post.post_id)} // レスポンスに基づいて処理を実行
+                                                        >
+                                                            <FavoriteIcon/>
+                                                            {postLikes[post.post_id] ?? post.likes_count}
+                                                        </Button>
+
+                                                        <div className={style.comment_button}><QuestionAnswerOutlinedIcon/>コメント{post.comments.length}件</div>
+
+                                                        <Button variant='ghost'
+                                                                leftIcon={<BiShare/>}>シェア</Button>
+                                                    </div>
+                                                    <CardFooter p={3} className={style.footer_component}>
+
+                                                        <div className={style.comment_component}>
+                                                            {post.comments.map((comment: any, index: number) => (
+                                                                <div key={index} className={style.comment}>
+                                                                    <div className={style.comment_left}>
+                                                                        <img className={style.avatar}
+                                                                             src={`http://localhost:3000${comment.avatar}`}
+                                                                             alt="avatar"/>
+                                                                    </div>
+                                                                    <div className={style.comment_left}>
+                                                                        <p>{comment.user_name}</p>
+                                                                        <p key={index}>{comment.content}</p>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            ))}
+                                                        </div>
+
+                                                    </CardFooter>
+
+
+                                                </Flex>
+                                                <AddCommentButton post_id={post.id}/>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     );
 }
 

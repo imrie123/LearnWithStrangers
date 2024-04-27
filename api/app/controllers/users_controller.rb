@@ -2,7 +2,6 @@ class UsersController < ApplicationController
 
   def create
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
-
     if @response["idToken"]
       if User.exists?(custom_id: user_params[:custom_id])
         @error = "Custom ID already exists"
@@ -19,7 +18,6 @@ class UsersController < ApplicationController
 
   def sign_in
     @response = FirebaseService::SignIn.new(user_params[:email], user_params[:password]).call
-
     if @response["idToken"]
       @user = User.find_by(email: user_params[:email])
       render "sign_in", formats: :json, handlers: :jbuilder, status: :ok
@@ -58,12 +56,11 @@ class UsersController < ApplicationController
         @entry = Entry.new
       end
     end
-
     render json: @room
   end
 
   def show_by_custom_id
-    token = params[:token]
+    token = request.headers['Authorization']&.split(' ')&.last
     if token.present?
       decoded_token = verify_firebase_token(token)
       email = decoded_token[0]["email"]
@@ -71,6 +68,7 @@ class UsersController < ApplicationController
     end
     @user = User.find_by(custom_id: params[:custom_id])
     if @user
+      @posts = @user.posts
       render "show_by_custom_id", formats: :json, handlers: :jbuilder, status: :ok
     else
       render json: { error: 'User not found' }, status: :not_found
@@ -78,7 +76,7 @@ class UsersController < ApplicationController
   end
 
   def me
-    token = params[:token]
+    token = request.headers['Authorization']&.split(' ')&.last
     if token.present?
       decoded_token = verify_firebase_token(token)
       email = decoded_token[0]["email"]
@@ -88,6 +86,11 @@ class UsersController < ApplicationController
           @user = User.find_by(custom_id: params[:custom_id])
         end
         if @user.present?
+          @current_user = User.find_by(email: email)
+          @user_posts = @user.posts
+          @liked_posts = @user.liked_posts
+          @following_user_posts = @user.following_user_posts
+          @all_posts = @user_posts + @following_user_posts
           render "me", formats: :json, handlers: :jbuilder, status: :ok
         else
           @error = "User not found"
@@ -101,7 +104,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    token = params[:token]
+    token = request.headers['Authorization']&.split(' ')&.last
     if token.present?
       decoded_token = verify_firebase_token(token)
       email = decoded_token[0]["email"]
@@ -124,7 +127,7 @@ class UsersController < ApplicationController
   end
 
   def avatar
-    token = params[:token]
+    token = request.headers['Authorization']&.split(' ')&.last
 
     if token.present?
       decoded_token = verify_firebase_token(token)
@@ -150,12 +153,11 @@ class UsersController < ApplicationController
   end
 
   def verify_token
-    token = params[:token]
+    token = request.headers['Authorization']&.split(' ')&.last
     if token.present?
       decoded_token = verify_firebase_token(token)
       email = decoded_token[0]["email"]
       @current_user = User.find_by(email: email)
-
       raise "User not found" unless @current_user
     end
   end

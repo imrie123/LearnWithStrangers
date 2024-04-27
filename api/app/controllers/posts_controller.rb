@@ -3,22 +3,25 @@ class PostsController < ApplicationController
 
   def create
     @post = @current_user.posts.build(post_params)
-
     if @post.save
       @post.image.attach(post_params[:image]) if post_params[:image].present?
       avatar_url = @current_user.avatar.attached? ? url_for(@current_user.avatar) : nil
       @avatar_url = avatar_url
-
-      render "create", formats: :json, handlers: :jbuilder, status: :ok
+      render json: {
+        id: @post.user.id,
+        post_id: @post.id,
+        content: @post.content,
+        image: @post.image,
+        created_at: @post.created_at,
+        image_url: @post.image_url
+      }, status: :ok
     else
       render json: @post.errors, status: :unprocessable_entity
     end
   end
 
   def show_likes
-
     @post = Post.find_by(params[:id])
-
     if @post.present?
       @likes_count = @post.likes.count
       render "show_likes", formats: :json, handler: :jbuilder, status: :ok
@@ -28,7 +31,6 @@ class PostsController < ApplicationController
   def index
     @posts = @current_user.posts
     render "index", formats: :json, handlers: :jbuilder, status: :ok
-
   end
 
   def update
@@ -45,9 +47,7 @@ class PostsController < ApplicationController
   end
 
   def destroy
-
     @post = @current_user.posts.find_by(id: params[:id])
-
     if @post
       @post.destroy
       render json: { message: "Post deleted" }, status: :ok
@@ -66,10 +66,12 @@ class PostsController < ApplicationController
     end
   end
 
+
+
   private
 
   def verify_token
-    token = params[:token]
+    token = request.headers['Authorization']&.split(' ')&.last
 
     if token.present?
       decoded_token = verify_firebase_token(token)

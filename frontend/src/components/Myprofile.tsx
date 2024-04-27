@@ -22,6 +22,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import styles from '../styles/Myprofile.module.scss';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddpostButton from './AddpostButton';
+import AddCommentButton from './AddCommentButton';
+
 
 interface Post {
     id: number;
@@ -34,6 +36,10 @@ interface Post {
     likes_count: number;
     liked_by_current_user: boolean;
     avatar_url: string;
+    comments: [];
+    custom_id: string;
+
+
 }
 
 function MyProfile() {
@@ -49,26 +55,20 @@ function MyProfile() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [likedPosts, setLikedPosts] = useState<Post[]>([]);
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            axios.get(`http://127.0.0.1:3000/likes/liked_posts?token=${token}`)
-                .then((response) => {
-                    console.log(response.data);
-                    setLikedPosts(response.data);
-                })
-                .catch((error) => {
-                    console.error("Error fetching liked posts:", error);
-                });
-        }
-    }, []);
+
+
+
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me/posts?token=${token}`)
+            axios.get(`http://127.0.0.1:3000/users/me`, {
+                headers: {Authorization: `Bearer ${token}`}
+            })
                 .then((response) => {
-                    setPosts(response.data.posts);
+                    console.log(response.data.user.liked_posts)
+                    setPosts(response.data.user.user_posts);
+                    setLikedPosts(response.data.user.liked_posts);
                 })
                 .catch((error) => {
                     console.error("Error fetching posts:", error);
@@ -79,9 +79,12 @@ function MyProfile() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me?token=${token}`)
+            axios.get(`http://127.0.0.1:3000/users/me`, {
+                headers: {Authorization: `Bearer ${token}`}
+            })
                 .then((response) => {
                     setUser(response.data.user);
+                    setPosts(response.data.user.user_posts);
                 })
                 .catch((error) => {
                     console.error("Error fetching user data:", error);
@@ -89,18 +92,27 @@ function MyProfile() {
         }
     }, []);
 
-    const deletePost = (post_id: number) => {
+    const deletePost = (id: number) => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.delete(`http://127.0.0.1:3000/users/me/posts/${post_id}?token=${token}`)
-                .then(() => {
-                    setPosts(prevPosts => prevPosts.filter(post => post.post_id !== post_id));
+            const postToDelete = posts.find(post => post.post_id === id);
+            if (postToDelete) {
+                axios.delete(`http://127.0.0.1:3000/posts/${postToDelete.id}`, {
+                    headers: {Authorization: `Bearer ${token}`},
                 })
-                .catch((error) => {
-                    console.error("Error deleting post:", error);
-                });
+                    .then(() => {
+                        setPosts(prevPosts => prevPosts.filter(post => post.post_id !== id));
+                    })
+                    .catch((error) => {
+                        console.error("Error deleting post:", error);
+                    });
+            } else {
+                console.warn("Post with id", id, "not found");
+            }
         }
     };
+
+
 
     return (
         <div className={styles.myprofile}>
@@ -143,13 +155,17 @@ function MyProfile() {
                         <TabPanel>
                             <div className={styles.user_posts}>
                                 {posts.map(post => (
-                                    <Card key={post.post_id} maxW='4xl' mb={4}>
-                                        <Flex direction="column" align="center" justify="center" p={4}>
+                                    <Card key={post.id} maxW='4xl' mb={4} padding={15}>
+                                        <Flex direction="column" justify="center" p={10}>
                                             <Flex align="flex-start" mb={4}>
                                                 <div className={styles.post_top}>
                                                     <div>
                                                         <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4}/>
-                                                        <Text fontWeight='bold' fontSize='xl'>{user.name}</Text>
+                                                        <div>
+                                                            <Text fontWeight='bold'>{user.name}</Text>
+                                                            @{user.custom_id}
+                                                        </div>
+
                                                     </div>
                                                     <div>
 
@@ -163,31 +179,56 @@ function MyProfile() {
                                                 src={post.image_url}
                                                 alt='Post Image'
                                             />
-                                            <CardBody>
+
+                                            <p className={styles.date}>
+                                                {new Date(post.created_at).toLocaleDateString()}
+                                            </p>
+                                            <CardBody className={styles.content_date}>
                                                 <Text>{post.content}</Text>
                                             </CardBody>
                                             <CardFooter
                                                 display='flex'
                                                 justifyContent='space-between'
                                                 p={4}
-                                            >
-                                                <Link to={`/editpost/${post.post_id}`}>
-                                                    <EditIcon/>
-                                                </Link>
+                                                className={styles.button}>
+
                                                 <Button variant='ghost'>
                                                     <FavoriteIcon/>
                                                     {post.likes_count}
                                                 </Button>
-                                                <Button variant='ghost' leftIcon={<BiChat/>}>
-                                                    コメント
-                                                </Button>
+                                                <div className={styles.comment_button}>コメント{post.comments.length}件</div>
+
+
                                                 <Button variant='ghost' leftIcon={<BiShare/>}>
                                                     シェア
                                                 </Button>
+                                                <Link to={`/editpost/${post.post_id}`}>
+                                                    <EditIcon/>
+                                                </Link>
                                                 <Button onClick={() => deletePost(post.post_id)}>
                                                     削除
                                                 </Button>
+
                                             </CardFooter>
+
+                                            <div className={styles.comment_component}>
+                                                {post.comments.map((comment: any, index: number) => (
+                                                    <div key={index} className={styles.comment}>
+                                                        <div className={styles.comment_left}>
+                                                            <img className={styles.comment_avatar}
+                                                                 src={`http://localhost:3000${comment.avatar}`}
+                                                                 alt="avatar"/>
+                                                        </div>
+                                                        <div className={styles.comment_left}>
+                                                            <p>{comment.user_name}</p>
+                                                            <p key={index}>{comment.content}</p>
+                                                        </div>
+
+                                                    </div>
+
+                                                ))}
+                                            </div>
+                                            <AddCommentButton post_id={post.id}/>
                                         </Flex>
                                     </Card>
                                 ))}
@@ -196,17 +237,32 @@ function MyProfile() {
                         <TabPanel>
                             <div className={styles.user_posts}>
                                 {likedPosts.map(post => (
-                                    <Card key={post.id} maxW='4xl' mb={4}>
-                                        <Flex direction="column" align="center" justify="center" p={4}>
+                                    <Card key={post.id} maxW='4xl' mb={4} padding={15}>
+                                        <Flex direction="column" justify="center" p={4}>
                                             <Flex align="flex-start" mb={4}>
-                                                <Avatar src={`http://localhost:3000${post.avatar_url}`} mr={4}/>
-                                                <Text fontWeight='bold' fontSize='xl'>{post.name}</Text>
+                                                <div className={styles.post_top}>
+                                                    <div>
+                                                        <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4}/>
+                                                        <div>
+                                                            <Text fontWeight='bold'>{user.name}</Text>
+                                                        </div>
+
+                                                    </div>
+                                                    <div>
+
+                                                    </div>
+
+                                                </div>
                                             </Flex>
+                                            @{post.custom_id}
                                             <Image
                                                 objectFit='cover'
                                                 src={post.image_url}
                                                 alt='Post Image'
                                             />
+                                            <p className={styles.date}>
+                                                {new Date(post.created_at).toLocaleDateString()}
+                                            </p>
                                             <CardBody>
                                                 <Text>{post.content}</Text>
                                             </CardBody>
@@ -214,28 +270,44 @@ function MyProfile() {
                                                 display='flex'
                                                 justifyContent='space-between'
                                                 p={4}
+                                                className={styles.button}
                                             >
-
                                                 <Button
                                                     variant='ghost'
-                                                    colorScheme={post.liked_by_current_user ? "red" : "gray"} // レスポンスに基づいて色を設定
-
+                                                    colorScheme={post.liked_by_current_user ? "red" : "gray"}
                                                 >
                                                     <FavoriteIcon/>
                                                     {post.likes_count}
                                                 </Button>
                                                 <Button variant='ghost' leftIcon={<BiChat/>}>
-                                                    コメント
+                                                    コメント {post.comments.length}件
                                                 </Button>
                                                 <Button variant='ghost' leftIcon={<BiShare/>}>
                                                     シェア
                                                 </Button>
                                             </CardFooter>
+                                            <div className={styles.comment_component}>
+                                                {post.comments.map((comment: any, index: number) => (
+                                                    <div key={index} className={styles.comment}>
+                                                        <div className={styles.comment_left}>
+                                                            <img className={styles.comment_avatar}
+                                                                 src={`http://localhost:3000${comment.avatar}`}
+                                                                 alt="avatar"/>
+                                                        </div>
+                                                        <div className={styles.comment_left}>
+                                                            <p>{comment.user_name}</p>
+                                                            <p key={index}>{comment.content}</p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <AddCommentButton post_id={post.id}/>
                                         </Flex>
                                     </Card>
                                 ))}
                             </div>
                         </TabPanel>
+
                     </TabPanels>
                 </Tabs>
 

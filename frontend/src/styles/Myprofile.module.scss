@@ -1,8 +1,9 @@
 .myprofile {
-.post_top{
-  display: flex;
-  justify-content: space-between;
-}
+  .post_top {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .avatar {
     width: 200px;
     height: 200px;
@@ -34,6 +35,47 @@
     align-items: flex-end;
     padding-bottom: 20px;
 
+
+  }
+
+  .comment_component {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 200px;
+
+
+  }
+
+  .comment_avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+
+  .button {
+    display: flex;
+    align-items: center;
+    padding-left: 0;
+    margin: 0;
+    -webkit-justify-content: unset;
+
+
+  }
+
+  .comment_button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 0;
+    margin: 0;
+    -webkit-justify-content: unset;
+    font-weight: bold;
+  }
+
+  .date {
+    font-size: 15px;
+    color: gray;
   }
 
 }

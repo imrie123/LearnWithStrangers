@@ -1,0 +1,42 @@
+.post_image_comments {
+  display: flex;
+}
+
+.footer_component{
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* 垂直方向のスクロールを可能にする */
+  max-height: 200px;
+}
+.footer {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  .comment_button{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 0;
+    margin: 0;
+    -webkit-justify-content: unset;
+    font-weight: bold;
+  }
+
+}
+.footer_component{
+
+  .comment{
+    display: flex;
+    overflow-y: auto;
+    width: 200px;
+  }
+
+}
+
+.avatar{
+  width: 30px;
+
+}
+.comment_component{
+
+}

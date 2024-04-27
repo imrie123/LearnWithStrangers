@@ -26,7 +26,7 @@ class RelationshipsController < ApplicationController
   private
 
   def verify_token
-    token = params[:token]
+    token = request.headers["Authorization"]&.split(" ")&.last
     if token.present?
       decoded_token = verify_firebase_token(token)
       email = decoded_token[0]["email"]
