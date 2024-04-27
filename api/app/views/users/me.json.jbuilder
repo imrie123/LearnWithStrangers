@@ -1,43 +1,31 @@
 json.user do
-  json.id @user.id
-  json.name @user.name
-  json.email @user.email
-  json.birthday @user.birthday
-  json.custom_id @user.custom_id
-  json.spoken_language @user.spoken_language
-  json.learning_language @user.learning_language
-  json.residence @user.residence
-  json.introduction @user.introduction
-  json.created_at @user.created_at
-  json.updated_at @user.updated_at
+  json.extract! @user, :id, :name, :email, :birthday, :custom_id, :spoken_language, :learning_language, :residence, :introduction, :created_at, :updated_at
   json.avatar_url url_for(@user.avatar) if @user.avatar.attached?
   json.followed_by_current_user @current_user.followed_by?(@user) if @user.present?
 
-  # user_posts に関する情報
-  json.user_posts @user_posts do |post|
-    json.id post.id
-    json.user_id post.user_id
+  json.liked_posts @liked_posts do |post|
+    json.extract! post, :id, :user_id, :image_url, :content, :created_at, :updated_at, :likes_count
+    json.liked_by_current_user post.liked_by?(@current_user) if @current_user.present?
     json.name post.user.name
-    json.content post.content
-    json.image_url post.image_url
-    json.created_at post.created_at
-    json.updated_at post.updated_at
-    json.likes_count post.likes_count
+    json.custom_id post.user.custom_id
+    json.comments post.comments
+    json.comments_count post.comments.count
+  end
+
+  json.user_posts @user_posts do |post|
+    json.extract! post, :id, :user_id, :image_url, :content, :created_at, :updated_at, :likes_count
     json.liked_by_current_user post.liked_by?(@current_user) if @current_user.present?
     json.comments post.comments
   end
 
-  # following_user_posts に関する情報
   json.following_user_posts @following_user_posts do |post|
-    json.id post.id
-    json.user_id post.user_id
-    json.content post.content
-    json.image_url post.image_url
-    json.created_at post.created_at
-    json.updated_at post.updated_at
-    json.likes_count post.likes_count
+    json.extract! post, :user_id, :id, :content, :created_at, :updated_at, :likes_count
     json.liked_by_current_user post.liked_by?(@current_user) if @current_user.present?
     json.custom_id post.user.custom_id
-    json.comments post.comments
+    json.comments post.comments.map { |comment| { user_name: comment.user.name, content: comment.content, avatar: comment.user.avatar_url } }
   end
 end
+
+
+
+

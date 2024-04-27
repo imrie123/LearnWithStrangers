@@ -8,10 +8,6 @@ import { RootState } from '../redux/store'
 
 function MyprofilePages() {
     const token = useSelector((state: RootState) => state.auth.token);
-    useEffect(() => {
-        console.log("myprof", token);
-    }, []);
-
     return (
         <div className={styles.my_profile}>
             <Sidebar />

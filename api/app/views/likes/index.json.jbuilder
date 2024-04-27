@@ -1,12 +1,8 @@
 json.likes @likes do |like|
   json.id like.id
   json.post do
-    json.id like.post.id
-    json.title like.post.title
-    json.content like.post.content
-    json.image like.post.image
-    json.created_at like.post.created_at
-    json.image_url like.post.image_url
-    json.likes_count like.post.likes_count
+    post = like.post
+    json.extract! post, :id, :title, :content, :image, :created_at, :image_url, :likes_count
+    json.comments post.comments.map { |comment| {user_name: comment.user.name, content: comment.content, avatar: comment.user.avatar_url}}
   end
 end

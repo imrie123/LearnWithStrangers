@@ -3,10 +3,11 @@ import axios from 'axios';
 import {useParams, useNavigate} from 'react-router-dom';
 import styles from '../styles/Myprofile.module.scss';
 import {Card, CardBody, CardFooter, Flex, Text, Button, Image, Avatar} from '@chakra-ui/react';
-import { BiShare} from 'react-icons/bi';
+import {BiShare} from 'react-icons/bi';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddCommentButton from './AddCommentButton';
-
+import style from '../styles/OtherUserProfile.module.scss';
+import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
 
 interface Post {
     id: number;
@@ -200,18 +201,26 @@ const OtherUserProfile = () => {
                                 {posts.length > 0 && (
                                     <div className={styles.user_posts}>
                                         {posts.map(post => (
-                                            <Card key={post.id} maxW='4xl' mb={4}>
-                                                <Flex direction="column" align="center" justify="center" p={4}>
-                                                    <Flex align="flex-start" mb={4}>
+                                            <Card key={post.id} maxW='4xl' mb={4} padding={15}>
+                                                <Flex direction="column" justify="center" p={10}>
+                                                    <Flex align="flex-start" mb={5}>
                                                         <Avatar src={`http://localhost:3000${user.avatar_url}`}
-                                                                mr={4}/>
-                                                        <Text fontWeight='bold'>{user.name}</Text>
+                                                                mr={4} className={style.avatar}/>
+                                                        <div>
+                                                            <Text fontWeight='bold'>{user.name}</Text>
+                                                            @{user.custom_id}
+                                                        </div>
+
                                                     </Flex>
-                                                    <Image objectFit='cover' src={post.image_url} alt='Post Image'/>
+                                                    <div className={style.post_image_comments}>
+                                                        <Image objectFit='cover' src={post.image_url} alt='Post Image'/>
+
+                                                    </div>
+
                                                     <CardBody>
                                                         <Text>{post.content}</Text>
                                                     </CardBody>
-                                                    <CardFooter display='flex' justifyContent='space-between' p={4}>
+                                                    <div className={style.footer}>
                                                         <Button
                                                             variant='ghost'
                                                             colorScheme={post.liked_by_current_user ? "red" : "gray"} // レスポンスに基づいて色を設定
@@ -221,17 +230,36 @@ const OtherUserProfile = () => {
                                                             {postLikes[post.post_id] ?? post.likes_count}
                                                         </Button>
 
-                                                        <div><AddCommentButton post_id={post.id}/></div>
-                                                        <div>
-                                                            {post.comments.map((comment: any, index: number) => (
-                                                                <p key={index}>{comment.content}</p>
-                                                            ))}
-                                                        </div>
+                                                        <div className={style.comment_button}><QuestionAnswerOutlinedIcon/>コメント{post.comments.length}件</div>
 
                                                         <Button variant='ghost'
                                                                 leftIcon={<BiShare/>}>シェア</Button>
+                                                    </div>
+                                                    <CardFooter p={3} className={style.footer_component}>
+
+                                                        <div className={style.comment_component}>
+                                                            {post.comments.map((comment: any, index: number) => (
+                                                                <div key={index} className={style.comment}>
+                                                                    <div className={style.comment_left}>
+                                                                        <img className={style.avatar}
+                                                                             src={`http://localhost:3000${comment.avatar}`}
+                                                                             alt="avatar"/>
+                                                                    </div>
+                                                                    <div className={style.comment_left}>
+                                                                        <p>{comment.user_name}</p>
+                                                                        <p key={index}>{comment.content}</p>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            ))}
+                                                        </div>
+
                                                     </CardFooter>
+
+
                                                 </Flex>
+                                                <AddCommentButton post_id={post.id}/>
                                             </Card>
                                         ))}
                                     </div>

@@ -1,31 +1,15 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useState} from 'react';
 import axios from 'axios';
-import {
-    Input,
-    Button,
-    FormControl,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-    useDisclosure
-} from '@chakra-ui/react';
-import MessageIcon from '@mui/icons-material/Message';
+import {Input, FormControl} from '@chakra-ui/react';
 import styles from '../styles/AddCommentButton.module.scss';
-import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
+
 interface AddCommentButtonProps {
     post_id: number;
-
 }
+
 function AddCommentButton(props: AddCommentButtonProps) {
-    console.log(props);
-    const {isOpen, onOpen, onClose} = useDisclosure();
     const [inputContent, setInputContent] = useState('');
     const initialRef = useRef<HTMLInputElement | null>(null); // initialRefを追加
-    const finalRef = useRef<HTMLInputElement | null>(null); // finalRefを追加
     const {post_id} = props;
     const handleSave = () => {
         const token = localStorage.getItem('token')
@@ -45,37 +29,16 @@ function AddCommentButton(props: AddCommentButtonProps) {
     }
     return (
         <>
-            <div onClick={onOpen} className={styles.Button}>
-                <QuestionAnswerOutlinedIcon/>
-                コメント
+            <div className={styles.comment_input}>
+                <form onSubmit={handleSave}>
+                    <FormControl>
+                        <Input type="text" value={inputContent} onChange={e => setInputContent(e.target.value)}
+                               ref={initialRef}
+                               autoFocus={true}
+                               focusBorderColor="gray.300"/>
+                    </FormControl>
+                </form>
             </div>
-            <Modal
-                initialFocusRef={initialRef}
-                finalFocusRef={finalRef}
-                isOpen={isOpen}
-                onClose={onClose}
-            >
-                <ModalOverlay/>
-                <ModalContent>
-                    <ModalHeader>投稿</ModalHeader>
-                    <ModalCloseButton/>
-                    <ModalBody pb={6}>
-                        <form>
-                            <FormControl>
-
-                                <Input type="text" value={inputContent} onChange={e => setInputContent(e.target.value)}
-                                       ref={initialRef}/>
-                            </FormControl>
-                        </form>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button colorScheme='blue' mr={3}　onClick={handleSave}>
-                            Save
-                        </Button>
-                        <Button onClick={onClose}>Cancel</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
         </>
     )
 }

@@ -1,9 +1,9 @@
 json.user do
   # ユーザー情報
+  json.name @user.name
+  json.custom_id @user.custom_id
   json.email @user.email
   json.birthday @user.birthday
-  json.custom_id @user.custom_id
-  json.image @user.image
   json.spoken_language @user.spoken_language
   json.learning_language @user.learning_language
   json.residence @user.residence
@@ -22,6 +22,6 @@ json.user do
     json.updated_at post.updated_at
     json.likes_count post.likes.count
     json.liked_by_current_user post.liked_by?(@current_user) if @current_user.present?
-    json.comments post.comments
+    json.comments post.comments.map { |comment| { user_name: comment.user.name, content: comment.content, avatar: comment.user.avatar_url } }
   end
 end

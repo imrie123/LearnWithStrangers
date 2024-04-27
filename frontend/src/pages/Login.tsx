@@ -74,7 +74,9 @@ const Login: React.FC = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me?token=${token}`)
+            axios.get(`http://127.0.0.1:3000/users/me`,{
+                headers: {Authorization: `Bearer ${token}`}
+            })
                 .then((response) => {
                     setUser(response.data.user);
                 })
