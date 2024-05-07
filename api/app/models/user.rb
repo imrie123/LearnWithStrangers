@@ -21,8 +21,11 @@ class User < ApplicationRecord
   has_many :followings, through: :relationships, source: :followed
   has_many :followers, through: :reverse_of_relationships, source: :follower
   has_many :comments, dependent: :destroy
+  has_many :group_users, foreign_key: :custom_id
+  has_many :groups, through: :group_users
+  has_many :owned_groups, class_name: "Group", foreign_key: :owner_id
 
-  # フォロー関連
+  # フォロー関連routes
   def follow(user)
     relationships.create(followed_id: user.id)
   end

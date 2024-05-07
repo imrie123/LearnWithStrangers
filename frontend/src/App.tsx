@@ -1,5 +1,8 @@
-import React from "react";
-import "./App.css";
+import React, {useEffect} from "react";
+import {RootState} from "./redux/store";
+import {setToken} from "./redux/authSlice";
+import {useSelector, useDispatch} from "react-redux";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import MyprofilePage from "./pages/MyprofilePage";
 import FindchatPage from "./pages/FindchatPage";
 import FindpostPage from "./pages/FindpostPage";
@@ -10,12 +13,8 @@ import SettingPages from "./pages/SettingPages";
 import AddpostPage from "./pages/AddpostPage";
 import EditpostPage from "./pages/EditpostPage";
 import OtherUserProfilePage from "./pages/OtherUserProfilePage";
-import {useSelector, useDispatch} from "react-redux";
-import {BrowserRouter, Routes, Route} from "react-router-dom";
-import {RootState} from "./redux/store";
-import {useEffect} from "react";
-import {setToken} from "./redux/authSlice";
 import ChatPage from "./pages/ChatPage";
+import GroupChatPage from "./pages/GroupChatPage";
 
 function App() {
     const token = useSelector((state: RootState) => state.auth.token);
@@ -34,11 +33,10 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {token ? (
-                    <Route path="*" element={<AuthenticatedRoutes/>}/>
-                ) : (
+                {token ?
+                    <Route path="*" element={<AuthenticatedRoutes/>}/> :
                     <Route path="*" element={<UnauthenticatedRoutes/>}/>
-                )}
+                }
             </Routes>
         </BrowserRouter>
     );
@@ -57,6 +55,7 @@ function AuthenticatedRoutes() {
             <Route path="/editpost/:post_id" element={<EditpostPage/>}/>
             <Route path="/user/:custom_id" element={<OtherUserProfilePage/>}/>\
             <Route path="/:custom_id/:id/:name" element={<ChatPage/>}/>
+            <Route path="/group/:id" element={<GroupChatPage/>}/>
         </Routes>
     );
 }
