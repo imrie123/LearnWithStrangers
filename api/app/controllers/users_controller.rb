@@ -91,6 +91,7 @@ class UsersController < ApplicationController
           @liked_posts = @user.liked_posts
           @following_user_posts = @user.following_user_posts
           @all_posts = @user_posts + @following_user_posts
+          @following_users = @user.followings
           render "me", formats: :json, handlers: :jbuilder, status: :ok
         else
           @error = "User not found"
@@ -137,7 +138,6 @@ class UsersController < ApplicationController
         @user = User.find_by(email: email)
         @user.update(avatar: params[:user][:avatar])
         avatar_url = @user.avatar.attached? ? url_for(@user.avatar) : nil
-
         @avatar_url = avatar_url
 
         render "avatar", formats: :json, handlers: :jbuilder, status: :ok
@@ -148,18 +148,8 @@ class UsersController < ApplicationController
   end
 
   def random
-    @random_users = User.all.sample(5)
+    @random_users = User.all
     render "random", formats: :json, handlers: :jbuilder, status: :ok
-  end
-
-  def verify_token
-    token = request.headers['Authorization']&.split(' ')&.last
-    if token.present?
-      decoded_token = verify_firebase_token(token)
-      email = decoded_token[0]["email"]
-      @current_user = User.find_by(email: email)
-      raise "User not found" unless @current_user
-    end
   end
 
   private

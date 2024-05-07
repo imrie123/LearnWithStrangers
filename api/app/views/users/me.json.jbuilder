@@ -24,6 +24,11 @@ json.user do
     json.custom_id post.user.custom_id
     json.comments post.comments.map { |comment| { user_name: comment.user.name, content: comment.content, avatar: comment.user.avatar_url } }
   end
+
+  json.following_users @following_users do |user|
+    json.extract! user, :id, :name, :custom_id
+    json.avatar_url url_for(user.avatar) if user.avatar.attached?
+  end
 end
 
 

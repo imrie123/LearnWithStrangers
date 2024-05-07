@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_17_033449) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_07_054622) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -47,6 +47,34 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_17_033449) do
     t.datetime "updated_at", null: false
     t.index ["post_id"], name: "index_comments_on_post_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "group_users", charset: "utf8mb3", force: :cascade do |t|
+    t.bigint "custom_id"
+    t.bigint "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["custom_id"], name: "index_group_users_on_custom_id"
+    t.index ["group_id"], name: "index_group_users_on_group_id"
+  end
+
+  create_table "groups", charset: "utf8mb3", force: :cascade do |t|
+    t.string "name"
+    t.text "introduction"
+    t.string "image_id"
+    t.integer "owner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "groups_messages", charset: "utf8mb3", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.bigint "user_id", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_groups_messages_on_group_id"
+    t.index ["user_id"], name: "index_groups_messages_on_user_id"
   end
 
   create_table "likes", charset: "utf8mb3", force: :cascade do |t|
@@ -121,6 +149,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_17_033449) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
+  add_foreign_key "group_users", "groups"
+  add_foreign_key "group_users", "users", column: "custom_id"
+  add_foreign_key "groups_messages", "groups"
+  add_foreign_key "groups_messages", "users"
   add_foreign_key "likes", "posts"
   add_foreign_key "likes", "users"
   add_foreign_key "messages", "rooms"
