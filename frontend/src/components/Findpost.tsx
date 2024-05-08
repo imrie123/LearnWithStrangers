@@ -26,11 +26,6 @@ interface Post {
     comments: string[];
 }
 
-interface LikedPosts {
-    custom_id: string;
-    post_id: number;
-    id: number;
-}
 
 function Findpost() {
     const [posts, setPosts] = useState<Post[]>([]);

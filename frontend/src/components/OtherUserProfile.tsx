@@ -11,6 +11,7 @@ import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlin
 
 interface Post {
     id: number;
+    custom_id: string;
     content: string;
     image_url?: string;
     created_at: string;
@@ -21,11 +22,17 @@ interface Post {
     liked_by_current_user_id: number;
     comments: string[];
     contents: string[];
-
-
+    liked_data: {
+        liked_id: number;
+        user_name: string;
+        avatar: string;
+    }[];
 }
 
 const OtherUserProfile = () => {
+    const {custom_id} = useParams<{ custom_id: string }>();
+    const navigate = useNavigate();
+
     const [user, setUser] = useState({
         name: 'Loading...',
         learning_language: 'Loading...',
@@ -40,11 +47,27 @@ const OtherUserProfile = () => {
 
     const [posts, setPosts] = useState<Post[]>([]);
     const [postLikes, setPostLikes] = useState<{ [post_id: number]: number }>({});
-    const [id, setId] = useState<number | null>();
-    const {custom_id} = useParams<{ custom_id: string }>();
-    const navigate = useNavigate();
-    const [likeData, setLikeData] = useState<{ post_id?: number | null } | null>(null);
-    const [comment, setComment] = useState('');
+    const [likeData, setLikeData] = useState<{ post_id?: number | null, id?: number | null } | null>({
+        post_id: null,
+        id: null
+    });
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        axios.get(`http://127.0.0.1:3000/users/${custom_id}`, {
+            headers: {Authorization: `Bearer ${token}`},
+        })
+            .then((response) => {
+                setUser(response.data.user);
+                setPosts(response.data.user.posts);
+                setLikeData(response.data.user.posts.map((post: Post) => post.liked_data));
+                console.log(response.data.user.posts.map((post: Post) => post.liked_data));
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }, [custom_id]);
+
 
     const handleStartChat = () => {
         const token = localStorage.getItem('token');
@@ -60,9 +83,9 @@ const OtherUserProfile = () => {
                 console.error('Error:', error);
             });
     }
+
     const handleFollow = () => {
         const token = localStorage.getItem('token');
-
         axios.post(
             `http://127.0.0.1:3000/users/${custom_id}/relationships`,
             {},
@@ -79,7 +102,6 @@ const OtherUserProfile = () => {
 
     const handleUnFollow = () => {
         const token = localStorage.getItem('token');
-
         axios.delete(`http://127.0.0.1:3000/users/${custom_id}/relationships`, {
             headers: {Authorization: `Bearer ${token}`},
         })
@@ -93,53 +115,46 @@ const OtherUserProfile = () => {
     }
     const handleLike = (post_id: number) => {
         const token = localStorage.getItem('token');
-        if (!token) {
-            console.error('Token is missing');
+        const post = posts.find((post) => post.post_id === post_id);
+        if (!token || !post || !post.id) {
+            console.error('Token is missing or post not found or invalid post ID');
             return;
         }
 
-        axios.post(`http://127.0.0.1:3000/users/${custom_id}/posts/${id}/likes`, {}, {
+        axios.post(`http://127.0.0.1:3000/users/${post.custom_id}/posts/${post.id}/likes`, {}, {
             headers: {Authorization: `Bearer ${token}`},
         })
             .then((response) => {
+                console.log(response.data.id);
+                setLikeData(response.data.id);
                 const likedPostIndex = posts.findIndex((post: Post) => post.post_id === post_id);
                 posts[likedPostIndex].liked_by_current_user = true;
-                setPosts(() => posts);
-                setLikeData(response.data);
+                setPosts([...posts]);
                 setPostLikes(prevPostLikes => ({
                     ...prevPostLikes,
                     [post_id]: (prevPostLikes[post_id] || 0) + 1
                 }));
-
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
     };
+
     const handleUnlike = (post_id: number) => {
         const token = localStorage.getItem('token');
-        if (!token) {
-            console.error('Token is missing');
-            return;
-        }
-        if (!likeData || !likeData.post_id) {
-            console.error('likeData or post_id is missing');
+        const post = posts.find((post) => post.post_id === post_id);
+        if (!token || !post) {
+            console.error('Token is missing or post not found');
             return;
         }
 
-        const post = posts.find(post => post.post_id === post_id);
-        if (!post) {
-            console.error('Post not found');
-            return;
-        }
-
-        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/posts/${likeData.post_id}/likes/${id}`, {
+        axios.delete(`http://127.0.0.1:3000/users/${post.custom_id}/posts/${post.id}/likes/${likeData}`, {
             headers: {Authorization: `Bearer ${token}`},
         })
             .then(() => {
                 const unlikedPostIndex = posts.findIndex((post: Post) => post.post_id === post_id);
                 posts[unlikedPostIndex].liked_by_current_user = false;
-                setPosts([...posts])
+                setPosts([...posts]);
                 setPostLikes(prevPostLikes => ({
                     ...prevPostLikes,
                     [post_id]: Math.max((prevPostLikes[post_id] || 0) - 1, 0)
@@ -150,26 +165,6 @@ const OtherUserProfile = () => {
             });
     };
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        axios.get(`http://127.0.0.1:3000/users/${custom_id}`, {
-            headers: {Authorization: `Bearer ${token}`},
-        })
-            .then((response) => {
-                setUser(response.data.user);
-                setPosts(response.data.user.posts);
-                setId(response.data.user.posts[0].id);
-                console.log(response.data.user);
-                setComment(response.data.posts.comments)
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    }, [custom_id]);
-
-    const handleAddComment = () => {
-
-    }
 
     return (
         <div className={styles.myprofile}>
@@ -230,13 +225,14 @@ const OtherUserProfile = () => {
                                                             {postLikes[post.post_id] ?? post.likes_count}
                                                         </Button>
 
-                                                        <div className={style.comment_button}><QuestionAnswerOutlinedIcon/>コメント{post.comments.length}件</div>
+                                                        <div className={style.comment_button}>
+                                                            <QuestionAnswerOutlinedIcon/>コメント{post.comments.length}件
+                                                        </div>
 
                                                         <Button variant='ghost'
                                                                 leftIcon={<BiShare/>}>シェア</Button>
                                                     </div>
                                                     <CardFooter p={3} className={style.footer_component}>
-
                                                         <div className={style.comment_component}>
                                                             {post.comments.map((comment: any, index: number) => (
                                                                 <div key={index} className={style.comment}>
@@ -254,10 +250,7 @@ const OtherUserProfile = () => {
 
                                                             ))}
                                                         </div>
-
                                                     </CardFooter>
-
-
                                                 </Flex>
                                                 <AddCommentButton post_id={post.id}/>
                                             </Card>

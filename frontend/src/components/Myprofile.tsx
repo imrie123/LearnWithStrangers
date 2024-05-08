@@ -50,14 +50,11 @@ function MyProfile() {
         residence: 'Loading...',
         introduction: 'Loading...',
         avatar_url: 'Loading...',
-        custom_id: 'Loading...'
+        custom_id: 'Loading...',
+        image_url: 'Loading...',
     });
     const [posts, setPosts] = useState<Post[]>([]);
     const [likedPosts, setLikedPosts] = useState<Post[]>([]);
-
-
-
-
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -111,7 +108,6 @@ function MyProfile() {
             }
         }
     };
-
 
 
     return (
@@ -168,18 +164,14 @@ function MyProfile() {
 
                                                     </div>
                                                     <div>
-
                                                     </div>
-
                                                 </div>
-
                                             </Flex>
                                             <Image
                                                 objectFit='cover'
                                                 src={post.image_url}
                                                 alt='Post Image'
                                             />
-
                                             <p className={styles.date}>
                                                 {new Date(post.created_at).toLocaleDateString()}
                                             </p>
@@ -196,7 +188,9 @@ function MyProfile() {
                                                     <FavoriteIcon/>
                                                     {post.likes_count}
                                                 </Button>
-                                                <div className={styles.comment_button}>コメント{post.comments.length}件</div>
+                                                <div
+                                                    className={styles.comment_button}>コメント{post.comments.length}件
+                                                </div>
 
 
                                                 <Button variant='ghost' leftIcon={<BiShare/>}>
@@ -208,9 +202,7 @@ function MyProfile() {
                                                 <Button onClick={() => deletePost(post.post_id)}>
                                                     削除
                                                 </Button>
-
                                             </CardFooter>
-
                                             <div className={styles.comment_component}>
                                                 {post.comments.map((comment: any, index: number) => (
                                                     <div key={index} className={styles.comment}>
@@ -242,9 +234,9 @@ function MyProfile() {
                                             <Flex align="flex-start" mb={4}>
                                                 <div className={styles.post_top}>
                                                     <div>
-                                                        <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4}/>
+                                                        <Avatar src={`http://localhost:3000${user.image_url}`} mr={4}/>
                                                         <div>
-                                                            <Text fontWeight='bold'>{user.name}</Text>
+                                                            <Text fontWeight='bold'>{post.name}</Text>
                                                         </div>
 
                                                     </div>
@@ -307,10 +299,8 @@ function MyProfile() {
                                 ))}
                             </div>
                         </TabPanel>
-
                     </TabPanels>
                 </Tabs>
-
             </div>
         </div>
     );
