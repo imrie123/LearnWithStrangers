@@ -23,7 +23,6 @@ class LikesController < ApplicationController
 
   def liked_posts
     @liked_posts = @current_user.liked_posts
-
     render "liked_posts", formats: :json, handlers: :jbuilder, status: :ok
   end
 
@@ -44,16 +43,6 @@ class LikesController < ApplicationController
   end
 
   private
-
-  def verify_token
-    token = request.headers['Authorization']&.split(' ')&.last
-    if token.present?
-      decoded_token = verify_firebase_token(token)
-      email = decoded_token[0]["email"]
-      @current_user = User.find_by(email: email)
-      raise "User not found" unless @current_user
-    end
-  end
 
   def set_post
     @post = Post.find(params[:post_id])
