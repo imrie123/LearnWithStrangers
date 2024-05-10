@@ -118,7 +118,6 @@ function Findpost() {
                                                 {post.custom_id}
                                             </div>
                                         </div>
-
                                     </Flex>
                                     <Image objectFit='cover' src={post.image_url} alt='Post Image'/>
                                     <p className={styles.date}>

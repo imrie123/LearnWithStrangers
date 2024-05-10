@@ -23,6 +23,17 @@ import styles from '../styles/Myprofile.module.scss';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddpostButton from './AddpostButton';
 import AddCommentButton from './AddCommentButton';
+import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+} from '@chakra-ui/react'
+import {useDisclosure} from '@chakra-ui/hooks'
+import styles2 from '../styles/GroupChat.module.scss';
 
 
 interface Post {
@@ -38,6 +49,12 @@ interface Post {
     avatar_url: string;
     comments: [];
     custom_id: string;
+    following_user_posts: [];
+    user_posts: [];
+    liked_posts: [];
+    following_count: number;
+    follower_count: number;
+    post_count: number;
 
 
 }
@@ -52,9 +69,18 @@ function MyProfile() {
         avatar_url: 'Loading...',
         custom_id: 'Loading...',
         image_url: 'Loading...',
+        following_count: 0,
+        follower_count: 0,
+        post_count: 0,
+        following_users: [],
+        follower_users: [],
+        followers: [],
     });
     const [posts, setPosts] = useState<Post[]>([]);
     const [likedPosts, setLikedPosts] = useState<Post[]>([]);
+    const {isOpen: isOpenFollowing, onOpen: onOpenFollowing, onClose: onCloseFollowing} = useDisclosure();
+    const {isOpen: isOpenFollower, onOpen: onOpenFollower, onClose: onCloseFollower} = useDisclosure();
+
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -111,16 +137,84 @@ function MyProfile() {
 
 
     return (
+
+
         <div className={styles.myprofile}>
+
+
+            <Modal isOpen={isOpenFollowing} onClose={onCloseFollowing}>
+                <ModalOverlay/>
+                <ModalContent>
+                    <ModalHeader>フォロー</ModalHeader>
+                    <ModalCloseButton/>
+                    <ModalBody>
+                        {user.following_users.map((user: any) => (
+                            <Link to={`/user/${user.custom_id}`}>
+                        <div key={user.id} className={styles2.following_user}>
+
+                                <div key={user.custom_id} className={styles2.group_member}>
+                                    <div><Avatar name={user.name}  src={`http://localhost:3000${user.avatar_url}`}/></div>
+
+                                    <div><p>{user.name}</p></div>
+
+
+                                </div>
+
+                        </div>
+                            </Link>
+                        ))}
+
+
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={onCloseFollowing}>
+                            Close
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            <Modal isOpen={isOpenFollower} onClose={onCloseFollower}>
+                <ModalOverlay/>
+                <ModalContent>
+                    <ModalHeader>フォロー</ModalHeader>
+                    <ModalCloseButton/>
+                    <ModalBody>
+                        {user.followers.map((user: any) => (
+                            <Link to={`/user/${user.custom_id}`}>
+                                <div key={user.id} className={styles2.following_user}>
+
+                                    <div key={user.custom_id} className={styles2.group_member}>
+                                        <div><Avatar name={user.name}  src={`http://localhost:3000${user.avatar_url}`}/></div>
+
+                                        <div><p>{user.name}</p></div>
+
+
+                                    </div>
+
+                                </div>
+                            </Link>
+                        ))}
+
+
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={onCloseFollower}>
+                            Close
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
             <div className={styles.component}>
                 <div className={styles.top}>
                     <div className={styles.introduce}>
-                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`} alt="avatar"/>
+                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`} alt="avatar" />
                         <div className={styles.info}>
                             <div className={styles.follow}>
-                                <p>フォロー:100</p>
-                                <p>フォロワー:100</p>
-                                <p>投稿:20</p>
+                                <p onClick={onOpenFollowing}>フォロー:{user.following_count}</p>
+                                <p onClick={onOpenFollower}>フォロワー:{user.follower_count}</p>
+                                <p>投稿:{user.post_count}</p>
                                 <Link to="/setting">
                                     <SettingsIcon/>
                                 </Link>

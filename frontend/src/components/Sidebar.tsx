@@ -13,15 +13,6 @@ function Sidebar() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [inputValue, setInputValue] = useState("");
-    const [user, setUser] = useState({
-        name: 'Loading...',
-        learning_language: 'Loading...',
-        spoken_language: 'Loading...',
-        residence: 'Loading...',
-        introduction: 'Loading...',
-        avatar_url: 'Loading...',
-        custom_id: 'Loading...'
-    });
 
     const handleInputChange = (e: any) => {
         setInputValue(e.target.value);
@@ -42,7 +33,6 @@ function Sidebar() {
                 headers: {Authorization: `Bearer ${token}`}
             })
                 .then((response) => {
-                    setUser(response.data.user);
                     console.log(response.data.user);
 
                     console.log(response.data.user);

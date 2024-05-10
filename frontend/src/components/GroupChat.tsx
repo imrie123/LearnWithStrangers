@@ -86,9 +86,6 @@ function GroupChat() {
                 });
         }
     }, []);
-    const handleUsers = () => {
-
-    }
 
 
     return (
