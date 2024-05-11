@@ -34,6 +34,32 @@ div{
   }
 .update{
   width: 400px;
+  padding-left: 30px;
+  padding-top: 30px;
+  gap: 20px;
+div{
+  display: flex;
+
+  flex-direction: column;
 }
+}
+  //Button{
+  //  width: 100px;
+  //  height: 40px;
+  //  background-color: #f5f5f5;
+  //  border: 1px solid #f5f5f5;
+  //  border-radius: 5px;
+  //  color: #000;
+  //  font-weight: bold;
+  //  cursor: pointer;
+  //
+  //}
+.update_button{
+  display: flex;
+  justify-content: flex-end;
+
+
+}
+
 
 }

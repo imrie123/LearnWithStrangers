@@ -18,6 +18,9 @@ import {
 } from '@chakra-ui/react';
 import {useDisclosure} from '@chakra-ui/hooks';
 import {Link} from 'react-router-dom';
+import {Card, CardHeader, CardBody, CardFooter} from '@chakra-ui/react'
+import {Heading, Stack, Text} from '@chakra-ui/layout'
+import {Avatar, AvatarGroup} from '@chakra-ui/react'
 
 interface FollowingUser {
     name: string;
@@ -100,6 +103,7 @@ function Findgroup() {
             })
                 .then((response) => {
                     setChatGroups(response.data);
+                    console.log(response.data);
                 })
                 .catch((error) => {
                     console.error("Error fetching groups:", error);
@@ -141,16 +145,22 @@ function Findgroup() {
                         <Button onClick={onClose}>Cancel</Button>
                     </ModalFooter>
                 </ModalContent>
-            </Modal>
-            <div>
-                {chatGroups.map((group: any) => (
-                    <div key={group.id}>
-                        <Link to={`/group/${group.id}`}>
-                            <h1>{group.name}</h1>
-                        </Link>
-                    </div>
-                ))}
-            </div>
+            </Modal><Stack spacing='4'>
+            {chatGroups.map((group: any) => (
+                <Card key={group.id}>
+                    <Link to={`/group/${group.id}`}>
+                        <CardHeader>
+                            <Heading size='md'>
+                                {group.name}
+                            </Heading>
+                        </CardHeader>
+                        <CardBody>
+                        </CardBody>
+                    </Link>
+                </Card>
+            ))}
+        </Stack>
+
         </div>
     );
 }

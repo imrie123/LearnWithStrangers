@@ -34,6 +34,7 @@ import {
 } from '@chakra-ui/react'
 import {useDisclosure} from '@chakra-ui/hooks'
 import styles2 from '../styles/GroupChat.module.scss';
+import style from '../styles/OtherUserProfile.module.scss';
 
 
 interface Post {
@@ -150,17 +151,18 @@ function MyProfile() {
                     <ModalBody>
                         {user.following_users.map((user: any) => (
                             <Link to={`/user/${user.custom_id}`}>
-                        <div key={user.id} className={styles2.following_user}>
+                                <div key={user.id} className={styles2.following_user}>
 
-                                <div key={user.custom_id} className={styles2.group_member}>
-                                    <div><Avatar name={user.name}  src={`http://localhost:3000${user.avatar_url}`}/></div>
+                                    <div key={user.custom_id} className={styles2.group_member}>
+                                        <div><Avatar name={user.name} src={`http://localhost:3000${user.avatar_url}`}/>
+                                        </div>
 
-                                    <div><p>{user.name}</p></div>
+                                        <div><p>{user.name}</p></div>
 
+
+                                    </div>
 
                                 </div>
-
-                        </div>
                             </Link>
                         ))}
 
@@ -185,7 +187,8 @@ function MyProfile() {
                                 <div key={user.id} className={styles2.following_user}>
 
                                     <div key={user.custom_id} className={styles2.group_member}>
-                                        <div><Avatar name={user.name}  src={`http://localhost:3000${user.avatar_url}`}/></div>
+                                        <div><Avatar name={user.name} src={`http://localhost:3000${user.avatar_url}`}/>
+                                        </div>
 
                                         <div><p>{user.name}</p></div>
 
@@ -209,7 +212,7 @@ function MyProfile() {
             <div className={styles.component}>
                 <div className={styles.top}>
                     <div className={styles.introduce}>
-                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`} alt="avatar" />
+                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`} alt="avatar"/>
                         <div className={styles.info}>
                             <div className={styles.follow}>
                                 <p onClick={onOpenFollowing}>フォロー:{user.following_count}</p>
@@ -250,11 +253,13 @@ function MyProfile() {
                                             <Flex align="flex-start" mb={4}>
                                                 <div className={styles.post_top}>
                                                     <div>
+
                                                         <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4}/>
                                                         <div>
                                                             <Text fontWeight='bold'>{user.name}</Text>
                                                             @{user.custom_id}
                                                         </div>
+
 
                                                     </div>
                                                     <div>
@@ -301,9 +306,11 @@ function MyProfile() {
                                                 {post.comments.map((comment: any, index: number) => (
                                                     <div key={index} className={styles.comment}>
                                                         <div className={styles.comment_left}>
+                                                            <Link to={`/user/${post.custom_id}`}>
                                                             <img className={styles.comment_avatar}
                                                                  src={`http://localhost:3000${comment.avatar}`}
                                                                  alt="avatar"/>
+                                                            </Link>
                                                         </div>
                                                         <div className={styles.comment_left}>
                                                             <p>{comment.user_name}</p>
@@ -328,7 +335,15 @@ function MyProfile() {
                                             <Flex align="flex-start" mb={4}>
                                                 <div className={styles.post_top}>
                                                     <div>
-                                                        <Avatar src={`http://localhost:3000${user.image_url}`} mr={4}/>
+                                                        <Link to={`/user/${post.custom_id}`}>
+                                                        {user.image_url ? (
+                                                            <img className={styles.avatar}
+                                                                 src={`http://localhost:3000${user.image_url}`}
+                                                                 alt="avatar"/>
+                                                        ) : (
+                                                            <Avatar name={post.name}/>
+                                                        )}
+                                                        </Link>
                                                         <div>
                                                             <Text fontWeight='bold'>{post.name}</Text>
                                                         </div>
@@ -350,7 +365,7 @@ function MyProfile() {
                                                 {new Date(post.created_at).toLocaleDateString()}
                                             </p>
                                             <CardBody>
-                                                <Text>{post.content}</Text>
+                                                <Text className={styles.content}>{post.content}</Text>
                                             </CardBody>
                                             <CardFooter
                                                 display='flex'
@@ -376,11 +391,13 @@ function MyProfile() {
                                                 {post.comments.map((comment: any, index: number) => (
                                                     <div key={index} className={styles.comment}>
                                                         <div className={styles.comment_left}>
+                                                            <Link to={`/user/${comment.custom_id}`}>
                                                             <img className={styles.comment_avatar}
-                                                                 src={`http://localhost:3000${comment.avatar}`}
+                                                                 src={`http://localhost:3000${comment.avatar_url}`}
                                                                  alt="avatar"/>
+                                                            </Link>
                                                         </div>
-                                                        <div className={styles.comment_left}>
+                                                        <div className={styles.comment_right}>
                                                             <p>{comment.user_name}</p>
                                                             <p key={index}>{comment.content}</p>
                                                         </div>

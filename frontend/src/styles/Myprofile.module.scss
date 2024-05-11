@@ -12,6 +12,10 @@
     border-radius: 50%;
   }
 
+  .content {
+    font-weight: bold;
+  }
+
   padding-left: 20px;
 
   .follow {
@@ -74,6 +78,19 @@
     margin: 0;
     -webkit-justify-content: unset;
     font-weight: bold;
+  }
+
+  .comment_component {
+    display: flex;
+    overflow-y: auto;
+    max-height: 200px;
+
+    .comment {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      font-weight: bold;
+    }
   }
 
   .date {

@@ -9,6 +9,7 @@ import {BiShare} from 'react-icons/bi';
 import styles from '../styles/Findpost.module.scss';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddCommentButton from './AddCommentButton';
+import {Link} from 'react-router-dom';
 
 interface Post {
     id: number;
@@ -112,10 +113,17 @@ function Findpost() {
                                 <Flex direction="column" justify="center" p={10}>
                                     <Flex align="flex-start" mb={4}>
                                         <div className={styles.post_top}>
-                                            <Avatar src={`http://localhost:3000${post.avatar_url}`} mr={4}/>
+                                            <Link to={`/user/${post.custom_id}`}>
+                                            {post.avatar_url ? (
+                                                <img className={styles.avatar} src={`http://localhost:3000${post.avatar_url}`}
+                                                     alt="avatar"/>
+                                            ) : (
+                                                <Avatar name={post.name} />
+                                            )}
+                                            </Link>
                                             <div>
                                                 <Text fontWeight='bold'>{post.name}</Text>
-                                                {post.custom_id}
+                                                @{post.custom_id}
                                             </div>
                                         </div>
                                     </Flex>
@@ -151,11 +159,17 @@ function Findpost() {
                                         {post.comments.map((comment: any, index: number) => (
                                             <div key={post.id} className={styles.comment}>
                                                 <div className={styles.comment_left}>
-                                                    <img className={styles.comment_avatar}
-                                                         src={`http://localhost:3000${comment.avatar}`}
-                                                         alt="avatar"/>
+                                                    <Link to={`/user/${comment.custom_id}`}>
+                                                    {comment.avatar ? (
+                                                        <img className={styles.avatar} src={`${comment.avatar}`}
+                                                             alt="avatar"/>
+                                                    ) : (
+                                                        <Avatar name={comment.name} />
+                                                    )}
+                                                    </Link>
                                                 </div>
-                                                <div className={styles.comment_left}>
+
+                                                <div className={styles.comment_right}>
                                                     <p>{comment.user_name}</p>
                                                     <p>{comment.created_at}</p>
                                                     <p key={index}>{comment.content}</p>

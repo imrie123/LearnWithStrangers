@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useParams, useNavigate, Link} from 'react-router-dom';
 import styles from '../styles/Myprofile.module.scss';
 import {Card, CardBody, CardFooter, Flex, Text, Button, Image, Avatar} from '@chakra-ui/react';
 import {BiShare} from 'react-icons/bi';
@@ -18,7 +18,6 @@ import {
     ModalFooter
 } from '@chakra-ui/react';
 import {useDisclosure} from '@chakra-ui/hooks';
-import {Link} from 'react-router-dom';
 import styles2 from '../styles/GroupChat.module.scss';
 
 interface Post {
@@ -206,7 +205,16 @@ const OtherUserProfile = () => {
                             <div key={user.id} className={styles2.following_user}>
 
                                 <div key={user.custom_id} className={styles2.group_member}>
-                                    <div><Avatar name={user.name} src={`http://localhost:3000${user.avatar_url}`}/>
+                                    <div>
+                                        {user.avatar_url ? (
+                                            <img className={styles.avatar}
+                                                 src={`http://localhost:3000${user.avatar_url}`}
+                                                 alt="avatar"/>
+                                        ) : (
+                                            <Avatar name={user.name}/>
+                                        )}
+
+
                                     </div>
 
                                     <div><p>{user.name}</p></div>
@@ -261,8 +269,14 @@ const OtherUserProfile = () => {
             <div className={styles.component}>
                 <div className={styles.top}>
                     <div className={styles.introduce}>
-                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`}
-                             alt="avatar"/>
+                        {user.avatar_url ? (
+                            <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`}
+                                 alt="avatar"/>
+                        ) : (
+                            <Avatar name={user.name} style={{width: '200px', height: '200px'}}/>
+                        )}
+
+
                         <div className={styles.info}>
                             <div className={styles.follow}>
                                 <p onClick={onOpenFollowing}>フォロー:{user.following_count}</p>
@@ -289,8 +303,14 @@ const OtherUserProfile = () => {
                                             <Card key={post.id} maxW='4xl' mb={4} padding={15}>
                                                 <Flex direction="column" justify="center" p={10}>
                                                     <Flex align="flex-start" mb={5}>
-                                                        <Avatar src={`http://localhost:3000${user.avatar_url}`}
-                                                                mr={4} className={style.avatar}/>
+
+                                                        {user.avatar_url ? (
+                                                            <img className={style.avatar}
+                                                                 src={`http://localhost:3000${user.avatar_url}`}
+                                                                 alt="avatar"/>
+                                                        ) : (
+                                                            <Avatar name={user.name}/>
+                                                        )}
                                                         <div>
                                                             <Text fontWeight='bold'>{user.name}</Text>
                                                             @{user.custom_id}
@@ -328,10 +348,10 @@ const OtherUserProfile = () => {
                                                                 <div key={index} className={style.comment}>
                                                                     <div className={style.comment_left}>
                                                                         <img className={style.avatar}
-                                                                             src={`http://localhost:3000${comment.avatar}`}
+                                                                             src={`${comment.avatar}`}
                                                                              alt="avatar"/>
                                                                     </div>
-                                                                    <div className={style.comment_left}>
+                                                                    <div className={style.comment_right}>
                                                                         <p>{comment.user_name}</p>
                                                                         <p key={index}>{comment.content}</p>
                                                                     </div>

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import styles from '../styles/Findchat.module.scss';
 import {useNavigate} from "react-router-dom";
+import {Avatar} from '@chakra-ui/react';
 
 
 interface User {
@@ -54,8 +55,12 @@ function Findchat() {
                                 <div className={styles.top}>
                                     <div className={styles.introduce}>
                                         <div>
-                                            <img className={styles.avatar}
-                                                 src={`http://localhost:3000${user.avatar_url}`} alt="Avatar"/>
+                                            {user.avatar_url ? ( // Check if avatar_url exists
+                                                <img className={styles.avatar}
+                                                     src={`http://localhost:3000${user.avatar_url}`} alt="Avatar"/>
+                                            ) : (
+                                                <Avatar name={user.name} style={{width: '200px', height: '200px'}}/> // Render Chakra UI Avatar if avatar_url doesn't exist
+                                            )}
                                         </div>
                                         <div className={styles.info}>
                                             <div className={styles.follow}>
