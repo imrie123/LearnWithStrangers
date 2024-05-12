@@ -96,6 +96,7 @@ GEM
       irb (~> 1.10)
       reline (>= 0.3.8)
     declarative (0.0.20)
+    diff-lcs (1.5.1)
     diffy (3.4.2)
     digest-crc (0.6.5)
       rake (>= 12.0.0, < 14.0.0)
@@ -303,6 +304,23 @@ GEM
     ridgepole (2.0.1)
       activerecord (>= 6.1, < 7.2)
       diffy
+    rspec-core (3.13.0)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-rails (6.0.4)
+      actionpack (>= 6.1)
+      activesupport (>= 6.1)
+      railties (>= 6.1)
+      rspec-core (~> 3.12)
+      rspec-expectations (~> 3.12)
+      rspec-mocks (~> 3.12)
+      rspec-support (~> 3.12)
+    rspec-support (3.13.1)
     ruby-vips (2.2.0)
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
@@ -349,6 +367,7 @@ DEPENDENCIES
   rails (~> 7.1.2)
   rest-client
   ridgepole
+  rspec-rails (~> 6.0.0)
   ruby-vips
   tzinfo-data
 

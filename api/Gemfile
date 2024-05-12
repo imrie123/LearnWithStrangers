@@ -28,6 +28,7 @@ gem "counter_culture"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri ]
+  gem 'rspec-rails', '~> 6.0.0'
 end
 
 group :development do
