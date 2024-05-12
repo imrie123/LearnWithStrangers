@@ -3,13 +3,8 @@ class UsersController < ApplicationController
   def create
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
     if @response["idToken"]
-      if User.exists?(custom_id: user_params[:custom_id])
-        @error = "Custom ID already exists"
-        render "error", formats: :json, handlers: :jbuilder, status: :unauthorized
-      else
         @user = User.create!(user_params)
         render json: { id: @user.id, name: @user.name, email: @user.email, birthday: @user.birthday, custom_id: @user.custom_id }, status: :created
-      end
     else
       @error = @response["error"]["message"]
       render "error", formats: :json, handlers: :jbuilder, status: :unauthorized

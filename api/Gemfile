@@ -29,6 +29,8 @@ gem "counter_culture"
 group :development, :test do
   gem "debug", platforms: %i[ mri ]
   gem 'rspec-rails', '~> 6.0.0'
+  gem 'factory_bot_rails'
+  gem 'faker'
 end
 
 group :development do
@@ -37,3 +39,5 @@ end
 
 gem "tzinfo-data", platforms: %i[ x64_mingw jruby ]
 gem "bootsnap", require: false
+
+gem "factory_bot", "~> 6.4"
