@@ -3,8 +3,8 @@ class UsersController < ApplicationController
   def create
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
     if @response["idToken"]
-        @user = User.create!(user_params)
-        render json: { id: @user.id, name: @user.name, email: @user.email, birthday: @user.birthday, custom_id: @user.custom_id }, status: :created
+      @user = User.create!(user_params)
+      render json: { token: @response["idToken"],id: @user.id, name: @user.name, email: @user.email, birthday: @user.birthday, custom_id: @user.custom_id }, status: :created
     else
       @error = @response["error"]["message"]
       render "error", formats: :json, handlers: :jbuilder, status: :unauthorized
@@ -24,12 +24,7 @@ class UsersController < ApplicationController
 
   def sign_out
     FirebaseService::SignOut.new(session[:token]).call
-    render "sign_out", status: :ok
-  end
-
-  def show
-    @user = User.find(params[:id])
-    render json: @user
+    head :ok
   end
 
   def show_room
