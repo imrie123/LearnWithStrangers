@@ -21,8 +21,6 @@ function Setting() {
 
     const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
-
-        // React.ChangeEvent<HTMLInputElement>よりファイルを取得
         const fileObject = e.target.files[0];
         const formData = new FormData();
         formData.append('user[avatar]', fileObject);
@@ -51,8 +49,6 @@ function Setting() {
                     setIntroduction(userData.introduction);
                     setAvatarUrl(userData.avatar_url);
                     setId(userData.id)
-
-
                     console.log(userData);
                 })
                 .catch((error) => {
@@ -82,6 +78,7 @@ function Setting() {
             });
     };
 
+
     const upload = () => {
         const token = localStorage.getItem('token');
         axios.post(`http://127.0.0.1:3000/users/avatar`, profileImage, {
@@ -89,11 +86,7 @@ function Setting() {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`,
             },
-
         })
-            .then((response) => {
-                console.log(response);
-            })
             .catch((error) => {
                 console.error("Error:", error);
             });
@@ -115,7 +108,6 @@ function Setting() {
     return (
         <div className={styles.setting}>
             <h1>ユーザー情報を変更する</h1>
-
             <div className={styles.myprofile}>
                 <div className={styles.component}>
                     <div className={styles.top}>
@@ -198,7 +190,6 @@ function Setting() {
                                 )
                             )}
                         </Select>
-
                     </div>
                     <div>
                         <label> 自己紹介:</label>

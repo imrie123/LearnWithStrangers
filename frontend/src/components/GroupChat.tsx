@@ -50,26 +50,29 @@ function GroupChat() {
     const {id} = useParams<{ id: string }>();
     const group_id = id;
     const [message, setMessage] = useState('');
-    const {isOpen, onOpen, onClose} = useDisclosure()
-    const handleMessageSubmit = (e: React.FormEvent) => {
+    const {isOpen, onOpen, onClose} = useDisclosure();
+
+    const handleMessageSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
         if (token) {
-            axios.post(`http://127.0.0.1:3000/groups/${group_id}/groups_messages`, {
-                groups_messages: {content: message},
-            }, {
-                headers: {Authorization: `Bearer ${token}`}
-            })
-                .then((response) => {
-                    console.log(response.data);
-                    setMessage('');
-                })
-                .catch((error) => {
-                    console.error("Error sending message:", error);
+            try {
+                const response = await axios.post(`http://127.0.0.1:3000/groups/${group_id}/groups_messages`, {
+                    groups_messages: {content: message},
+                }, {
+                    headers: {Authorization: `Bearer ${token}`}
                 });
+                console.log(response.data);
+                setChatGroup(prevChatGroup => ({
+                    ...prevChatGroup,
+                    messages: [...prevChatGroup.messages, response.data]
+                }));
+                setMessage('');
+            } catch (error) {
+                console.error("Error sending message:", error);
+            }
         }
     }
-
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -97,22 +100,15 @@ function GroupChat() {
                     <ModalHeader>メンバー</ModalHeader>
                     <ModalCloseButton/>
                     <ModalBody>
-
                         {chatGroup.users.map((user: any) => (
-
                             <Link to={`/user/${user.custom_id}`}>
                                 <div key={user.custom_id} className={style.group_member}>
                                     <div><Avatar name={user.name} src={user.image}/></div>
-
                                     <div><p>{user.name}</p></div>
-
-
                                 </div>
                             </Link>
                         ))}
-
                     </ModalBody>
-
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={onClose}>
                             Close
@@ -120,25 +116,17 @@ function GroupChat() {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-
-
             <div className={styles.top}>
                 <h1>{chatGroup.name}</h1>
-
                 <AvatarGroup size='md' max={2} onClick={onOpen}>
                     <Avatar name={chatGroup.owner.name} src={chatGroup.owner.image}/>
                     {chatGroup.users.map((user: any) => (
                         <div key={user.custom_id}>
-
                             <Avatar name={user.name} src={user.image}/>
-
-
                         </div>
                     ))}
                 </AvatarGroup>
-
             </div>
-
             <div className={styles.message}>
                 <ul>
                     {chatGroup.messages.map((message: Message) => (
@@ -155,7 +143,6 @@ function GroupChat() {
                     ))}
                 </ul>
             </div>
-
             <div className={styles.bottom}>
                 <form onSubmit={handleMessageSubmit}>
                     <FormControl>

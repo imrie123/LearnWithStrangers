@@ -28,21 +28,23 @@ function Findchat() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            axios.get(`http://127.0.0.1:3000/users/random`)
-                .then((response) => {
+        const fetchUsers = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const response = await axios.get(`http://127.0.0.1:3000/users/random`);
                     setUsers(response.data);
                     console.log(response.data)
-                })
-                .catch((error) => {
+                } catch (error) {
                     console.error('Error:', error);
-                });
+                }
+            }
         }
+        fetchUsers()
     }, []);
 
-    const handleUserClick = (custom_id: number) => {
-        navigate(`/user/${custom_id}`);
+    const handleUserClick = (user: User) => {
+        navigate(`/user/${user.custom_id}`);
     };
 
     return (
@@ -50,16 +52,18 @@ function Findchat() {
             <ul>
                 {users.map((user: User) => (
                     <li key={user.id}>
-                        <div className={styles.myprofile} onClick={() => handleUserClick(user.custom_id)}>
+                        <div className={styles.myprofile} onClick={() => handleUserClick(user)}>
                             <div className={styles.component}>
                                 <div className={styles.top}>
                                     <div className={styles.introduce}>
                                         <div>
                                             {user.avatar_url ? ( // Check if avatar_url exists
                                                 <img className={styles.avatar}
-                                                     src={`http://localhost:3000${user.avatar_url}`} alt="Avatar"/>
+                                                     src={`http://localhost:3000${user.avatar_url}`}
+                                                     alt="Avatar"/>
                                             ) : (
-                                                <Avatar name={user.name} style={{width: '200px', height: '200px'}}/> // Render Chakra UI Avatar if avatar_url doesn't exist
+                                                <Avatar name={user.name}
+                                                        style={{width: '200px', height: '200px'}}/> // Render Chakra UI Avatar if avatar_url doesn't exist
                                             )}
                                         </div>
                                         <div className={styles.info}>

@@ -1,48 +1,55 @@
-div{
-  h1{
+div {
+  h1 {
     font-size: 20px;
     font-weight: bold;
     padding: 20px;
   }
-.avatar{
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-}
 
-  .myprofile{
+  .avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+  }
 
-    padding-left: 20px ;
-    .follow{
+  .myprofile {
+
+    padding-left: 20px;
+
+    .follow {
       display: flex;
       gap: 20px;
     }
-    .introduce{
+
+    .introduce {
       display: flex;
       padding-top: 20px;
 
-      p{
+      p {
         font-weight: bold;
       }
 
     }
-    .user{
+
+    .user {
       padding: 20px;
 
     }
 
   }
-.update{
-  width: 400px;
-  padding-left: 30px;
-  padding-top: 30px;
-  gap: 20px;
-div{
-  display: flex;
 
-  flex-direction: column;
-}
-}
+  .update {
+    width: 400px;
+    padding-left: 30px;
+    padding-top: 30px;
+    gap: 20px;
+
+    div {
+      display: flex;
+
+      flex-direction: column;
+    }
+  }
+
   //Button{
   //  width: 100px;
   //  height: 40px;
@@ -54,12 +61,12 @@ div{
   //  cursor: pointer;
   //
   //}
-.update_button{
-  display: flex;
-  justify-content: flex-end;
+  .update_button {
+    display: flex;
+    justify-content: flex-end;
 
 
-}
+  }
 
 
 }

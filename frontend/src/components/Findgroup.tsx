@@ -14,13 +14,12 @@ import {
     Input,
     FormControl,
     Button
-
 } from '@chakra-ui/react';
 import {useDisclosure} from '@chakra-ui/hooks';
 import {Link} from 'react-router-dom';
-import {Card, CardHeader, CardBody, CardFooter} from '@chakra-ui/react'
-import {Heading, Stack, Text} from '@chakra-ui/layout'
-import {Avatar, AvatarGroup} from '@chakra-ui/react'
+import {Card, CardHeader, CardBody} from '@chakra-ui/react'
+import {Heading, Stack} from '@chakra-ui/layout'
+import styles from '../styles/Findgroup.module.scss';
 
 interface FollowingUser {
     name: string;
@@ -42,28 +41,31 @@ function Findgroup() {
     const initialRef = useRef(null);
     const finalRef = useRef(null);
     const [followingUsers, setFollowingUsers] = useState([]);
-    const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+    const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
     const [groupName, setGroupName] = useState('');
     const [chatGroups, setChatGroups] = useState([]);
     const [introduction, setIntroduction] = useState('');
     const [currentUserCustomId, setCurrentUserCustomId] = useState('');
 
     const handleSelect = (id: string) => {
-        const isSelected = selectedUsers.includes(id);
-
-        if (isSelected) {
-            setSelectedUsers(selectedUsers.filter(userId => userId !== id));
+        if (selectedUsers.has(id)) {
+            setSelectedUsers(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(id);
+                return newSet;
+            })
         } else {
-            setSelectedUsers([...selectedUsers, id]);
+            selectedUsers.add(id);
         }
+        setSelectedUsers(new Set(selectedUsers));
     }
 
     const handleSave = () => {
-        console.log("Selected users:", selectedUsers);
+        console.log("Selected users:", Array.from(selectedUsers));
         axios.post(`http://127.0.0.1:3000/groups`, {
             name: groupName,
             introduction: introduction,
-            users: [...selectedUsers, currentUserCustomId]
+            users: [...Array.from(selectedUsers), currentUserCustomId]
         }, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -130,7 +132,7 @@ function Findgroup() {
                                ref={initialRef}/>
                         <Input placeholder="introduce" value={introduction}
                                onChange={(e) => setIntroduction(e.target.value)} ref={initialRef}/>
-                        <CheckboxGroup value={selectedUsers}>
+                        <CheckboxGroup value={Array.from(selectedUsers)}>
                             {followingUsers.map((user: FollowingUser) => (
                                 <FollowingUserSelect key={user.custom_id} custom_id={user.custom_id} name={user.name}
                                                      handleSelect={handleSelect}/>
@@ -145,21 +147,22 @@ function Findgroup() {
                         <Button onClick={onClose}>Cancel</Button>
                     </ModalFooter>
                 </ModalContent>
-            </Modal><Stack spacing='4'>
-            {chatGroups.map((group: any) => (
-                <Card key={group.id}>
-                    <Link to={`/group/${group.id}`}>
-                        <CardHeader>
-                            <Heading size='md'>
-                                {group.name}
-                            </Heading>
-                        </CardHeader>
-                        <CardBody>
-                        </CardBody>
-                    </Link>
-                </Card>
-            ))}
-        </Stack>
+            </Modal>
+            <Stack spacing='4' className={styles.chat_group}>
+                {chatGroups.map((group: any) => (
+                    <Card key={group.id}>
+                        <Link to={`/group/${group.id}`}>
+                            <CardHeader>
+                                <Heading size='md'>
+                                    {group.name}
+                                </Heading>
+                            </CardHeader>
+                            <CardBody>
+                            </CardBody>
+                        </Link>
+                    </Card>
+                ))}
+            </Stack>
 
         </div>
     );

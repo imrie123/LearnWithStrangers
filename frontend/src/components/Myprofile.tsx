@@ -34,8 +34,6 @@ import {
 } from '@chakra-ui/react'
 import {useDisclosure} from '@chakra-ui/hooks'
 import styles2 from '../styles/GroupChat.module.scss';
-import style from '../styles/OtherUserProfile.module.scss';
-
 
 interface Post {
     id: number;
@@ -138,11 +136,7 @@ function MyProfile() {
 
 
     return (
-
-
         <div className={styles.myprofile}>
-
-
             <Modal isOpen={isOpenFollowing} onClose={onCloseFollowing}>
                 <ModalOverlay/>
                 <ModalContent>
@@ -198,10 +192,7 @@ function MyProfile() {
                                 </div>
                             </Link>
                         ))}
-
-
                     </ModalBody>
-
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={onCloseFollower}>
                             Close
@@ -238,7 +229,6 @@ function MyProfile() {
                         </div>
                     </div>
                 </div>
-
                 <Tabs isLazy>
                     <TabList>
                         <Tab>投稿</Tab>
@@ -259,8 +249,6 @@ function MyProfile() {
                                                             <Text fontWeight='bold'>{user.name}</Text>
                                                             @{user.custom_id}
                                                         </div>
-
-
                                                     </div>
                                                     <div>
                                                     </div>
@@ -307,9 +295,9 @@ function MyProfile() {
                                                     <div key={index} className={styles.comment}>
                                                         <div className={styles.comment_left}>
                                                             <Link to={`/user/${post.custom_id}`}>
-                                                            <img className={styles.comment_avatar}
-                                                                 src={`http://localhost:3000${comment.avatar}`}
-                                                                 alt="avatar"/>
+                                                                <img className={styles.comment_avatar}
+                                                                     src={`http://localhost:3000${comment.avatar}`}
+                                                                     alt="avatar"/>
                                                             </Link>
                                                         </div>
                                                         <div className={styles.comment_left}>
@@ -336,13 +324,13 @@ function MyProfile() {
                                                 <div className={styles.post_top}>
                                                     <div>
                                                         <Link to={`/user/${post.custom_id}`}>
-                                                        {user.image_url ? (
-                                                            <img className={styles.avatar}
-                                                                 src={`http://localhost:3000${user.image_url}`}
-                                                                 alt="avatar"/>
-                                                        ) : (
-                                                            <Avatar name={post.name}/>
-                                                        )}
+                                                            {user.image_url ? (
+                                                                <img className={styles.avatar}
+                                                                     src={`http://localhost:3000${user.image_url}`}
+                                                                     alt="avatar"/>
+                                                            ) : (
+                                                                <Avatar name={post.name}/>
+                                                            )}
                                                         </Link>
                                                         <div>
                                                             <Text fontWeight='bold'>{post.name}</Text>
@@ -392,9 +380,9 @@ function MyProfile() {
                                                     <div key={index} className={styles.comment}>
                                                         <div className={styles.comment_left}>
                                                             <Link to={`/user/${comment.custom_id}`}>
-                                                            <img className={styles.comment_avatar}
-                                                                 src={`http://localhost:3000${comment.avatar_url}`}
-                                                                 alt="avatar"/>
+                                                                <img className={styles.comment_avatar}
+                                                                     src={`http://localhost:3000${comment.avatar_url}`}
+                                                                     alt="avatar"/>
                                                             </Link>
                                                         </div>
                                                         <div className={styles.comment_right}>

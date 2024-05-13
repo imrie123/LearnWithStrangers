@@ -48,7 +48,7 @@ interface Post {
 const OtherUserProfile = () => {
     const {custom_id} = useParams<{ custom_id: string }>();
     const navigate = useNavigate();
-    const {isOpen, onOpen, onClose} = useDisclosure()
+    const {onClose} = useDisclosure()
 
 
     const [user, setUser] = useState({

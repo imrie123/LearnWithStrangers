@@ -34,73 +34,54 @@ function Findpost() {
     const [likeData, setLikeData] = useState<{ post_id?: number | null } | null>(null);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        axios.get(`http://127.0.0.1:3000/users/me`, {
-            headers: {Authorization: `Bearer ${token}`}
-        })
-            .then((response) => {
-                console.log(response.data);
-                setPosts(response.data.user.following_user_posts);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+        const fetchPosts = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const response = await axios.get(`http://127.0.0.1:3000/users/me`, {
+                        headers: {Authorization: `Bearer ${token}`}
+                    });
+                    setPosts(response.data.user.following_user_posts);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+        };
+
+        fetchPosts();
     }, []);
 
 
-    const handleLike = (post_id: number) => {
-        console.log("Post ID:", post_id);
+    const handleLikeToggle = async (post_id: number) => {
         const token = localStorage.getItem('token');
         const post = posts.find((post) => post.post_id === post_id);
-        console.log('Post ID:', post_id);
-        console.log('Post:', post);
         if (!token || !post || !post.id) {
             console.error('Token is missing or post not found or invalid post ID');
             return;
         }
 
-        axios.post(`http://127.0.0.1:3000/users/${post.custom_id}/posts/${post.id}/likes`, {}, {
-            headers: {Authorization: `Bearer ${token}`},
-        })
-            .then((response) => {
-                console.log(response.data.id);
-                setLikeData(response.data.id);
-                const likedPostIndex = posts.findIndex((post: Post) => post.post_id === post_id);
-                posts[likedPostIndex].liked_by_current_user = true;
-                setPosts([...posts]);
-                setPostLikes(prevPostLikes => ({
-                    ...prevPostLikes,
-                    [post_id]: (prevPostLikes[post_id] || 0) + 1
-                }));
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    };
+        try {
+            let response;
+            if (post.liked_by_current_user) {
+                response = await axios.delete(`http://127.0.0.1:3000/users/${post.custom_id}/posts/${post.id}/likes/${likeData}`, {
+                    headers: {Authorization: `Bearer ${token}`},
+                });
+            } else {
+                response = await axios.post(`http://127.0.0.1:3000/users/${post.custom_id}/posts/${post.id}/likes`, {}, {
+                    headers: {Authorization: `Bearer ${token}`},
+                });
+            }
 
-    const handleUnlike = (post_id: number) => {
-        const token = localStorage.getItem('token');
-        const post = posts.find((post) => post.post_id === post_id);
-        if (!token || !post) {
-            console.error('Token is missing or post not found');
-            return;
+            const likedPostIndex = posts.findIndex((post: Post) => post.post_id === post_id);
+            posts[likedPostIndex].liked_by_current_user = !post.liked_by_current_user;
+            setPosts([...posts]);
+            setPostLikes(prevPostLikes => ({
+                ...prevPostLikes,
+                [post_id]: post.liked_by_current_user ? (prevPostLikes[post_id] || 0) + 1 : Math.max((prevPostLikes[post_id] || 0) - 1, 0)
+            }));
+        } catch (error) {
+            console.error('Error:', error);
         }
-
-        axios.delete(`http://127.0.0.1:3000/users/${post.custom_id}/posts/${post.id}/likes/${likeData}`, {
-            headers: {Authorization: `Bearer ${token}`},
-        })
-            .then(() => {
-                const unlikedPostIndex = posts.findIndex((post: Post) => post.post_id === post_id);
-                posts[unlikedPostIndex].liked_by_current_user = false;
-                setPosts([...posts]);
-                setPostLikes(prevPostLikes => ({
-                    ...prevPostLikes,
-                    [post_id]: Math.max((prevPostLikes[post_id] || 0) - 1, 0)
-                }));
-            })
-            .catch((error) => {
-                console.error('Error in unlike:', error);
-            });
     };
 
     return (
@@ -114,12 +95,13 @@ function Findpost() {
                                     <Flex align="flex-start" mb={4}>
                                         <div className={styles.post_top}>
                                             <Link to={`/user/${post.custom_id}`}>
-                                            {post.avatar_url ? (
-                                                <img className={styles.avatar} src={`http://localhost:3000${post.avatar_url}`}
-                                                     alt="avatar"/>
-                                            ) : (
-                                                <Avatar name={post.name} />
-                                            )}
+                                                {post.avatar_url ? (
+                                                    <img className={styles.avatar}
+                                                         src={`http://localhost:3000${post.avatar_url}`}
+                                                         alt="avatar"/>
+                                                ) : (
+                                                    <Avatar name={post.name}/>
+                                                )}
                                             </Link>
                                             <div>
                                                 <Text fontWeight='bold'>{post.name}</Text>
@@ -140,7 +122,7 @@ function Findpost() {
                                                 <Button
                                                     variant='ghost'
                                                     colorScheme={post.liked_by_current_user ? "red" : "gray"}
-                                                    onClick={() => post.liked_by_current_user ? handleUnlike(post.post_id) : handleLike(post.post_id)}
+                                                    onClick={() => handleLikeToggle(post.post_id)}
                                                 >
                                                     <FavoriteIcon/>
                                                     {postLikes[post.post_id] ?? post.likes_count}
@@ -160,12 +142,12 @@ function Findpost() {
                                             <div key={post.id} className={styles.comment}>
                                                 <div className={styles.comment_left}>
                                                     <Link to={`/user/${comment.custom_id}`}>
-                                                    {comment.avatar ? (
-                                                        <img className={styles.avatar} src={`${comment.avatar}`}
-                                                             alt="avatar"/>
-                                                    ) : (
-                                                        <Avatar name={comment.name} />
-                                                    )}
+                                                        {comment.avatar ? (
+                                                            <img className={styles.avatar} src={`${comment.avatar}`}
+                                                                 alt="avatar"/>
+                                                        ) : (
+                                                            <Avatar name={comment.name}/>
+                                                        )}
                                                     </Link>
                                                 </div>
 
