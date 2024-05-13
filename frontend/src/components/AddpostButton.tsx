@@ -15,27 +15,32 @@ import {
 import {useState} from 'react';
 import axios from 'axios';
 
+const upload = (formData: FormData) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        console.error('token is not found');
+        return;
+    }
+    axios.post(`http://127.0.0.1:3000/posts`, formData, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+        },
+    })
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
+};
+
 function InitialFocus() {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [inputContent, setInputContent] = useState('');
     const initialRef = useRef<HTMLInputElement | null>(null); // initialRefを追加
     const finalRef = useRef<HTMLInputElement | null>(null); // finalRefを追加
 
-    const upload = (formData: FormData) => {
-        const token = localStorage.getItem('token');
-        axios.post(`http://127.0.0.1:3000/posts`, formData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data',
-            },
-        })
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-            });
-    };
 
     const handleSubmit: React.MouseEventHandler<HTMLButtonElement> = (e) => {
         e.preventDefault();
@@ -45,6 +50,8 @@ function InitialFocus() {
             formData.append('post[image]', fileInput.files[0]);
             formData.append('post[content]', inputContent);
             upload(formData);
+        } else {
+            console.error('file input is not found');
         }
         onClose();
     };

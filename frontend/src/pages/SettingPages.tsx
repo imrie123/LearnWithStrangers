@@ -4,13 +4,14 @@ import Sidebar from "../components/Sidebar";
 import styles from "../styles/SettingPages.module.scss";
 
 function SettingPages() {
-  return (
-    <div className={styles.editpage}>
-      <Sidebar />
-      <Setting />
+    return (
+        <div className={styles.editpage}>
+            <Sidebar/>
+            <Setting/>
 
 
-    </div>
-  )
+        </div>
+    )
 }
+
 export default SettingPages;

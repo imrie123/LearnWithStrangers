@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import styles from '../styles/Setting.module.scss';
 import {Button, Input} from '@chakra-ui/react'
 import {Select} from '@chakra-ui/react'
@@ -12,20 +12,15 @@ function Setting() {
     const [spokenLanguage, setSpokenLanguage] = useState('');
     const [residence, setResidence] = useState('');
     const [introduction, setIntroduction] = useState('');
-    const [user, setUser] = useState(null);
     const [id, setId] = useState(null);
     const [profileImage, setProfileImage] = useState<FormData>();
     const [avatar_url, setAvatarUrl] = useState('');
-    // const [image, setImage] = useState();
-    // const [title, setTitle] = useState();
     const residenceOptions = ["japan", "korea", "china", "usa", "uk", "france", "germany", "italy", "spain", "russia", "india", "brazil", "canada", "australia", "other"];
     const learningLanguageOptions = ["japanese", "korean", "chinese", "english", "french", "german", "italian", "spanish", "russian", "hindi", "portuguese", "other"];
     const spokenLanguageOptions = ["japanese", "korean", "chinese", "english", "french", "german", "italian", "spanish", "russian", "hindi", "portuguese", "other"];
 
     const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
-
-        // React.ChangeEvent<HTMLInputElement>よりファイルを取得
         const fileObject = e.target.files[0];
         const formData = new FormData();
         formData.append('user[avatar]', fileObject);
@@ -40,7 +35,11 @@ function Setting() {
 
 
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me?token=${token}`)
+            axios.get(`http://127.0.0.1:3000/users/me`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
                 .then((response) => {
                     const userData = response.data.user;
                     setName(userData.name);
@@ -49,10 +48,7 @@ function Setting() {
                     setResidence(userData.residence);
                     setIntroduction(userData.introduction);
                     setAvatarUrl(userData.avatar_url);
-
                     setId(userData.id)
-
-
                     console.log(userData);
                 })
                 .catch((error) => {
@@ -74,7 +70,6 @@ function Setting() {
             token
         })
             .then((response) => {
-                setUser(response.data.user);
                 console.log(response.data.user);
                 navigate("/myprofile");
             })
@@ -83,17 +78,15 @@ function Setting() {
             });
     };
 
+
     const upload = () => {
         const token = localStorage.getItem('token');
-        axios.post(`http://127.0.0.1:3000/users/avatar?token=${token}`, profileImage, {
+        axios.post(`http://127.0.0.1:3000/users/avatar`, profileImage, {
             headers: {
                 'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`,
             },
-
         })
-            .then((response) => {
-                console.log(response);
-            })
             .catch((error) => {
                 console.error("Error:", error);
             });
@@ -105,7 +98,7 @@ function Setting() {
 
         // フォームデータをサーバーに送信
         update();
-        if (profileImage){
+        if (profileImage) {
             upload();
         }
 
@@ -115,51 +108,31 @@ function Setting() {
     return (
         <div className={styles.setting}>
             <h1>ユーザー情報を変更する</h1>
-
             <div className={styles.myprofile}>
                 <div className={styles.component}>
                     <div className={styles.top}>
-
                         <div className={styles.introduce}>
-
-
                             <img className={styles.avatar} src={`http://localhost:3000${avatar_url}`} alt="avatar"/>
-
-
                             <div className={styles.info}>
-                                <div className={styles.follow}>
-                                    <p>フォロー:100</p>
-                                    <p>フォロワー:100</p>
-                                    <p>投稿:20</p>
-                                </div>
                                 <div className={styles.user}>
                                     <p>{name}</p>
                                     <p>話せる言語:{spokenLanguage}</p>
                                     <p>学びたい言語:{learningLanguage}</p>
                                     <p>住んでいる国:{residence}</p>
                                     <p>自己紹介:{introduction}</p>
-
                                 </div>
-                                <Button>
-                                    フォロー
-                                </Button>
                             </div>
-
-
                         </div>
-
                     </div>
                 </div>
             </div>
             <div className={styles.update}>
-
                 <form onSubmit={handleSubmit}>
-
                     <div>
+                        <div>
+                            <input type="file" accept="image/*" onChange={onFileInputChange}/>
 
-                        {/*<input type="file" accept="image/*" onChange={(e) => setImage(e)}/>*/}
-                        <input type="file" accept="image/*" onChange={onFileInputChange}　/>
-
+                        </div>
                         <label> 名前:</label>
                         <Input
                             type="text"
@@ -187,8 +160,6 @@ function Setting() {
                                 <option key={option} value={option}>{option}</option>
                             ))}
                         </Select>
-
-
                     </div>
                     <div>
                         <label> 学びたい言語:</label>
@@ -204,7 +175,6 @@ function Setting() {
                                 )
                             )}
                         </Select>
-
                     </div>
                     <div>
                         <label> 住んでる国:</label>
@@ -220,7 +190,6 @@ function Setting() {
                                 )
                             )}
                         </Select>
-
                     </div>
                     <div>
                         <label> 自己紹介:</label>
@@ -232,11 +201,9 @@ function Setting() {
                             onChange={(e) => setIntroduction(e.target.value)}
                         />
                     </div>
-                    <button type="submit">更新</button>
-
+                    <Button type="submit" colorScheme='blue' className={styles.update_button}>更新</Button>
                 </form>
             </div>
-
         </div>
     );
 }

@@ -3,7 +3,7 @@ import {Input, Stack} from "@chakra-ui/react";
 import Styles from "../styles/Sidebar.module.scss";
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {clearToken} from "../redux/authSlice";
 import {Icon} from "@chakra-ui/react";
 import {MdQuestionAnswer} from "react-icons/md";
@@ -13,40 +13,22 @@ function Sidebar() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [inputValue, setInputValue] = useState("");
-    const [user, setUser] = useState({
-        name: 'Loading...',
-        learning_language: 'Loading...',
-        spoken_language: 'Loading...',
-        residence: 'Loading...',
-        introduction: 'Loading...',
-        avatar_url: 'Loading...',
-        custom_id: 'Loading...'
-    });
 
     const handleInputChange = (e: any) => {
         setInputValue(e.target.value);
-        console.log(e.target.value);
     };
     const logout = () => {
         dispatch(clearToken());
-
         localStorage.removeItem('token');
         navigate('/');
     }
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me`,{
+            axios.get(`http://127.0.0.1:3000/users/me`, {
                 headers: {Authorization: `Bearer ${token}`}
             })
-                .then((response) => {
-                    setUser(response.data.user);
-                    console.log(response.data.user);
-
-                    console.log(response.data.user);
-                })
                 .catch((error) => {
                     console.error("Error:", error);
                 });
@@ -56,9 +38,11 @@ function Sidebar() {
 
     const items = [
         {name: "プロフィール", path: `/`, icon: <Icon as={MdQuestionAnswer}/>},
+        {name: "メッセージ", path: "/message"},
         {name: "会話相手を探す", path: "/findchat"},
         {name: "グループチャットに参加する", path: "/findgroup"},
         {name: "フォローしているユーザーの投稿", path: "/findpost"}
+
     ];
     return (
         <div className={Styles.sidebar}>

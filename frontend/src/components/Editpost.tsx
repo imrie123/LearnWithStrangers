@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState, FormEvent} from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardFooter, Avatar, Flex, Image, Text, Input, Button } from '@chakra-ui/react';
+import {useParams, useNavigate} from 'react-router-dom';
+import {Card, CardFooter, Avatar, Flex, Image, Text, Input, Button} from '@chakra-ui/react';
 import styles from '../styles/Editpost.module.scss';
 
 interface Post {
@@ -13,11 +13,17 @@ interface Post {
 }
 
 function Editpost() {
-    const { post_id } = useParams<{ post_id: string }>();
-    const [content, setContent] = useState('');
+    const {post_id} = useParams<{ post_id: string }>();
     const [inputContent, setInputContent] = useState('');
     const [post, setPost] = useState<Post | null>(null);
-    const [user, setUser] = useState({ name: 'Loading...', learning_language: 'Loading...', spoken_language: 'Loading...', residence: 'Loading...', introduction: 'Loading...', avatar_url: 'Loading...' });
+    const [user, setUser] = useState({
+        name: 'Loading...',
+        learning_language: 'Loading...',
+        spoken_language: 'Loading...',
+        residence: 'Loading...',
+        introduction: 'Loading...',
+        avatar_url: 'Loading...'
+    });
     const [avatar_url, setAvatarUrl] = useState('');
     const navigate = useNavigate();
 
@@ -27,7 +33,7 @@ function Editpost() {
         if (token) {
             axios.get(`http://127.0.0.1:3000/users/me?token=${token}`)
                 .then((response) => {
-                    const { user, avatar_url } = response.data; // Destructuring user and avatar_url from response.data
+                    const {user, avatar_url} = response.data; // Destructuring user and avatar_url from response.data
                     setUser(user);
                     setAvatarUrl(avatar_url);
                 })
@@ -43,8 +49,7 @@ function Editpost() {
         if (token && post_id) {
             axios.get(`http://127.0.0.1:3000/users/:user_id/posts/${post_id}?token=${token}`)
                 .then((response) => {
-                    const postData = response.data.posts[0]; // Extracting the first post from response.data.posts
-                    setContent(postData.content);
+                    const postData = response.data.posts[0];
                     setInputContent(postData.content);
                     setPost(postData);
                 })
@@ -54,11 +59,11 @@ function Editpost() {
         }
     }, [post_id]);
 
-    const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
         if (token && post_id) {
-            axios.put(`http://127.0.0.1:3000/users/:user_id/posts/${post_id}?token=${token}`, { content: inputContent })
+            axios.put(`http://127.0.0.1:3000/users/:user_id/posts/${post_id}?token=${token}`, {content: inputContent})
                 .then((response) => {
                     setPost(response.data.posts); // Assuming response.data.posts contains the updated post
                     navigate('/'); // Redirecting to home page after successful submit
@@ -76,7 +81,7 @@ function Editpost() {
                 <Card key={post.id} maxW='md' mb={4}>
                     <Flex direction="column" align="center" justify="center" p={4}>
                         <Flex align="flex-start" mb={4}>
-                            <Avatar src={`http://localhost:3000${avatar_url}`} mr={4} />
+                            <Avatar src={`http://localhost:3000${avatar_url}`} mr={4}/>
                             <Text fontWeight='bold'>{user.name}</Text>
                         </Flex>
                         <Image
@@ -86,7 +91,8 @@ function Editpost() {
                         />
                         <CardFooter display='flex' justifyContent='space-between' p={4}>
                             <form className={styles.input}>
-                                <Input type="text" value={inputContent} onChange={(e) => setInputContent(e.target.value)} />
+                                <Input type="text" value={inputContent}
+                                       onChange={(e) => setInputContent(e.target.value)}/>
                                 <Button colorScheme='blue' onClick={handleSubmit}>Submit</Button>
                             </form>
                         </CardFooter>
