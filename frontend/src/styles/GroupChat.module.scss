@@ -1,15 +1,16 @@
-.user_avatar{
- display: flex;
+.user_avatar {
+  display: flex;
 
 }
-.group_member{
+
+.group_member {
   display: flex;
   align-items: center;
   gap: 10px;
-p{
-  font-weight: bold;
-}
 
+  p {
+    font-weight: bold;
+  }
 
 
 }

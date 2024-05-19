@@ -5,8 +5,8 @@ import styles from '../styles/GroupChatPage.module.scss';
 function GroupChatPage() {
     return (
         <div className={styles.group_chat}>
-            <Sidebar />
-            <GroupChat />
+            <Sidebar/>
+            <GroupChat/>
         </div>
     );
 }

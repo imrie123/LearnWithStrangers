@@ -60,6 +60,7 @@ class UsersController < ApplicationController
           @following_user_posts = @user.following_user_posts
           @all_posts = @user_posts + @following_user_posts
           @following_users = @user.followings
+          @followers = @user.followers
           render "me", formats: :json, handlers: :jbuilder, status: :ok
         else
           render "error", status: :unauthorized

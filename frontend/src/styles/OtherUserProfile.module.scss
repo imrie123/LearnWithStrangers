@@ -2,17 +2,19 @@
   display: flex;
 }
 
-.footer_component{
+.footer_component {
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* 垂直方向のスクロールを可能にする */
+  overflow-y: auto;
   max-height: 200px;
 }
+
 .footer {
   display: flex;
   justify-items: center;
   align-items: center;
-  .comment_button{
+
+  .comment_button {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -23,20 +25,31 @@
   }
 
 }
-.footer_component{
 
-  .comment{
+.footer_component {
+
+  .comment {
     display: flex;
     overflow-y: auto;
     width: 200px;
+    align-items: center;
+
+    .comment_right {
+      padding-left: 10px;
+
+    }
   }
 
 }
 
-.avatar{
-  width: 30px;
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+
 
 }
-.comment_component{
+
+.comment_component {
 
 }

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useParams, useNavigate, Link} from 'react-router-dom';
 import styles from '../styles/Myprofile.module.scss';
 import {Card, CardBody, CardFooter, Flex, Text, Button, Image, Avatar} from '@chakra-ui/react';
 import {BiShare} from 'react-icons/bi';
@@ -8,6 +8,17 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddCommentButton from './AddCommentButton';
 import style from '../styles/OtherUserProfile.module.scss';
 import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
+import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter
+} from '@chakra-ui/react';
+import {useDisclosure} from '@chakra-ui/hooks';
+import styles2 from '../styles/GroupChat.module.scss';
 
 interface Post {
     id: number;
@@ -22,6 +33,10 @@ interface Post {
     liked_by_current_user_id: number;
     comments: string[];
     contents: string[];
+    following_count: number;
+    follower_count: number;
+    post_count: number;
+    following_users: [];
     liked_data: {
         liked_id: number;
         user_name: string;
@@ -33,6 +48,8 @@ interface Post {
 const OtherUserProfile = () => {
     const {custom_id} = useParams<{ custom_id: string }>();
     const navigate = useNavigate();
+    const {onClose} = useDisclosure()
+
 
     const [user, setUser] = useState({
         id: 0,
@@ -45,7 +62,6 @@ const OtherUserProfile = () => {
         custom_id: 'Loading...',
         user_id: null,
         followed_by_current_user: false,
-
     });
 
     const [posts, setPosts] = useState<Post[]>([]);
@@ -54,6 +70,7 @@ const OtherUserProfile = () => {
         post_id: null,
         id: null
     });
+
 const [currentUser, setCurrentUser] = useState({
         id: 0,
         name: 'Loading...',
@@ -201,16 +218,93 @@ const [currentUser, setCurrentUser] = useState({
 
     return (
         <div className={styles.myprofile}>
+            <Modal isOpen={isOpenFollowing} onClose={onCloseFollowing}>
+                <ModalOverlay/>
+                <ModalContent>
+                    <ModalHeader>Modal Title</ModalHeader>
+                    <ModalCloseButton/>
+                    <ModalBody>
+                        {user.following_users.map((user: any) => (
+                            <div key={user.id} className={styles2.following_user}>
+
+                                <div key={user.custom_id} className={styles2.group_member}>
+                                    <div>
+                                        {user.avatar_url ? (
+                                            <img className={styles.avatar}
+                                                 src={`http://localhost:3000${user.avatar_url}`}
+                                                 alt="avatar"/>
+                                        ) : (
+                                            <Avatar name={user.name}/>
+                                        )}
+
+
+                                    </div>
+
+                                    <div><p>{user.name}</p></div>
+
+
+                                </div>
+
+                            </div>
+                        ))}
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={onClose}>
+                            Close
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            <Modal isOpen={isOpenFollower} onClose={onCloseFollower}>
+                <ModalOverlay/>
+                <ModalContent>
+                    <ModalHeader>フォロー</ModalHeader>
+                    <ModalCloseButton/>
+                    <ModalBody>
+                        {user.followers.map((user: any) => (
+                            <Link to={`/user/${user.custom_id}`}>
+                                <div key={user.id} className={styles2.following_user}>
+
+                                    <div key={user.custom_id} className={styles2.group_member}>
+                                        <div><Avatar name={user.name} src={`http://localhost:3000${user.avatar_url}`}/>
+                                        </div>
+
+                                        <div><p>{user.name}</p></div>
+
+
+                                    </div>
+
+                                </div>
+                            </Link>
+                        ))}
+
+
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={onCloseFollower}>
+                            Close
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
             <div className={styles.component}>
                 <div className={styles.top}>
                     <div className={styles.introduce}>
-                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`}
-                             alt="avatar"/>
+                        {user.avatar_url ? (
+                            <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`}
+                                 alt="avatar"/>
+                        ) : (
+                            <Avatar name={user.name} style={{width: '200px', height: '200px'}}/>
+                        )}
+
+
                         <div className={styles.info}>
                             <div className={styles.follow}>
-                                <p>フォロー:100</p>
-                                <p>フォロワー:100</p>
-                                <p>投稿:100</p>
+                                <p onClick={onOpenFollowing}>フォロー:{user.following_count}</p>
+                                <p onClick={onOpenFollower}>フォロワー:{user.follower_count}</p>
+                                <p>投稿:{user.post_count}</p>
                                 <Button onClick={handleStartChat}>メッセージを送信する</Button>
                             </div>
                             <div className={styles.user}>
@@ -232,8 +326,14 @@ const [currentUser, setCurrentUser] = useState({
                                             <Card key={post.id} maxW='4xl' mb={4} padding={15}>
                                                 <Flex direction="column" justify="center" p={10}>
                                                     <Flex align="flex-start" mb={5}>
-                                                        <Avatar src={`http://localhost:3000${user.avatar_url}`}
-                                                                mr={4} className={style.avatar}/>
+
+                                                        {user.avatar_url ? (
+                                                            <img className={style.avatar}
+                                                                 src={`http://localhost:3000${user.avatar_url}`}
+                                                                 alt="avatar"/>
+                                                        ) : (
+                                                            <Avatar name={user.name}/>
+                                                        )}
                                                         <div>
                                                             <Text fontWeight='bold'>{user.name}</Text>
                                                             @{user.custom_id}
@@ -271,10 +371,10 @@ const [currentUser, setCurrentUser] = useState({
                                                                 <div key={index} className={style.comment}>
                                                                     <div className={style.comment_left}>
                                                                         <img className={style.avatar}
-                                                                             src={`http://localhost:3000${comment.avatar}`}
+                                                                             src={`${comment.avatar}`}
                                                                              alt="avatar"/>
                                                                     </div>
-                                                                    <div className={style.comment_left}>
+                                                                    <div className={style.comment_right}>
                                                                         <p>{comment.user_name}</p>
                                                                         <p key={index}>{comment.content}</p>
                                                                     </div>

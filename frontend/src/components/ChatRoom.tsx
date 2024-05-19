@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, FormEvent} from 'react';
 import axios from 'axios';
 import {useParams} from 'react-router-dom';
 import styles from '../styles/ChatRoom.module.scss';
@@ -47,7 +47,8 @@ function ChatRoom() {
         }
     }, [custom_id, name]);
 
-    const handleMessageSubmit = () => {
+    const handleMessageSubmit = (e: FormEvent) => {
+        e.preventDefault();
         const token = localStorage.getItem('token');
         if (token) {
             axios.post(`http://127.0.0.1:3000/users/${custom_id}/room/${id}/message?token=${token}`, {

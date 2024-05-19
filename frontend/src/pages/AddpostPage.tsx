@@ -1,5 +1,5 @@
-import { Input } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import {Input} from '@chakra-ui/react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import styles from '../styles/AddpostPage.module.scss';
@@ -15,9 +15,6 @@ function AddpostPage() {
                 'authorization': `Bearer ${token}`,
             },
         })
-            .then((response) => {
-                console.log(response);
-            })
             .catch((error) => {
                 console.error("Error:", error);
             });
@@ -36,7 +33,7 @@ function AddpostPage() {
 
     return (
         <div className={styles.add_post}>
-            <Sidebar />
+            <Sidebar/>
             <div className={styles.main_content}>
                 <h1>AddpostPage</h1>
                 <h2>投稿を追加</h2>
@@ -46,8 +43,8 @@ function AddpostPage() {
                     <button type="submit">投稿</button>
                 </form>
             </div>
-            </div>
-            );
-            }
+        </div>
+    );
+}
 
-            export default AddpostPage;
+export default AddpostPage;

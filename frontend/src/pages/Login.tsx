@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import styles from '../styles/Login.module.scss';
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Input, Button } from '@chakra-ui/react';
-import { useDispatch } from 'react-redux';
-import { setToken } from '../redux/authSlice';
-import { useNavigate } from 'react-router-dom';
+import {Tabs, TabList, TabPanels, Tab, TabPanel, Input, Button} from '@chakra-ui/react';
+import {useDispatch} from 'react-redux';
+import {setToken} from '../redux/authSlice';
+import {useNavigate} from 'react-router-dom';
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -35,7 +35,7 @@ const Login: React.FC = () => {
     const signUp = async () => {
         try {
             const response = await axios.post('http://127.0.0.1:3000/users', {
-                user: { email, password, name, birthday, custom_id: customId }
+                user: {email, password, name, birthday, custom_id: customId}
             });
             localStorage.setItem('token', response.data.token);
             dispatch(setToken(response.data.token));
@@ -47,7 +47,7 @@ const Login: React.FC = () => {
     const signIn = async () => {
         try {
             const response = await axios.post('http://127.0.0.1:3000/users/sign_in', {
-                user: { email: loginEmail, password: loginPassword }
+                user: {email: loginEmail, password: loginPassword}
             });
             localStorage.setItem('token', response.data.auth_token);
             axios.get(`http://127.0.0.1:3000/users/me?token=${response.data.auth_token}`)
@@ -74,7 +74,7 @@ const Login: React.FC = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me`,{
+            axios.get(`http://127.0.0.1:3000/users/me`, {
                 headers: {Authorization: `Bearer ${token}`}
             })
                 .then((response) => {
@@ -97,17 +97,24 @@ const Login: React.FC = () => {
                     <TabPanels>
                         <TabPanel className={styles.tab_panel}>
                             <p>Learn With Strangers!</p>
-                            <Input type="text" placeholder="Email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} />
-                            <Input type="password" placeholder="Password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
+                            <Input type="text" placeholder="Email" value={loginEmail}
+                                   onChange={(e) => setLoginEmail(e.target.value)}/>
+                            <Input type="password" placeholder="Password" value={loginPassword}
+                                   onChange={(e) => setLoginPassword(e.target.value)}/>
                             <Button colorScheme='blue' className={styles.button} onClick={signIn}>ログイン</Button>
                         </TabPanel>
                         <TabPanel className={styles.tab_panel}>
                             <p>Learn With Strangers!</p>
-                            <Input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                            <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                            <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-                            <Input type="text" placeholder="Custom id" value={customId} onChange={(e) => setCustomId(e.target.value)} />
-                            <Input type="date" placeholder="Birthday" value={birthday} onChange={(e) => setBirthday(e.target.value)} />
+                            <Input type="text" placeholder="Email" value={email}
+                                   onChange={(e) => setEmail(e.target.value)}/>
+                            <Input type="password" placeholder="Password" value={password}
+                                   onChange={(e) => setPassword(e.target.value)}/>
+                            <Input type="text" placeholder="Name" value={name}
+                                   onChange={(e) => setName(e.target.value)}/>
+                            <Input type="text" placeholder="Custom id" value={customId}
+                                   onChange={(e) => setCustomId(e.target.value)}/>
+                            <Input type="date" placeholder="Birthday" value={birthday}
+                                   onChange={(e) => setBirthday(e.target.value)}/>
                             <Button colorScheme='blue' className={styles.button} onClick={signUp}>登録</Button>
                         </TabPanel>
                     </TabPanels>
