@@ -1,5 +1,6 @@
 json.user do
   # ユーザー情報
+  json.id @user.id
   json.name @user.name
   json.custom_id @user.custom_id
   json.email @user.email
@@ -11,26 +12,8 @@ json.user do
   json.created_at @user.created_at
   json.updated_at @user.updated_at
   json.avatar_url url_for(@user.avatar) if @user.avatar.attached?
-  json.followed_by_current_user @current_user.followed_by?(@user) if @user.present?
-  json.following_count @user.followings.count
-  json.follower_count @user.followers.count
-  json.post_count @user.posts.count
-  json.following_users @user.following_users do |user|
-    json.id user.id
-    json.name user.name
-    json.custom_id user.custom_id
-    json.avatar_url url_for(user.avatar) if user.avatar.attached?
-  end
-  json.followers @user.followers do |follower|
-    json.id follower.id
-    json.name follower.name
-    json.custom_id follower.custom_id
-    json.avatar_url url_for(follower.avatar) if follower.avatar.attached?
-  end
-
-
-
-  # ユーザーの投稿情報
+　　　　json.followed_by_current_user @user.followed_by?(@current_user) if @current_user.present?
+# ユーザーの投稿情報
   json.posts @posts do |post|
     json.id post.id
     json.content post.content

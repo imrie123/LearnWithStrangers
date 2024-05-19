@@ -52,6 +52,7 @@ const OtherUserProfile = () => {
 
 
     const [user, setUser] = useState({
+        id: 0,
         name: 'Loading...',
         learning_language: 'Loading...',
         spoken_language: 'Loading...',
@@ -61,11 +62,6 @@ const OtherUserProfile = () => {
         custom_id: 'Loading...',
         user_id: null,
         followed_by_current_user: false,
-        following_count: 0,
-        follower_count: 0,
-        post_count: 0,
-        following_users: [],
-        followers: [],
     });
 
     const [posts, setPosts] = useState<Post[]>([]);
@@ -74,9 +70,19 @@ const OtherUserProfile = () => {
         post_id: null,
         id: null
     });
-    const {isOpen: isOpenFollowing, onOpen: onOpenFollowing, onClose: onCloseFollowing} = useDisclosure();
-    const {isOpen: isOpenFollower, onOpen: onOpenFollower, onClose: onCloseFollower} = useDisclosure();
 
+const [currentUser, setCurrentUser] = useState({
+        id: 0,
+        name: 'Loading...',
+        learning_language: 'Loading...',
+        spoken_language: 'Loading...',
+        residence: 'Loading...',
+        introduction: 'Loading...',
+        avatar_url: 'Loading...',
+        custom_id: 'Loading...',
+        user_id: null,
+        followed_by_current_user: false,
+    });
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -95,20 +101,37 @@ const OtherUserProfile = () => {
             });
     }, [custom_id]);
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            axios.get(`http://127.0.0.1:3000/users/me`, {
+                headers: {Authorization: `Bearer ${token}`},
+            })
+                .then((response) => {
+                    console.log(response.data);
+                    setCurrentUser(response.data.user);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+    }, []);
 
     const handleStartChat = () => {
         const token = localStorage.getItem('token');
-        axios.post(`http://127.0.0.1:3000/users/${custom_id}/room`, {}, {
-            headers: {Authorization: `Bearer ${token}`}
-        })
-            .then((response) => {
-                console.log(response.data);
-                navigate(`/${custom_id}/${response.data.id}/${response.data.name}`);
-
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+        axios.post(`http://127.0.0.1:3000/users/${custom_id}/room`, {
+            room: {
+                name: user.name,
+                user_id: currentUser.id
+            }
+        }, {
+            headers: { Authorization: `Bearer ${token}` }
+        }).then((response) => {
+            console.log(response.data);
+            navigate(`/${custom_id}/${response.data.id}/${response.data.name}`);
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
     }
 
     const handleFollow = () => {

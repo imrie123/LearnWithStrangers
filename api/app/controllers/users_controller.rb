@@ -3,13 +3,8 @@ class UsersController < ApplicationController
   def create
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
     if @response["idToken"]
-      if User.exists?(custom_id: user_params[:custom_id])
-        @error = "Custom ID already exists"
-        render "error", formats: :json, handlers: :jbuilder, status: :unauthorized
-      else
-        @user = User.create!(user_params)
-        render json: { id: @user.id, name: @user.name, email: @user.email, birthday: @user.birthday, custom_id: @user.custom_id }, status: :created
-      end
+      @user = User.create!(user_params)
+      render json: { token: @response["idToken"],id: @user.id, name: @user.name, email: @user.email, birthday: @user.birthday, custom_id: @user.custom_id }, status: :created
     else
       @error = @response["error"]["message"]
       render "error", formats: :json, handlers: :jbuilder, status: :unauthorized
@@ -29,34 +24,7 @@ class UsersController < ApplicationController
 
   def sign_out
     FirebaseService::SignOut.new(session[:token]).call
-    render "sign_out", status: :ok
-  end
-
-  def show
-    @user = User.find(params[:id])
-    render json: @user
-  end
-
-  def show_room
-    @user = User.find(params[:id])
-    @current_user_entry = Entry.where(user_id: current_user.id)
-    @user_entry = Entry.where(user_id: @user.id)
-    if @user.id == @current_user.id
-    else
-      @current_user_entry.each do |cu|
-        @user_entry.each do |u|
-          if cu.room_id == u.room_id then
-            @is_room = true
-            @room_id = cu.room_id
-          end
-        end
-      end
-      unless @is_room
-        @room = Room.new
-        @entry = Entry.new
-      end
-    end
-    render json: @room
+    head :ok
   end
 
   def show_by_custom_id
@@ -95,15 +63,15 @@ class UsersController < ApplicationController
           @followers = @user.followers
           render "me", formats: :json, handlers: :jbuilder, status: :ok
         else
-          @error = "User not found"
-          render "error", status: :not_found
+          render "error", status: :unauthorized
         end
-      else
-        @error = "Me Error"
-        render "error", status: :unprocessable_entity
       end
     end
   end
+
+
+
+
 
   def update
     token = request.headers['Authorization']&.split(' ')&.last
@@ -121,11 +89,6 @@ class UsersController < ApplicationController
         render "error", status: :unprocessable_entity
       end
     end
-  end
-
-  def index
-    @users = User.all
-    render "index", formats: :json, handlers: :jbuilder, status: :ok
   end
 
   def avatar
