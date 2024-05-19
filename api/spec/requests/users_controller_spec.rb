@@ -97,7 +97,7 @@ RSpec.describe UsersController, type: :request do
   end
 
   describe "POST /users/sign_in" do
-    subject { post '/users/sign_in', params: params}
+    subject { post '/users/sign_in', params: params }
 
     let(:params) do
       {
@@ -133,7 +133,7 @@ RSpec.describe UsersController, type: :request do
 
     context "異常系" do
       context "emailが存在しない場合" do
-        before  do
+        before do
           allow(FirebaseService::SignIn).to receive(:new).with(email, password).and_return(sign_in_service)
           allow(sign_in_service).to receive(:call).and_return({ "error" => { "message" => "error" } })
         end
@@ -168,8 +168,9 @@ RSpec.describe UsersController, type: :request do
       end
     end
   end
-  describe  "POST /users/sign_out" do
-    subject { post '/users/sign_out'}
+
+  describe "POST /users/sign_out" do
+    subject { post '/users/sign_out' }
 
     context "正常系" do
       it "ログアウトできる" do
@@ -179,7 +180,67 @@ RSpec.describe UsersController, type: :request do
     end
   end
 
-  describe "GET /" do
+  describe "GET /users/:custom_id" do
+    subject { get "/users/#{custom_id}" }
 
+    let(:custom_id) { "nosirie" }
+
+    context "正常系" do
+      before { create(:user, custom_id: custom_id) }
+
+      it "ユーザー情報が取得できる" do
+        subject
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "異常系" do
+      it "ユーザーが存在しない場合" do
+        subject
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe "GET /users/me" do
+    subject { get "/users/me", headers: headers }
+    let(:token) { "mock_token" }
+    let(:headers) { { 'Authorization' => "Bearer #{token}", 'Accept' => 'application/json' } }
+    let(:current_user) { create(:user) }
+
+    context "正常系" do
+      before do
+        allow_any_instance_of(UsersController).to receive(:verify_firebase_token).and_return([{ "email" => current_user.email }])
+      end
+
+      it "自分の情報が取得できる" do
+        subject
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "異常系" do
+      it "トークンがない場合" do
+        subject
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+  end
+
+  describe 'GET /users/random' do
+    before do
+      create_list(:user, 5)
+    end
+
+    it 'returns a success response' do
+      get '/users/random', as: :json
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'returns all users' do
+      get '/users/random', as: :json
+      json_response = JSON.parse(response.body)
+      expect(json_response.size).to eq(User.count)
+    end
   end
 end

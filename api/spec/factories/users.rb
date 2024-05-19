@@ -1,10 +1,18 @@
+# spec/factories/users.rb
 FactoryBot.define do
   factory :user do
-    id { |n| n }
-    email { |n| Faker::Internet.email }
-    password { |n| Faker::Internet.password(min_length: 8)}
-    name { |n| Faker::Name.name}
-    custom_id { |n| Faker::Name.name}
-    birthday { |n| Faker::Date.birthday(min_age: 18, max_age: 65) }
+    sequence(:id) { |n| n }
+    email { Faker::Internet.email }
+    password { Faker::Internet.password(min_length: 8) }
+    name { Faker::Name.name }
+    sequence(:custom_id) { |n| "custom_id_#{n}" }
+    birthday { Faker::Date.birthday(min_age: 18, max_age: 65) }
+  end
+  factory :current_user, class: User do
+    email { Faker::Internet.email }
+    password { Faker::Internet.password(min_length: 8) }
+    name { Faker::Name.name }
+    sequence(:custom_id) { |n| "custom_id_#{n}" }
+    birthday { Faker::Date.birthday(min_age: 18, max_age: 65) }
   end
 end

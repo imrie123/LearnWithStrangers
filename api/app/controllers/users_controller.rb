@@ -27,28 +27,6 @@ class UsersController < ApplicationController
     head :ok
   end
 
-  def show_room
-    @user = User.find(params[:id])
-    @current_user_entry = Entry.where(user_id: current_user.id)
-    @user_entry = Entry.where(user_id: @user.id)
-    if @user.id == @current_user.id
-    else
-      @current_user_entry.each do |cu|
-        @user_entry.each do |u|
-          if cu.room_id == u.room_id then
-            @is_room = true
-            @room_id = cu.room_id
-          end
-        end
-      end
-      unless @is_room
-        @room = Room.new
-        @entry = Entry.new
-      end
-    end
-    render json: @room
-  end
-
   def show_by_custom_id
     token = request.headers['Authorization']&.split(' ')&.last
     if token.present?
@@ -84,15 +62,15 @@ class UsersController < ApplicationController
           @following_users = @user.followings
           render "me", formats: :json, handlers: :jbuilder, status: :ok
         else
-          @error = "User not found"
-          render "error", status: :not_found
+          render "error", status: :unauthorized
         end
-      else
-        @error = "Me Error"
-        render "error", status: :unprocessable_entity
       end
     end
   end
+
+
+
+
 
   def update
     token = request.headers['Authorization']&.split(' ')&.last
@@ -110,11 +88,6 @@ class UsersController < ApplicationController
         render "error", status: :unprocessable_entity
       end
     end
-  end
-
-  def index
-    @users = User.all
-    render "index", formats: :json, handlers: :jbuilder, status: :ok
   end
 
   def avatar

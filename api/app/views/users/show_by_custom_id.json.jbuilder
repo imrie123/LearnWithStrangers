@@ -1,5 +1,6 @@
 json.user do
   # ユーザー情報
+  json.id @user.id
   json.name @user.name
   json.custom_id @user.custom_id
   json.email @user.email
@@ -11,8 +12,7 @@ json.user do
   json.created_at @user.created_at
   json.updated_at @user.updated_at
   json.avatar_url url_for(@user.avatar) if @user.avatar.attached?
-  json.followed_by_current_user @current_user.followed_by?(@user) if @user.present?
-
+  json.followed_by_current_user @user.followed_by?(@current_user) if @current_user.present?
   # ユーザーの投稿情報
   json.posts @posts do |post|
     json.id post.id

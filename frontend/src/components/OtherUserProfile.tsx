@@ -27,6 +27,7 @@ interface Post {
         user_name: string;
         avatar: string;
     }[];
+
 }
 
 const OtherUserProfile = () => {
@@ -34,6 +35,7 @@ const OtherUserProfile = () => {
     const navigate = useNavigate();
 
     const [user, setUser] = useState({
+        id: 0,
         name: 'Loading...',
         learning_language: 'Loading...',
         spoken_language: 'Loading...',
@@ -43,6 +45,7 @@ const OtherUserProfile = () => {
         custom_id: 'Loading...',
         user_id: null,
         followed_by_current_user: false,
+
     });
 
     const [posts, setPosts] = useState<Post[]>([]);
@@ -50,6 +53,18 @@ const OtherUserProfile = () => {
     const [likeData, setLikeData] = useState<{ post_id?: number | null, id?: number | null } | null>({
         post_id: null,
         id: null
+    });
+const [currentUser, setCurrentUser] = useState({
+        id: 0,
+        name: 'Loading...',
+        learning_language: 'Loading...',
+        spoken_language: 'Loading...',
+        residence: 'Loading...',
+        introduction: 'Loading...',
+        avatar_url: 'Loading...',
+        custom_id: 'Loading...',
+        user_id: null,
+        followed_by_current_user: false,
     });
 
     useEffect(() => {
@@ -62,26 +77,44 @@ const OtherUserProfile = () => {
                 setPosts(response.data.user.posts);
                 setLikeData(response.data.user.posts.map((post: Post) => post.liked_data));
                 console.log(response.data.user.posts.map((post: Post) => post.liked_data));
+                console.log(response.data);
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
     }, [custom_id]);
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            axios.get(`http://127.0.0.1:3000/users/me`, {
+                headers: {Authorization: `Bearer ${token}`},
+            })
+                .then((response) => {
+                    console.log(response.data);
+                    setCurrentUser(response.data.user);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+    }, []);
 
     const handleStartChat = () => {
         const token = localStorage.getItem('token');
-        axios.post(`http://127.0.0.1:3000/users/${custom_id}/room`, {}, {
-            headers: {Authorization: `Bearer ${token}`}
-        })
-            .then((response) => {
-                console.log(response.data);
-                navigate(`/${custom_id}/${response.data.id}/${response.data.name}`);
-
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+        axios.post(`http://127.0.0.1:3000/users/${custom_id}/room`, {
+            room: {
+                name: user.name,
+                user_id: currentUser.id
+            }
+        }, {
+            headers: { Authorization: `Bearer ${token}` }
+        }).then((response) => {
+            console.log(response.data);
+            navigate(`/${custom_id}/${response.data.id}/${response.data.name}`);
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
     }
 
     const handleFollow = () => {

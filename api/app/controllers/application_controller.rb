@@ -1,6 +1,13 @@
 class ApplicationController < ActionController::API
   include ActionController::Cookies
   require 'jwt'
+  before_action :verify_token
+
+  def current_user
+    @current_user
+  end
+
+
 
   def verify_token
     token = request.headers['Authorization']&.split(' ')&.last

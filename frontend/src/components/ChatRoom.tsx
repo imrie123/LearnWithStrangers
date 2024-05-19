@@ -32,7 +32,9 @@ function ChatRoom() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/${custom_id}/room/${id}?token=${token}`)
+            axios.get(`http://127.0.0.1:3000/users/${custom_id}/room/${id}`,  {
+                headers: {Authorization: `Bearer ${token}`}
+            })
                 .then((response) => {
                     console.log(response.data);
                     setRoom(response.data.room);

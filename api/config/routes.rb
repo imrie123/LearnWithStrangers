@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   end
 
   # ユーザーに関するルート
-  resources :users, only: [:create, :index] do
+  resources :users, only: [:create] do
     collection do
       post "sign_in"
       post "sign_out"
@@ -33,9 +33,7 @@ Rails.application.routes.draw do
     get 'followings' => 'relationships#followings', as: 'followings'
     get 'followers' => 'relationships#followers', as: 'followers'
 
-    resources :room, only: [:create, :show] do
-      resources :message, only: [:create, :index]
-    end
+
 
     # ユーザーの投稿に関するルート
     resources :posts, only: [] do

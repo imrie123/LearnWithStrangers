@@ -24,6 +24,8 @@ class User < ApplicationRecord
   has_many :group_users, foreign_key: :custom_id
   has_many :groups, through: :group_users
   has_many :owned_groups, class_name: "Group", foreign_key: :owner_id
+  has_many :user_rooms
+  has_many :rooms, through: :user_rooms
 
   # フォロー関連routes
   def follow(user)
