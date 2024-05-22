@@ -36,6 +36,7 @@
 /api/.yarn-integrity
 
 
+
 /frontend/node_modules
 /frontend/.pnp
 /frontend/.pnp.js
@@ -57,3 +58,4 @@
 /frontend/yarn-debug.log*
 /frontend/yarn-error.log*
 /api/.env
+/node_modules

@@ -55,7 +55,7 @@ function AuthenticatedRoutes() {
             <Route path="/addpost" element={<AddpostPage/>}/>
             <Route path="/editpost/:post_id" element={<EditpostPage/>}/>
             <Route path="/user/:custom_id" element={<OtherUserProfilePage/>}/>\
-            <Route path="/rooms/:id" element={<ChatPage/>}/>
+            <Route path="/room/:id" element={<ChatPage/>}/>
             <Route path="/group/:id" element={<GroupChatPage/>}/>
             <Route path="/message" element={<MessagePage/>}/>
         </Routes>

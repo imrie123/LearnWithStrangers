@@ -24,8 +24,9 @@ class User < ApplicationRecord
   has_many :group_users, foreign_key: :custom_id
   has_many :groups, through: :group_users
   has_many :owned_groups, class_name: "Group", foreign_key: :owner_id
-  has_many :user_rooms
-  has_many :rooms, through: :user_rooms
+  has_many :entries, dependent: :destroy
+  has_many :messages, dependent: :destroy
+  has_many :rooms, through: :entries
 
   # フォローする
   def follow(user)
@@ -95,5 +96,11 @@ class User < ApplicationRecord
   # フォローしているユーザーを取得
   def following_users
     self.followings
+  end
+
+  def common_room_with(user)
+    user_rooms = user.rooms
+    common_rooms = self.rooms & user_rooms
+    common_rooms.first
   end
 end

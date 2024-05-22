@@ -33,7 +33,8 @@ Rails.application.routes.draw do
     get 'followings' => 'relationships#followings', as: 'followings'
     get 'followers' => 'relationships#followers', as: 'followers'
 
-
+    # ユーザーのルームに関するルート
+    resources :rooms, only: [:create, :index]
 
     # ユーザーの投稿に関するルート
     resources :posts, only: [] do
@@ -48,6 +49,10 @@ Rails.application.routes.draw do
       get 'show_likes', to: 'posts#show_likes', on: :member
       post 'toggle_like', to: 'likes#toggle_like'
     end
+  end
+  # ルームに関するルート
+  resources :rooms, only: [:show] do
+    resources :messages, only: [:create, :index]
   end
 
   # フォロー中のユーザーの投稿に関するルート

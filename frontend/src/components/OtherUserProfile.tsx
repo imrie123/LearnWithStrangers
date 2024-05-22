@@ -14,11 +14,10 @@ import {
     ModalContent,
     ModalHeader,
     ModalCloseButton,
-    ModalBody,
     ModalFooter
 } from '@chakra-ui/react';
 import {useDisclosure} from '@chakra-ui/hooks';
-import styles2 from '../styles/GroupChat.module.scss';
+
 
 interface Post {
     id: number;
@@ -62,6 +61,11 @@ const OtherUserProfile = () => {
         custom_id: 'Loading...',
         user_id: null,
         followed_by_current_user: false,
+        following_count: 0,
+        follower_count: 0,
+        post_count: 0,
+        following_users: [],
+        followers: [],
     });
 
     const [posts, setPosts] = useState<Post[]>([]);
@@ -70,8 +74,10 @@ const OtherUserProfile = () => {
         post_id: null,
         id: null
     });
+    const {isOpen: isOpenFollowing, onOpen: onOpenFollowing, onClose: onCloseFollowing} = useDisclosure();
+    const {isOpen: isOpenFollower, onOpen: onOpenFollower, onClose: onCloseFollower} = useDisclosure();
 
-const [currentUser, setCurrentUser] = useState({
+    const [currentUser, setCurrentUser] = useState({
         id: 0,
         name: 'Loading...',
         learning_language: 'Loading...',
@@ -114,21 +120,22 @@ const [currentUser, setCurrentUser] = useState({
                 .catch((error) => {
                     console.error('Error:', error);
                 });
-            }
+        }
     }, []);
 
     const handleStartChat = () => {
         const token = localStorage.getItem('token');
-        axios.post(`http://127.0.0.1:3000/users/${custom_id}/room`, {
+        axios.post(`http://127.0.0.1:3000/users/${custom_id}/rooms`, {
             room: {
                 name: user.name,
-                user_id: currentUser.id
+                current_user_custom_id: currentUser.id,
+                other_user_custom_id: user.id, // ここで user の id を正しく取得する
             }
         }, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: {Authorization: `Bearer ${token}`}
         }).then((response) => {
             console.log(response.data);
-            navigate(`/${custom_id}/${response.data.id}/${response.data.name}`);
+            navigate(`/room/${response.data.id}`);
         }).catch((error) => {
             console.error('Error:', error);
         });
@@ -223,31 +230,31 @@ const [currentUser, setCurrentUser] = useState({
                 <ModalContent>
                     <ModalHeader>Modal Title</ModalHeader>
                     <ModalCloseButton/>
-                    <ModalBody>
-                        {user.following_users.map((user: any) => (
-                            <div key={user.id} className={styles2.following_user}>
+                    {/*<ModalBody>*/}
+                    {/*    {user.following_users.map((user: any) => (*/}
+                    {/*        <div key={user.id} className={styles2.following_user}>*/}
 
-                                <div key={user.custom_id} className={styles2.group_member}>
-                                    <div>
-                                        {user.avatar_url ? (
-                                            <img className={styles.avatar}
-                                                 src={`http://localhost:3000${user.avatar_url}`}
-                                                 alt="avatar"/>
-                                        ) : (
-                                            <Avatar name={user.name}/>
-                                        )}
-
-
-                                    </div>
-
-                                    <div><p>{user.name}</p></div>
+                    {/*            <div key={user.custom_id} className={styles2.group_member}>*/}
+                    {/*                <div>*/}
+                    {/*                    {user.avatar_url ? (*/}
+                    {/*                        <img className={styles.avatar}*/}
+                    {/*                             src={`http://localhost:3000${user.avatar_url}`}*/}
+                    {/*                             alt="avatar"/>*/}
+                    {/*                    ) : (*/}
+                    {/*                        <Avatar name={user.name}/>*/}
+                    {/*                    )}*/}
 
 
-                                </div>
+                    {/*                </div>*/}
 
-                            </div>
-                        ))}
-                    </ModalBody>
+                    {/*                <div><p>{user.name}</p></div>*/}
+
+
+                    {/*            </div>*/}
+
+                    {/*        </div>*/}
+                    {/*    ))}*/}
+                    {/*</ModalBody>*/}
 
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={onClose}>
@@ -261,26 +268,26 @@ const [currentUser, setCurrentUser] = useState({
                 <ModalContent>
                     <ModalHeader>フォロー</ModalHeader>
                     <ModalCloseButton/>
-                    <ModalBody>
-                        {user.followers.map((user: any) => (
-                            <Link to={`/user/${user.custom_id}`}>
-                                <div key={user.id} className={styles2.following_user}>
+                    {/*<ModalBody>*/}
+                    {/*    {user.followers.map((user: any) => (*/}
+                    {/*        <Link to={`/user/${user.custom_id}`}>*/}
+                    {/*            <div key={user.id} className={styles2.following_user}>*/}
 
-                                    <div key={user.custom_id} className={styles2.group_member}>
-                                        <div><Avatar name={user.name} src={`http://localhost:3000${user.avatar_url}`}/>
-                                        </div>
+                    {/*                <div key={user.custom_id} className={styles2.group_member}>*/}
+                    {/*                    <div><Avatar name={user.name} src={`http://localhost:3000${user.avatar_url}`}/>*/}
+                    {/*                    </div>*/}
 
-                                        <div><p>{user.name}</p></div>
-
-
-                                    </div>
-
-                                </div>
-                            </Link>
-                        ))}
+                    {/*                    <div><p>{user.name}</p></div>*/}
 
 
-                    </ModalBody>
+                    {/*                </div>*/}
+
+                    {/*            </div>*/}
+                    {/*        </Link>*/}
+                    {/*    ))}*/}
+
+
+                    {/*</ModalBody>*/}
 
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={onCloseFollower}>
