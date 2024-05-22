@@ -4,7 +4,7 @@ class UsersController < ApplicationController
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
     if @response["idToken"]
       @user = User.create!(user_params)
-      render json: { token: @response["idToken"],id: @user.id, name: @user.name, email: @user.email, birthday: @user.birthday, custom_id: @user.custom_id }, status: :created
+      render json: { token: @response["idToken"], id: @user.id, name: @user.name, email: @user.email, birthday: @user.birthday, custom_id: @user.custom_id }, status: :created
     else
       @error = @response["error"]["message"]
       render "error", formats: :json, handlers: :jbuilder, status: :unauthorized
@@ -61,6 +61,7 @@ class UsersController < ApplicationController
           @all_posts = @user_posts + @following_user_posts
           @following_users = @user.followings
           @followers = @user.followers
+          @user_rooms = @user.rooms.includes(:entries, :messages)
           render "me", formats: :json, handlers: :jbuilder, status: :ok
         else
           render "error", status: :unauthorized
@@ -68,10 +69,6 @@ class UsersController < ApplicationController
       end
     end
   end
-
-
-
-
 
   def update
     token = request.headers['Authorization']&.split(' ')&.last
@@ -114,6 +111,26 @@ class UsersController < ApplicationController
   def random
     @random_users = User.all
     render "random", formats: :json, handlers: :jbuilder, status: :ok
+  end
+
+  def show
+    @user = User.find(params[:id])
+    @current_entry = Entry.find_by(user_id: @current_user.id)
+    @another_entry = Entry.find_by(user_id: @user.id)
+    unless @user.id === @current_user.id
+      @current_entry.each do |current|
+        @another_entry.each do |another|
+          if current.room_id === another.room_id
+            @is_room = true
+            @room_id = current.room_id
+          end
+        end
+      end
+      unless @is_room
+        @room = Room.new
+        @entry = Entry.new
+      end
+    end
   end
 
   private

@@ -14,22 +14,25 @@ interface Room {
 }
 
 function Message() {
-    const [userRooms, setUserRooms] = useState([]);
+    const [userRooms, setUserRooms] = useState<Room[]>([]);
 
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me`, {
-                headers: {Authorization: `Bearer ${token}`}
-            })
-                .then((response) => {
+        const fetchUserRooms = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (token) {
+                    const response = await axios.get(`http://127.0.0.1:3000/users/me`, {
+                        headers: {Authorization: `Bearer ${token}`}
+                    });
                     setUserRooms(response.data.user.user_rooms);
-                })
-                .catch((error) => {
-                    console.error("Error fetching posts:", error);
-                });
-        }
+                }
+            } catch (error) {
+                console.error("Error fetching user rooms:", error);
+            }
+        };
+
+        fetchUserRooms();
     }, []);
 
 
@@ -46,7 +49,7 @@ function Message() {
                             {userRooms.map((room: Room) => (
                                 <Card key={room.id}>
                                     <CardHeader>
-                                        <Link to={`/rooms/${room.id}`}>
+                                        <Link to={`/room/${room.id}`}>
                                             <Heading size='md'>
                                                 {room.name}
                                             </Heading>

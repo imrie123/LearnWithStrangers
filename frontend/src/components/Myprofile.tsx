@@ -46,11 +46,11 @@ interface Post {
     likes_count: number;
     liked_by_current_user: boolean;
     avatar_url: string;
-    comments: [];
+    comments: any[];
     custom_id: string;
-    following_user_posts: [];
-    user_posts: [];
-    liked_posts: [];
+    following_user_posts: any[];
+    user_posts: any[];
+    liked_posts: any[];
     following_count: number;
     follower_count: number;
     post_count: number;
@@ -82,37 +82,25 @@ function MyProfile() {
 
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me`, {
-                headers: {Authorization: `Bearer ${token}`}
-            })
-                .then((response) => {
-                    console.log(response.data.user.liked_posts)
-                    setPosts(response.data.user.user_posts);
-                    setLikedPosts(response.data.user.liked_posts);
-                })
-                .catch((error) => {
-                    console.error("Error fetching posts:", error);
-                });
-        }
-    }, []);
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me`, {
-                headers: {Authorization: `Bearer ${token}`}
-            })
-                .then((response) => {
+        const fetchUserData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (token) {
+                    const response = await axios.get(`http://127.0.0.1:3000/users/me`, {
+                        headers: {Authorization: `Bearer ${token}`}
+                    });
                     setUser(response.data.user);
                     setPosts(response.data.user.user_posts);
-                })
-                .catch((error) => {
-                    console.error("Error fetching user data:", error);
-                });
-        }
+                    setLikedPosts(response.data.user.liked_posts);
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData();
     }, []);
+
 
     const deletePost = (id: number) => {
         const token = localStorage.getItem('token');
