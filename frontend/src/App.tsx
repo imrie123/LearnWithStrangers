@@ -16,6 +16,7 @@ import OtherUserProfilePage from "./pages/OtherUserProfilePage";
 import ChatPage from "./pages/ChatPage";
 import GroupChatPage from "./pages/GroupChatPage";
 import MessagePage from "./pages/MessagePage";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
     const token = useSelector((state: RootState) => state.auth.token);
@@ -58,6 +59,7 @@ function AuthenticatedRoutes() {
             <Route path="/room/:id" element={<ChatPage/>}/>
             <Route path="/group/:id" element={<GroupChatPage/>}/>
             <Route path="/message" element={<MessagePage/>}/>
+            <Route path="/search" element={<SearchPage/>}/>
         </Routes>
     );
 }

@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :verify_token, only: [:search]
 
   def create
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
@@ -130,6 +131,29 @@ class UsersController < ApplicationController
         @room = Room.new
         @entry = Entry.new
       end
+    end
+  end
+
+  def search
+    query = params[:query]
+    criteria = params[:criteria]
+    case criteria
+    when "name"
+      @users = User.where('name LIKE ?', "%#{query}%")
+    when "residence"
+      @users = User.where('residence LIKE ?', "%#{query}%")
+    when "learning_language"
+      @users = User.where('learning_language LIKE ?', "%#{query}%")
+    when "spoken_language"
+      @users = User.where('spoken_language LIKE ?', "%#{query}%")
+    else
+      @users = User.where('custom_id LIKE ?', "%#{query}%")
+    end
+
+    if @users.present?
+      render 'search', formats: :json, handlers: :jbuilder, status: :ok
+    else
+      render json: { error: 'not found' }, status: :not_found
     end
   end
 
