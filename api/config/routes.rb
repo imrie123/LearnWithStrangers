@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       post "avatar"
       get "me"
       get "random"
+      get 'search'
     end
   end
 
