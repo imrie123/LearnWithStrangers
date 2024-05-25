@@ -83,11 +83,12 @@ function ChatRoom() {
                     {messages && messages.map((message: Message) => (
                         <li key={message.message_id}>
                             <div className={styles.message_list}>
-                                {message.user ? (
-                                    <Avatar src={message.user.avatar_url} name={message.user.name}
+                                {message.user.avatar_url ? (
+                                    <Avatar src={`http://localhost:3000${message.user.avatar_url}`}
+                                            name={message.user.name}
                                             className={styles.avatar}/>
                                 ) : (
-                                    <Avatar name="Unknown" className={styles.avatar}/>
+                                    <Avatar name={message.user.name} className={styles.avatar}/>
                                 )}
                                 <div className={styles.balloon}>
                                     <p className={styles.name}>{message.user.name}</p>

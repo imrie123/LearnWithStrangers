@@ -12,6 +12,7 @@ json.user do
     json.name post.user.name
     json.custom_id post.user.custom_id
     json.comments_count post.comments.count
+    json.avatar_url url_for(post.user.avatar) if post.user.avatar.attached?
     json.comments post.comments do |comment|
       json.extract! comment, :id, :content, :created_at, :updated_at
       json.user_name comment.user.name
@@ -23,7 +24,12 @@ json.user do
   json.user_posts @user_posts do |post|
     json.extract! post, :id, :user_id, :image_url, :content, :created_at, :updated_at, :likes_count
     json.liked_by_current_user post.liked_by?(@current_user) if @current_user.present?
-    json.comments post.comments
+    json.comments post.comments do |comment|
+      json.extract! comment, :id, :content, :created_at, :updated_at
+      json.user_name comment.user.name
+      json.custom_id comment.user.custom_id
+      json.avatar_url url_for(comment.user.avatar) if comment.user.avatar.attached?
+    end
   end
 
   json.following_user_posts @following_user_posts do |post|

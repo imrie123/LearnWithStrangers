@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :verify_token, only: [:search]
+  before_action :verify_token
 
   def create
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
@@ -72,40 +72,23 @@ class UsersController < ApplicationController
   end
 
   def update
-    token = request.headers['Authorization']&.split(' ')&.last
-    if token.present?
-      decoded_token = verify_firebase_token(token)
-      email = decoded_token[0]["email"]
-      if email
-        @user = User.find_by(email: email)
-        @user.avatar.attach(params[:avatar])
-        @user.update!(user_params)
-
-        render "update", formats: :json, handlers: :jbuilder, status: :ok
-      else
-        @error = "Update Error"
-        render "error", status: :unprocessable_entity
-      end
+    @current_user.update(update_params)
+    if @current_user.save
+      render "update", formats: :json, handlers: :jbuilder, status: :ok
+    else
+      @error = "Update Error"
+      render "error", status: :unprocessable_entity
     end
   end
 
   def avatar
-    token = request.headers['Authorization']&.split(' ')&.last
-
-    if token.present?
-      decoded_token = verify_firebase_token(token)
-      email = decoded_token[0]["email"]
-
-      if email
-        @user = User.find_by(email: email)
-        @user.update(avatar: params[:user][:avatar])
-        avatar_url = @user.avatar.attached? ? url_for(@user.avatar) : nil
-        @avatar_url = avatar_url
-
-        render "avatar", formats: :json, handlers: :jbuilder, status: :ok
-      else
-        render json: { error: 'Update Error: Email not found' }, status: :unprocessable_entity
-      end
+    @current_user.update(update_params)
+    avatar_url = @current_user.avatar.attached? ? url_for(@current_user.avatar) : nil
+    @avatar_url = avatar_url
+    if @current_user.save
+      render "avatar", formats: :json, handlers: :jbuilder, status: :ok
+    else
+      render json: { error: 'Update Error: Email not found' }, status: :unprocessable_entity
     end
   end
 
@@ -160,6 +143,11 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:id, :email, :password, :name, :birthday, :spoken_language, :learning_language, :introduction, :avatar, :custom_id)
+    params.require(:user).permit(:id, :email, :password, :name, :birthday, :spoken_language, :learning_language, :introduction, :avatar, :custom_id, :residence)
   end
+
+  def update_params
+    params.require(:user).permit(:name, :spoken_language, :learning_language, :introduction, :avatar, :residence)
+  end
+
 end
