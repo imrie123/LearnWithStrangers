@@ -66,8 +66,11 @@ function Setting() {
             learning_language: learningLanguage,
             spoken_language: spokenLanguage,
             residence,
-            introduction,
-            token
+            introduction
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
         })
             .then((response) => {
                 console.log(response.data.user);

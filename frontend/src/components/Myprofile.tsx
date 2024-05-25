@@ -94,6 +94,7 @@ function MyProfile() {
                     setUser(response.data.user);
                     setPosts(response.data.user.user_posts);
                     setLikedPosts(response.data.user.liked_posts);
+                    console.log(response.data.user);
                 }
             } catch (error) {
                 console.error('Error fetching user data:', error);
@@ -288,7 +289,7 @@ function MyProfile() {
                                                         <div className={styles.comment_left}>
                                                             <Link to={`/user/${post.custom_id}`}>
                                                                 <img className={styles.comment_avatar}
-                                                                     src={`http://localhost:3000${comment.avatar}`}
+                                                                     src={`http://localhost:3000${comment.avatar_url}`}
                                                                      alt="avatar"/>
                                                             </Link>
                                                         </div>
@@ -316,9 +317,9 @@ function MyProfile() {
                                                 <div className={styles.post_top}>
                                                     <div>
                                                         <Link to={`/user/${post.custom_id}`}>
-                                                            {user.image_url ? (
-                                                                <img className={styles.avatar}
-                                                                     src={`http://localhost:3000${user.image_url}`}
+                                                            {post.avatar_url ? (
+                                                                <img className={styles.liked_post_avatar}
+                                                                     src={`http://localhost:3000${post.avatar_url}`}
                                                                      alt="avatar"/>
                                                             ) : (
                                                                 <Avatar name={post.name}/>
@@ -372,9 +373,14 @@ function MyProfile() {
                                                     <div key={index} className={styles.comment}>
                                                         <div className={styles.comment_left}>
                                                             <Link to={`/user/${comment.custom_id}`}>
-                                                                <img className={styles.comment_avatar}
-                                                                     src={`http://localhost:3000${comment.avatar_url}`}
-                                                                     alt="avatar"/>
+                                                                {comment.avatar_url ? (
+                                                                    <img className={styles.liked_post_avatar}
+                                                                         src={`http://localhost:3000${comment.avatar_url}`}
+                                                                         alt="avatar"/>
+                                                                ) : (
+                                                                    <Avatar name={post.name}/>
+                                                                )}
+
                                                             </Link>
                                                         </div>
                                                         <div className={styles.comment_right}>
