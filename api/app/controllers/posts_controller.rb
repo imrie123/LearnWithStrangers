@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
   before_action :verify_token, only: [:create, :update, :destroy, :index, :other_user_posts]
+  skip_before_action :verify_token, only: [:show]
 
   def create
     @post = @current_user.posts.build(post_params)
@@ -66,24 +67,12 @@ class PostsController < ApplicationController
     end
   end
 
-
+  def show
+    @post = Post.find(params[:id])
+    render 'show', formats: :json, handlers: :jbuilder, status: :ok
+  end
 
   private
-
-  def verify_token
-    token = request.headers['Authorization']&.split(' ')&.last
-
-    if token.present?
-      decoded_token = verify_firebase_token(token)
-      email = decoded_token[0]["email"]
-      @current_user = User.find_by(email: email)
-      unless @current_user
-        render json: { error: "Invalid token" }, status: :unprocessable_entity
-      end
-    else
-      render json: { error: "Token is missing" }, status: :unprocessable_entity
-    end
-  end
 
   def post_params
     params.require(:post).permit(:content, :image)

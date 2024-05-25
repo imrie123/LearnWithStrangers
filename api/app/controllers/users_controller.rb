@@ -58,7 +58,7 @@ class UsersController < ApplicationController
           @current_user = User.find_by(email: email)
           @user_posts = @user.posts
           @liked_posts = @user.liked_posts
-          @following_user_posts = @user.following_user_posts
+          @following_user_posts = @user.following_user_posts + @user_posts
           @all_posts = @user_posts + @following_user_posts
           @following_users = @user.followings
           @followers = @user.followers

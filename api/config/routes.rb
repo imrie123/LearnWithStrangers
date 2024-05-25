@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   end
 
   # 投稿に関するルート
-  resources :posts, only: [:create, :index, :update, :destroy] do
+  resources :posts, only: [:create, :index, :update, :destroy, :show] do
     resources :comments, only: [:create, :destroy]
   end
 

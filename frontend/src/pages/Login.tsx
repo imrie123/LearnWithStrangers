@@ -50,7 +50,9 @@ const Login: React.FC = () => {
                 user: {email: loginEmail, password: loginPassword}
             });
             localStorage.setItem('token', response.data.auth_token);
-            axios.get(`http://127.0.0.1:3000/users/me?token=${response.data.auth_token}`)
+            axios.get(`http://127.0.0.1:3000/users/me`, {
+                headers: {Authorization: `Bearer ${response.data.auth_token}`}
+            })
                 .then((response) => {
                     setUser(response.data.user);
                     navigate(`/`);
