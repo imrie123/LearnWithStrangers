@@ -17,6 +17,7 @@ import ChatPage from "./pages/ChatPage";
 import GroupChatPage from "./pages/GroupChatPage";
 import MessagePage from "./pages/MessagePage";
 import SearchPage from "./pages/SearchPage";
+import SharePage from "./pages/SharePage";
 
 function App() {
     const token = useSelector((state: RootState) => state.auth.token);
@@ -30,15 +31,17 @@ function App() {
                 dispatch(setToken(localToken));
             }
         }
-    }, [token]);
+    }, [token, dispatch]);
 
     return (
         <BrowserRouter>
             <Routes>
-                {token ?
-                    <Route path="*" element={<AuthenticatedRoutes/>}/> :
+                <Route path="/share/:id" element={<SharePage/>}/>
+                {token ? (
+                    <Route path="*" element={<AuthenticatedRoutes/>}/>
+                ) : (
                     <Route path="*" element={<UnauthenticatedRoutes/>}/>
-                }
+                )}
             </Routes>
         </BrowserRouter>
     );
@@ -47,7 +50,7 @@ function App() {
 function AuthenticatedRoutes() {
     return (
         <Routes>
-            <Route path="*" element={<MyprofilePage/>}/>
+            <Route path="/" element={<MyprofilePage/>}/>
             <Route path="/findchat" element={<FindchatPage/>}/>
             <Route path="/findpost" element={<FindpostPage/>}/>
             <Route path="/seepost" element={<SeepostPage/>}/>
@@ -55,7 +58,7 @@ function AuthenticatedRoutes() {
             <Route path="/setting" element={<SettingPages/>}/>
             <Route path="/addpost" element={<AddpostPage/>}/>
             <Route path="/editpost/:post_id" element={<EditpostPage/>}/>
-            <Route path="/user/:custom_id" element={<OtherUserProfilePage/>}/>\
+            <Route path="/user/:custom_id" element={<OtherUserProfilePage/>}/>
             <Route path="/room/:id" element={<ChatPage/>}/>
             <Route path="/group/:id" element={<GroupChatPage/>}/>
             <Route path="/message" element={<MessagePage/>}/>

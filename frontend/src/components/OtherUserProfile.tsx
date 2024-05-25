@@ -17,6 +17,7 @@ import {
     ModalFooter
 } from '@chakra-ui/react';
 import {useDisclosure} from '@chakra-ui/hooks';
+import {FacebookIcon, FacebookShareButton, TwitterIcon, TwitterShareButton} from "react-share";
 
 
 interface Post {
@@ -368,9 +369,14 @@ const OtherUserProfile = () => {
                                                         <div className={style.comment_button}>
                                                             <QuestionAnswerOutlinedIcon/>コメント{post.comments.length}件
                                                         </div>
-
-                                                        <Button variant='ghost'
-                                                                leftIcon={<BiShare/>}>シェア</Button>
+                                                        <FacebookShareButton
+                                                            url={`http://localhost:3001/share/${post.id}`}>
+                                                            <FacebookIcon size={32} round={true}/>
+                                                        </FacebookShareButton>
+                                                        <TwitterShareButton
+                                                            url={`http://localhost:3001/share/${post.id}`}>
+                                                            <TwitterIcon size={32} round={true}/>
+                                                        </TwitterShareButton>
                                                     </div>
                                                     <CardFooter p={3} className={style.footer_component}>
                                                         <div className={style.comment_component}>
