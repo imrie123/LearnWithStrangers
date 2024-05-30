@@ -31,6 +31,7 @@ function Sidebar() {
 
     const items = [
         {name: "プロフィール", path: `/`, icon: <Icon as={MdQuestionAnswer}/>},
+        {name: "掲示板", path: "/bulletin"},
         {name: "メッセージ", path: "/message"},
         {name: "会話相手を探す", path: "/findchat"},
         {name: "グループチャットに参加する", path: "/findgroup"},

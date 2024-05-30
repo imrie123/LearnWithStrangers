@@ -55,6 +55,10 @@ Rails.application.routes.draw do
   resources :rooms, only: [:show] do
     resources :messages, only: [:create, :index]
   end
+  #掲示板に関するルート
+  resources :bulletin, only: [:create, :index, :show] do
+    resources :replies, only: [:create]
+  end
 
   # フォロー中のユーザーの投稿に関するルート
   get '/following_user_posts', to: 'posts#following_user_posts', as: 'following_user_posts'
