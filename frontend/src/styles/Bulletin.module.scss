@@ -1,0 +1,55 @@
+.bulletin {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+
+  .top {
+    border-bottom: 1px solid lightgray;
+    padding: 10px;
+  }
+
+  .middle {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+
+    .reply_user {
+      display: flex;
+    }
+
+    ul.reply_list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  .bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+    background: white;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+
+    .input {
+      display: flex;
+      align-items: center;
+
+      Input {
+        background-color: white;
+      }
+    }
+  }
+
+  .reply_user {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+
+    p {
+      padding-left: 10px;
+    }
+  }
+}

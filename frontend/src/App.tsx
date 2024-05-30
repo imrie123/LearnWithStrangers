@@ -18,6 +18,8 @@ import GroupChatPage from "./pages/GroupChatPage";
 import MessagePage from "./pages/MessagePage";
 import SearchPage from "./pages/SearchPage";
 import SharePage from "./pages/SharePage";
+import BulletinBoardPage from "./pages/BulletinBoardPage";
+import BulletinPage from "./pages/BulletinPage";
 
 function App() {
     const token = useSelector((state: RootState) => state.auth.token);
@@ -63,6 +65,8 @@ function AuthenticatedRoutes() {
             <Route path="/group/:id" element={<GroupChatPage/>}/>
             <Route path="/message" element={<MessagePage/>}/>
             <Route path="/search" element={<SearchPage/>}/>
+            <Route path="/bulletin" element={<BulletinBoardPage/>}/>
+            <Route path='/bulletin/:id' element={<BulletinPage/>}/>
         </Routes>
     );
 }
