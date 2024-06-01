@@ -42,7 +42,7 @@ class User < ApplicationRecord
 
   # フォローしているかどうかを判定
   def followed_by?(user)
-    relationships.find_by(follower_id: id, followed_id: user.id).present?
+    relationships.find_by(follower_id: user.id, followed_id: id).present?
   end
 
   #　フォローしているユーザーの投稿を取得
