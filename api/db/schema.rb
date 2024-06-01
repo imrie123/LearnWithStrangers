@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_30_021228) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_01_061938) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -110,6 +110,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_30_021228) do
     t.text "content", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "translated_content"
     t.index ["room_id"], name: "index_messages_on_room_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
@@ -126,6 +127,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_30_021228) do
     t.datetime "updated_at", null: false
     t.integer "follower_id"
     t.integer "followed_id"
+    t.index ["follower_id", "followed_id"], name: "index_relationships_on_follower_id_and_followed_id", unique: true
   end
 
   create_table "replies", charset: "utf8mb3", force: :cascade do |t|

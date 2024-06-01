@@ -42,7 +42,7 @@ class User < ApplicationRecord
 
   # フォローしているかどうかを判定
   def followed_by?(user)
-    relationships.find_by(follower_id: user.id, followed_id: id).present?
+    reverse_of_relationships.find_by(follower_id: user.id).present?
   end
 
   #　フォローしているユーザーの投稿を取得
@@ -83,6 +83,10 @@ class User < ApplicationRecord
   # フォロー数を取得
   def following_count
     self.followings.count
+  end
+
+  def following?(user)
+    relationships.exists?(followed_id: user.id)
   end
 
   # フォロワー数を取得
