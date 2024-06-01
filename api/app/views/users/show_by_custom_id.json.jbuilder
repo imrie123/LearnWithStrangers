@@ -12,6 +12,7 @@ json.user do
   json.created_at @user.created_at
   json.updated_at @user.updated_at
   json.avatar_url url_for(@user.avatar) if @user.avatar.attached?
+  binding.pry
   json.followed_by_current_user @user.followed_by?(@current_user) if @current_user.present?
   # ユーザーの投稿情報
   json.posts @posts do |post|
