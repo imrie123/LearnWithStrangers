@@ -79,7 +79,7 @@ function Bulletinboard() {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay/>
                 <ModalContent>
-                    <ModalHeader>掲示板</ModalHeader>
+                    <ModalHeader>Bulletin Board</ModalHeader>
                     <ModalCloseButton/>
                     <ModalBody>
                         <form onSubmit={handleBulletinSubmit}>
@@ -87,7 +87,7 @@ function Bulletinboard() {
                                 <div className={styles.input}>
                                     <Input type='text' value={title} onChange={(e) => setTitle(e.target.value)}/>
                                     <Input type='text' value={content} onChange={(e) => setContent(e.target.value)}/>
-                                    <Button type='submit'>送信</Button>
+                                    <Button type='submit'>Submit</Button>
                                 </div>
                             </FormControl>
                         </form>
@@ -100,7 +100,7 @@ function Bulletinboard() {
                 </ModalContent>
             </Modal>
             <h1>Bulletinboard</h1>
-            <Button onClick={handleBulletin}>新しく作成する</Button>
+            <Button onClick={handleBulletin}>Create New</Button>
 
             <Stack spacing='4' className={style.stack}>
                 {bulletins.map((bulletin: Bulletin) => (

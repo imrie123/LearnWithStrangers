@@ -93,8 +93,8 @@ const Login: React.FC = () => {
             <div className={styles.formContainer}>
                 <Tabs isFitted variant='enclosed'>
                     <TabList mb='1em'>
-                        <Tab onClick={toggleForm}>ログイン</Tab>
-                        <Tab onClick={toggleForm}>登録</Tab>
+                        <Tab onClick={toggleForm}>Login</Tab>
+                        <Tab onClick={toggleForm}>Registration</Tab>
                     </TabList>
                     <TabPanels>
                         <TabPanel className={styles.tab_panel}>
@@ -103,7 +103,7 @@ const Login: React.FC = () => {
                                    onChange={(e) => setLoginEmail(e.target.value)}/>
                             <Input type="password" placeholder="Password" value={loginPassword}
                                    onChange={(e) => setLoginPassword(e.target.value)}/>
-                            <Button colorScheme='blue' className={styles.button} onClick={signIn}>ログイン</Button>
+                            <Button colorScheme='blue' className={styles.button} onClick={signIn}>Login</Button>
                         </TabPanel>
                         <TabPanel className={styles.tab_panel}>
                             <p>Learn With Strangers!</p>
@@ -117,7 +117,7 @@ const Login: React.FC = () => {
                                    onChange={(e) => setCustomId(e.target.value)}/>
                             <Input type="date" placeholder="Birthday" value={birthday}
                                    onChange={(e) => setBirthday(e.target.value)}/>
-                            <Button colorScheme='blue' className={styles.button} onClick={signUp}>登録</Button>
+                            <Button colorScheme='blue' className={styles.button} onClick={signUp}>Registration</Button>
                         </TabPanel>
                     </TabPanels>
                 </Tabs>

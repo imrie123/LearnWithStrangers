@@ -131,7 +131,7 @@ function MyProfile() {
             <Modal isOpen={isOpenFollowing} onClose={onCloseFollowing}>
                 <ModalOverlay/>
                 <ModalContent>
-                    <ModalHeader>フォロー</ModalHeader>
+                    <ModalHeader>Following</ModalHeader>
                     <ModalCloseButton/>
                     <ModalBody>
                         {user.following_users.map((user: any) => (
@@ -164,7 +164,7 @@ function MyProfile() {
             <Modal isOpen={isOpenFollower} onClose={onCloseFollower}>
                 <ModalOverlay/>
                 <ModalContent>
-                    <ModalHeader>フォロー</ModalHeader>
+                    <ModalHeader>Followers</ModalHeader>
                     <ModalCloseButton/>
                     <ModalBody>
                         {user.followers.map((user: any) => (
@@ -197,9 +197,9 @@ function MyProfile() {
                         <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`} alt="avatar"/>
                         <div className={styles.info}>
                             <div className={styles.follow}>
-                                <p onClick={onOpenFollowing}>フォロー:{user.following_count}</p>
-                                <p onClick={onOpenFollower}>フォロワー:{user.follower_count}</p>
-                                <p>投稿:{user.post_count}</p>
+                                <p onClick={onOpenFollowing}>Following:{user.following_count}</p>
+                                <p onClick={onOpenFollower}>Followers:{user.follower_count}</p>
+                                <p>Posts:{user.post_count}</p>
                                 <Link to="/setting">
                                     <SettingsIcon/>
                                 </Link>
@@ -208,10 +208,10 @@ function MyProfile() {
                                 <div className={styles.user}>
                                     <p>{user.name}</p>
                                     <p>@{user.custom_id}</p>
-                                    <p>話せる言語:{user.spoken_language}</p>
-                                    <p>学びたい言語:{user.learning_language}</p>
-                                    <p>住んでいる国:{user.residence}</p>
-                                    <p>自己紹介:{user.introduction}</p>
+                                    <p>Spoken Language:{user.spoken_language}</p>
+                                    <p>Learning Language:{user.learning_language}</p>
+                                    <p>Residence:{user.residence}</p>
+                                    <p>Introduction:{user.introduction}</p>
                                 </div>
                                 <div>
                                     <AddpostButton/>
@@ -222,8 +222,8 @@ function MyProfile() {
                 </div>
                 <Tabs isLazy>
                     <TabList>
-                        <Tab>投稿</Tab>
-                        <Tab>いいねした投稿</Tab>
+                        <Tab>Post</Tab>
+                        <Tab>Liked Posts</Tab>
                     </TabList>
                     <TabPanels>
                         <TabPanel>
@@ -267,9 +267,8 @@ function MyProfile() {
                                                     {post.likes_count}
                                                 </Button>
                                                 <div
-                                                    className={styles.comment_button}>コメント{post.comments.length}件
+                                                    className={styles.comment_button}>{post.comments.length}Comments
                                                 </div>
-
                                                 <FacebookShareButton url={`http://localhost:3001/share/${post.id}`}>
                                                     <FacebookIcon size={32} round={true}/>
                                                 </FacebookShareButton>
@@ -280,7 +279,7 @@ function MyProfile() {
                                                     <EditIcon/>
                                                 </Link>
                                                 <Button onClick={() => deletePost(post.post_id)}>
-                                                    削除
+                                                    Delete
                                                 </Button>
                                             </CardFooter>
                                             <div className={styles.comment_component}>
@@ -362,10 +361,10 @@ function MyProfile() {
                                                     {post.likes_count}
                                                 </Button>
                                                 <Button variant='ghost' leftIcon={<BiChat/>}>
-                                                    コメント {post.comments.length}件
+                                                    {post.comments.length}Comments
                                                 </Button>
                                                 <Button variant='ghost' leftIcon={<BiShare/>}>
-                                                    シェア
+                                                    Share
                                                 </Button>
                                             </CardFooter>
                                             <div className={styles.comment_component}>

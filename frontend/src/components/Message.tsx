@@ -40,8 +40,8 @@ function Message() {
         <div>
             <Tabs isFitted variant='enclosed'>
                 <TabList mb='1em'>
-                    <Tab>チャット</Tab>
-                    <Tab>グループチャット</Tab>
+                    <Tab>Chat</Tab>
+                    <Tab>Group Chat</Tab>
                 </TabList>
                 <TabPanels>
                     <TabPanel>

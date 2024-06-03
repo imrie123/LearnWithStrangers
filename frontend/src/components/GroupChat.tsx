@@ -97,7 +97,7 @@ function GroupChat() {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay/>
                 <ModalContent>
-                    <ModalHeader>メンバー</ModalHeader>
+                    <ModalHeader>Members</ModalHeader>
                     <ModalCloseButton/>
                     <ModalBody>
                         {chatGroup.users.map((user: any) => (
@@ -148,7 +148,7 @@ function GroupChat() {
                     <FormControl>
                         <div className={styles.input}>
                             <Input type='text' value={message} onChange={(e) => setMessage(e.target.value)}/>
-                            <Button type='submit'>送信</Button>
+                            <Button type='submit'>Submit</Button>
                         </div>
                     </FormControl>
                 </form>

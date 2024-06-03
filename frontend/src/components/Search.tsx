@@ -59,21 +59,21 @@ function Search() {
             <form className={styles.input}>
                 <Stack spacing={3}>
                     <Select
-                        placeholder="検索条件を選択"
+                        placeholder="Select search criteria"
                         width="500px"
                         borderRadius="10px"
                         value={selectedCriteria}
                         onChange={(e) => setSelectedCriteria(e.target.value)}
                     >
-                        <option value="name">名前</option>
-                        <option value="custom_id">id</option>
-                        <option value="residence">住所</option>
-                        <option value="learning_language">学習言語</option>
-                        <option value="spoken_language">話せる言語</option>
+                        <option value="name">Name</option>
+                        <option value="custom_id">Id</option>
+                        <option value="residence">Residence</option>
+                        <option value="learning_language">Learning Language</option>
+                        <option value="spoken_language">Spoken Language</option>
                     </Select>
                     <Input
                         variant="filled"
-                        placeholder="検索"
+                        placeholder="Search"
                         size="md"
                         width="500px"
                         borderRadius="10px"
@@ -94,18 +94,18 @@ function Search() {
                                              alt="avatar"/>
                                         <div className={styles.info}>
                                             <div className={styles.follow}>
-                                                <p>フォロー:{user.following_count}</p>
-                                                <p>フォロワー:{user.follower_count}</p>
-                                                <p>投稿:{user.post_count}</p>
+                                                <p>Following: {user.following_count}</p>
+                                                <p>Followers: {user.follower_count}</p>
+                                                <p>Posts: {user.post_count}</p>
                                             </div>
                                             <div className={styles.myprofile_footer}>
                                                 <div className={styles.user}>
                                                     <p>{user.name}</p>
                                                     <p>@{user.custom_id}</p>
-                                                    <p>話せる言語:{user.spoken_language}</p>
-                                                    <p>学びたい言語:{user.learning_language}</p>
-                                                    <p>住んでいる国:{user.residence}</p>
-                                                    <p>自己紹介:{user.introduction}</p>
+                                                    <p>Spoken Language: {user.spoken_language}</p>
+                                                    <p>Learning Language: {user.learning_language}</p>
+                                                    <p>Residence: {user.residence}</p>
+                                                    <p>Introduction: {user.introduction}</p>
                                                 </div>
                                             </div>
                                         </div>

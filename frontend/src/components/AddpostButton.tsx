@@ -58,7 +58,7 @@ function InitialFocus() {
 
     return (
         <>
-            <Button onClick={onOpen}>投稿する</Button>
+            <Button onClick={onOpen}>Post</Button>
             <Modal
                 initialFocusRef={initialRef}
                 finalFocusRef={finalRef}
@@ -67,7 +67,7 @@ function InitialFocus() {
             >
                 <ModalOverlay/>
                 <ModalContent>
-                    <ModalHeader>投稿</ModalHeader>
+                    <ModalHeader>Post</ModalHeader>
                     <ModalCloseButton/>
                     <ModalBody pb={6}>
                         <form>

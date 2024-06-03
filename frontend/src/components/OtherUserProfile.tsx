@@ -310,22 +310,24 @@ const OtherUserProfile = () => {
 
                         <div className={styles.info}>
                             <div className={styles.follow}>
-                                <p onClick={onOpenFollowing}>フォロー:{user.following_count}</p>
-                                <p onClick={onOpenFollower}>フォロワー:{user.follower_count}</p>
-                                <p>投稿:{user.post_count}</p>
-                                <Button onClick={handleStartChat}>メッセージを送信する</Button>
+                                <p onClick={onOpenFollowing}>Following: {user.following_count}</p>
+                                <p onClick={onOpenFollower}>Followers: {user.follower_count}</p>
+                                <p>Posts: {user.post_count}</p>
+                                <Button onClick={handleStartChat}>Send Message</Button>
                             </div>
                             <div className={styles.user}>
                                 <p>{user.name}</p>
                                 <p>@{user.custom_id}</p>
-                                <p>話せる言語:{user.spoken_language}</p>
-                                <p>学びたい言語:{user.learning_language}</p>
-                                <p>住んでいる国:{user.residence}</p>
-                                <p>自己紹介:{user.introduction}</p>
+                                <p>Spoken Language: {user.spoken_language}</p>
+                                <p>Learning Language: {user.learning_language}</p>
+                                <p>Residence: {user.residence}</p>
+                                <p>Introduction: {user.introduction}</p>
                                 <Button onClick={user.followed_by_current_user ? handleUnFollow : handleFollow}
-                                        colorScheme={user.followed_by_current_user ? "gray" : "blue"}>フォローする</Button>
-
+                                        colorScheme={user.followed_by_current_user ? "gray" : "blue"}>
+                                    {user.followed_by_current_user ? "Unfollow" : "Follow"}
+                                </Button>
                             </div>
+
 
                             <div className={styles.user_posts}>
                                 {posts.length > 0 && (
@@ -367,7 +369,7 @@ const OtherUserProfile = () => {
                                                         </Button>
 
                                                         <div className={style.comment_button}>
-                                                            <QuestionAnswerOutlinedIcon/>コメント{post.comments.length}件
+                                                            <QuestionAnswerOutlinedIcon/>{post.comments.length}Comments
                                                         </div>
                                                         <FacebookShareButton
                                                             url={`http://localhost:3001/share/${post.id}`}>

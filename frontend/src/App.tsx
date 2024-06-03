@@ -6,7 +6,6 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import MyprofilePage from "./pages/MyprofilePage";
 import FindchatPage from "./pages/FindchatPage";
 import FindpostPage from "./pages/FindpostPage";
-import SeepostPage from "./pages/SeepostPage";
 import FindgroupPage from "./pages/FindgroupPage";
 import Login from "./pages/Login";
 import SettingPages from "./pages/SettingPages";
@@ -55,7 +54,6 @@ function AuthenticatedRoutes() {
             <Route path="/" element={<MyprofilePage/>}/>
             <Route path="/findchat" element={<FindchatPage/>}/>
             <Route path="/findpost" element={<FindpostPage/>}/>
-            <Route path="/seepost" element={<SeepostPage/>}/>
             <Route path="/findgroup" element={<FindgroupPage/>}/>
             <Route path="/setting" element={<SettingPages/>}/>
             <Route path="/addpost" element={<AddpostPage/>}/>
