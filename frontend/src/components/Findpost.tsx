@@ -129,7 +129,7 @@ function Findpost() {
                                                     {postLikes[post.post_id] ?? post.likes_count}
                                                 </Button>
                                                 <div
-                                                    className={styles.comment_button}>コメント{post.comments.length}件
+                                                    className={styles.comment_button}>{post.comments.length}Comments
                                                 </div>
                                                 <FacebookShareButton url={`http://localhost:3001/share/${post.id}`}>
                                                     <FacebookIcon size={32} round={true}/>

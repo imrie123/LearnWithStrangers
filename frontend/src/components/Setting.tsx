@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 import styles from '../styles/Setting.module.scss';
-import {Button, Input} from '@chakra-ui/react'
-import {Select} from '@chakra-ui/react'
+import {Button, Input} from '@chakra-ui/react';
+import {Select} from '@chakra-ui/react';
 
 function Setting() {
 
@@ -15,9 +15,9 @@ function Setting() {
     const [id, setId] = useState(null);
     const [profileImage, setProfileImage] = useState<FormData>();
     const [avatar_url, setAvatarUrl] = useState('');
-    const residenceOptions = ["japan", "korea", "china", "usa", "uk", "france", "germany", "italy", "spain", "russia", "india", "brazil", "canada", "australia", "other"];
-    const learningLanguageOptions = ["japanese", "korean", "chinese", "english", "french", "german", "italian", "spanish", "russian", "hindi", "portuguese", "other"];
-    const spokenLanguageOptions = ["japanese", "korean", "chinese", "english", "french", "german", "italian", "spanish", "russian", "hindi", "portuguese", "other"];
+    const residenceOptions = ["Japan", "Korea", "China", "USA", "UK", "France", "Germany", "Italy", "Spain", "Russia", "India", "Brazil", "Canada", "Australia", "Other"];
+    const learningLanguageOptions = ["Japanese", "Korean", "Chinese", "English", "French", "German", "Italian", "Spanish", "Russian", "Hindi", "Portuguese", "Other"];
+    const spokenLanguageOptions = ["Japanese", "Korean", "Chinese", "English", "French", "German", "Italian", "Spanish", "Russian", "Hindi", "Portuguese", "Other"];
 
     const onFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
@@ -97,9 +97,9 @@ function Setting() {
 
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); // フォームのデフォルトの動作を防止（ページのリロードを防ぐ）
+        e.preventDefault(); // Prevent default form behavior (page reload)
 
-        // フォームデータをサーバーに送信
+        // Send form data to the server
         update();
         if (profileImage) {
             upload();
@@ -110,7 +110,7 @@ function Setting() {
 
     return (
         <div className={styles.setting}>
-            <h1>ユーザー情報を変更する</h1>
+            <h1>Edit User Information</h1>
             <div className={styles.myprofile}>
                 <div className={styles.component}>
                     <div className={styles.top}>
@@ -118,11 +118,11 @@ function Setting() {
                             <img className={styles.avatar} src={`http://localhost:3000${avatar_url}`} alt="avatar"/>
                             <div className={styles.info}>
                                 <div className={styles.user}>
-                                    <p>{name}</p>
-                                    <p>話せる言語:{spokenLanguage}</p>
-                                    <p>学びたい言語:{learningLanguage}</p>
-                                    <p>住んでいる国:{residence}</p>
-                                    <p>自己紹介:{introduction}</p>
+                                    <p>Name:{name}</p>
+                                    <p>Spoken Language: {spokenLanguage}</p>
+                                    <p>Learning Language: {learningLanguage}</p>
+                                    <p>Residence: {residence}</p>
+                                    <p>Introduction: {introduction}</p>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +136,7 @@ function Setting() {
                             <input type="file" accept="image/*" onChange={onFileInputChange}/>
 
                         </div>
-                        <label> 名前:</label>
+                        <label> Name:</label>
                         <Input
                             type="text"
                             id="username"
@@ -147,7 +147,7 @@ function Setting() {
                         />
                     </div>
                     <div>
-                        <label> 話せる言語:</label>
+                        <label> Spoken Language:</label>
                         <Select
                             id="spokenLanguage"
                             value={spokenLanguage}
@@ -165,7 +165,7 @@ function Setting() {
                         </Select>
                     </div>
                     <div>
-                        <label> 学びたい言語:</label>
+                        <label> Learning Language:</label>
                         <Select
                             id="learningLanguage"
                             value={learningLanguage}
@@ -174,13 +174,12 @@ function Setting() {
 
                         >
                             {learningLanguageOptions.map((option) => (
-                                    <option key={option} value={option}>{option}</option>
-                                )
-                            )}
+                                <option key={option} value={option}>{option}</option>
+                            ))}
                         </Select>
                     </div>
                     <div>
-                        <label> 住んでる国:</label>
+                        <label> Residence:</label>
                         <Select
                             id="residence"
                             value={residence}
@@ -189,13 +188,12 @@ function Setting() {
 
                         >
                             {residenceOptions.map((option) => (
-                                    <option key={option} value={option}>{option}</option>
-                                )
-                            )}
+                                <option key={option} value={option}>{option}</option>
+                            ))}
                         </Select>
                     </div>
                     <div>
-                        <label> 自己紹介:</label>
+                        <label> Introduction:</label>
                         <Input
                             type="text"
                             id="introduction"
@@ -204,7 +202,7 @@ function Setting() {
                             onChange={(e) => setIntroduction(e.target.value)}
                         />
                     </div>
-                    <Button type="submit" colorScheme='blue' className={styles.update_button}>更新</Button>
+                    <Button type="submit" colorScheme='blue' className={styles.update_button}>Update</Button>
                 </form>
             </div>
         </div>

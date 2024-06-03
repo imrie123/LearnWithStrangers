@@ -30,13 +30,13 @@ function Sidebar() {
     }, []);
 
     const items = [
-        {name: "プロフィール", path: `/`, icon: <Icon as={MdQuestionAnswer}/>},
-        {name: "掲示板", path: "/bulletin"},
-        {name: "メッセージ", path: "/message"},
-        {name: "会話相手を探す", path: "/findchat"},
-        {name: "グループチャットに参加する", path: "/findgroup"},
-        {name: "フォローしているユーザーの投稿", path: "/findpost"},
-        {name: "検索", path: "/search"}
+        {name: "MyProfile", path: `/`, icon: <Icon as={MdQuestionAnswer}/>},
+        {name: "Bulletin Board", path: "/bulletin"},
+        {name: "Messages", path: "/message"},
+        {name: "Find Conversation Partners", path: "/findchat"},
+        {name: "Join Group Chat", path: "/findgroup"},
+        {name: "Posts by Followed Users", path: "/findpost"},
+        {name: "Search", path: "/search"}
     ];
 
     return (
@@ -55,7 +55,7 @@ function Sidebar() {
                     ))}
                 </ul>
                 <div className={Styles.search}>
-                    <button onClick={logout}>ログアウト</button>
+                    <button onClick={logout}>Logout</button>
                 </div>
             </div>
         </div>

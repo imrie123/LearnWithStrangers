@@ -68,16 +68,16 @@ function Findchat() {
                                         </div>
                                         <div className={styles.info}>
                                             <div className={styles.follow}>
-                                                <p>フォロー:{user.following_count}</p>
-                                                <p>フォロワー:{user.follower_count}</p>
-                                                <p>投稿:{user.post_count}</p>
+                                                <p>Following: {user.following_count}</p>
+                                                <p>Followers: {user.follower_count}</p>
+                                                <p>Posts: {user.post_count}</p>
                                             </div>
                                             <div className={styles.user}>
-                                                <p>{user.name}</p>
-                                                <p>話せる言語:{user.spoken_language}</p>
-                                                <p>学びたい言語:{user.learning_language}</p>
-                                                <p>住んでいる国:{user.residence}</p>
-                                                <p>自己紹介:{user.introduction}</p>
+                                                <p>Name:{user.name}</p>
+                                                <p>Spoken Language: {user.spoken_language}</p>
+                                                <p>Learning Language: {user.learning_language}</p>
+                                                <p>Residence: {user.residence}</p>
+                                                <p>Introduction: {user.introduction}</p>
                                             </div>
                                         </div>
                                     </div>

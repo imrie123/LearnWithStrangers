@@ -106,7 +106,7 @@ function ChatRoom() {
                     <FormControl>
                         <div className={styles.input}>
                             <Input type='text' value={message} onChange={(e) => setMessage(e.target.value)}/>
-                            <Button type='submit'>送信</Button>
+                            <Button type='submit'>Submit</Button>
                         </div>
                     </FormControl>
                 </form>
