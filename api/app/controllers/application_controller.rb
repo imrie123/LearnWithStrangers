@@ -8,8 +8,6 @@ class ApplicationController < ActionController::API
     @current_user
   end
 
-  private
-
   def verify_token
     token = request.headers['Authorization']&.split(' ')&.last
 
