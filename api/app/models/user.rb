@@ -45,7 +45,7 @@ class User < ApplicationRecord
     reverse_of_relationships.find_by(follower_id: user.id).present?
   end
 
-  #　フォローしているユーザーの投稿を取得
+  # フォローしているユーザーの投稿を取得
   def following_user_posts
     followed_user_ids = self.followings.pluck(:id)
     followings_user_posts = Post.where(user_id: followed_user_ids)
