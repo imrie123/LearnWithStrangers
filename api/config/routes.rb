@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   end
 
   # 投稿に関するルート
-  resources :posts, only: [:create, :index, :update, :destroy, :show] do
+  resources :posts, only: [:create, :index, :destroy, :show] do
     resources :comments, only: [:create, :destroy]
   end
 
@@ -55,7 +55,7 @@ Rails.application.routes.draw do
   resources :rooms, only: [:show] do
     resources :messages, only: [:create, :index]
   end
-  #掲示板に関するルート
+  # 掲示板に関するルート
   resources :bulletin, only: [:create, :index, :show] do
     resources :replies, only: [:create]
   end

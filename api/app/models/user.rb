@@ -5,7 +5,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :password, presence: true, on: :create
   validates :name, presence: true
-  validates :custom_id, presence: true, uniqueness: true
+  validates :custom_id, presence: true, uniqueness: { message: "Custom id has already been taken" }
   validates :birthday, presence: true, format: { with: /\d{4}-\d{2}-\d{2}/, message: "must be in the following format: yyyy-mm-dd" }
 
   # アクティブストレージの関連付け
