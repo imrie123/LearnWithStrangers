@@ -3,12 +3,15 @@ class MessagesController < ApplicationController
   before_action :set_room
 
   def create
+
     @message = @room.messages.build(message_params)
     @message.user = @current_user
 
     if @message.save
       render 'create', formats: :json, handlers: :jbuilder, status: :created
     else
+      # エラーを出力する
+      Rails.logger.error(@message.errors.full_messages.to_sentence)
       render json: @message.errors, status: :unprocessable_entity
     end
   end
