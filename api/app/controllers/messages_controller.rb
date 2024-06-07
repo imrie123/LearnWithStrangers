@@ -3,7 +3,6 @@ class MessagesController < ApplicationController
   before_action :set_room
 
   def create
-
     @message = @room.messages.build(message_params)
     @message.user = @current_user
 
