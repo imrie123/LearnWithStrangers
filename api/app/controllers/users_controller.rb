@@ -2,13 +2,18 @@ class UsersController < ApplicationController
   before_action :verify_token
 
   def create
+
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
     if @response["idToken"]
-      @user = User.create!(user_params)
-      render json: { token: @response["idToken"], id: @user.id, name: @user.name, email: @user.email, birthday: @user.birthday, custom_id: @user.custom_id }, status: :created
+      @user = User.new(user_params)
+      if @user.save
+        render json: { token: @response["idToken"], id: @user.id, name: @user.name, email: @user.email, birthday: @user.birthday, custom_id: @user.custom_id }, status: :created
+      else
+        render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+      end
     else
       @error = @response["error"]["message"]
-      render "error", formats: :json, handlers: :jbuilder, status: :unauthorized
+      render json: { error: @error }, status: :unauthorized
     end
   end
 
@@ -51,23 +56,16 @@ class UsersController < ApplicationController
       email = decoded_token[0]["email"]
       if email
         @user = User.find_by(email: email)
-        unless @user.present?
-          @user = User.find_by(custom_id: params[:custom_id])
-        end
         if @user.present?
-          @current_user = User.find_by(email: email)
-          @user_posts = @user.posts
-          @liked_posts = @user.liked_posts
-          @following_user_posts = @user.following_user_posts + @user_posts
-          @all_posts = @user_posts + @following_user_posts
-          @following_users = @user.followings
-          @followers = @user.followers
-          @user_rooms = @user.rooms.includes(:entries, :messages)
           render "me", formats: :json, handlers: :jbuilder, status: :ok
         else
-          render "error", status: :unauthorized
+          render json: { error: 'User not found' }, status: :not_found
         end
+      else
+        render json: { error: 'Invalid token' }, status: :unauthorized
       end
+    else
+      render json: { error: 'Token missing' }, status: :unauthorized
     end
   end
 
@@ -120,23 +118,24 @@ class UsersController < ApplicationController
   def search
     query = params[:query]
     criteria = params[:criteria]
-    case criteria
-    when "name"
-      @users = User.where('name LIKE ?', "%#{query}%")
-    when "residence"
-      @users = User.where('residence LIKE ?', "%#{query}%")
-    when "learning_language"
-      @users = User.where('learning_language LIKE ?', "%#{query}%")
-    when "spoken_language"
-      @users = User.where('spoken_language LIKE ?', "%#{query}%")
-    else
-      @users = User.where('custom_id LIKE ?', "%#{query}%")
+
+    if query.blank?
+      render json: { error: 'Query parameter is missing' }, status: :not_found and return
     end
 
-    if @users.present?
-      render 'search', formats: :json, handlers: :jbuilder, status: :ok
+    case criteria
+    when 'name'
+      @users = User.where('name LIKE ?', "%#{query}%")
+    when 'custom_id'
+      @users = User.where('custom_id LIKE ?', "%#{query}%")
     else
-      render json: { error: 'not found' }, status: :not_found
+      render json: { error: 'Invalid search criteria' }, status: :bad_request and return
+    end
+
+    if @users.empty?
+      render json: { error: 'No users found' }, status: :not_found
+    else
+      render :search, formats: :json, handlers: :jbuilder
     end
   end
 

@@ -1,8 +1,12 @@
 class PostsController < ApplicationController
-  before_action :verify_token, only: [:create, :update, :destroy, :index, :other_user_posts]
+  before_action :verify_token, only: [:create, :destroy, :index, :other_user_posts]
   skip_before_action :verify_token, only: [:show]
 
   def create
+    unless @current_user
+      return render json: { error: 'Unauthorized' }, status: :unauthorized
+    end
+
     @post = @current_user.posts.build(post_params)
     if @post.save
       @post.image.attach(post_params[:image]) if post_params[:image].present?
@@ -17,7 +21,7 @@ class PostsController < ApplicationController
         image_url: @post.image_url
       }, status: :ok
     else
-      render json: @post.errors, status: :unprocessable_entity
+      render json: { errors: @post.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -30,30 +34,23 @@ class PostsController < ApplicationController
   end
 
   def index
+    if @current_user.nil?
+      render json: { error: 'Unauthorized' }, status: :unauthorized and return
+    end
     @posts = @current_user.posts
     render "index", formats: :json, handlers: :jbuilder, status: :ok
   end
 
-  def update
-    @post = @user.posts.find_by(id: params[:id])
-    if @post
-      if @post.update(post_params)
-        render json: @post, status: :ok
-      else
-        render json: @post.errors, status: :unprocessable_entity
-      end
-    else
-      render json: { error: "Post not found" }, status: :not_found
-    end
-  end
-
   def destroy
+    if @current_user.nil?
+      render json: { error: 'Unauthorized' }, status: :unauthorized and return
+    end
     @post = @current_user.posts.find_by(id: params[:id])
     if @post
       @post.destroy
-      render json: { message: "Post deleted" }, status: :ok
+      render json: { message: 'Post deleted' }, status: :ok
     else
-      render json: { error: "Post not found" }, status: :not_found
+      render json: { error: 'Post not found' }, status: :not_found
     end
   end
 

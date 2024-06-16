@@ -3,6 +3,10 @@ class GroupsMessagesController < ApplicationController
   before_action :set_group
 
   def create
+    if @current_user.nil?
+      render json: { errors: ['Unauthorized'] }, status: :unauthorized
+      return
+    end
     message = @group.messages.build(message_params)
     message.user = @current_user
     if message.save
@@ -10,7 +14,7 @@ class GroupsMessagesController < ApplicationController
         user: { only: [:id, :name, :avatar_url] }
       })
     else
-      render json: message.errors, status: :unprocessable_entity
+      render json: { errors: message.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

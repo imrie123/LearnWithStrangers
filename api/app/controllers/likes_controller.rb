@@ -7,12 +7,12 @@ class LikesController < ApplicationController
     if @like.save
       render "create", formats: :json, handlers: :jbuilder, status: :created
     else
-      render json: @like.errors, status: :unprocessable_entity
+      render json: { error: "Post not found" }, status: :not_found
     end
   end
 
   def destroy
-    @like = @current_user.likes.find_by(user_id: @current_user.id, post_id: @post.id)
+    @like = @current_user.likes.find_by(post_id: @post.id)
     if @like
       @like.destroy
       head :no_content
@@ -22,29 +22,41 @@ class LikesController < ApplicationController
   end
 
   def liked_posts
-    @liked_posts = @current_user.liked_posts
-    render "liked_posts", formats: :json, handlers: :jbuilder, status: :ok
+    user = User.find_by(custom_id: params[:custom_id])
+    liked_posts = user.posts.joins(:likes)
+
+    if liked_posts.empty?
+      render json: { error: 'Liked posts not found' }, status: :not_found
+    else
+      render json: liked_posts, status: :ok
+    end
   end
 
   def toggle_like
-    like = Like.find_by(user_id: params[:user_id], post_id: params[:post_id])
+    like = @post.likes.find_by(user: @current_user)
     if like
       like.destroy
       render json: { liked: false }
     else
-      Like.create(user_id: params[:user_id], post_id: params[:post_id])
+      @post.likes.create(user: @current_user)
       render json: { liked: true }
     end
   end
 
   def index
-    @likes = @user.likes
-    render "index", formats: :json, handlers: :jbuilder, status: :ok
+    @likes = @current_user.likes
+    if @likes
+      render "index", formats: :json, handlers: :jbuilder, status: :ok
+    else
+      render json: { error: "Likes not found" }, status: :not_found
+    end
   end
 
   private
 
   def set_post
     @post = Post.find(params[:post_id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Post not found" }, status: :not_found
   end
 end

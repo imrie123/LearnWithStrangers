@@ -9,6 +9,8 @@ class MessagesController < ApplicationController
     if @message.save
       render 'create', formats: :json, handlers: :jbuilder, status: :created
     else
+      # エラーを出力する
+      Rails.logger.error(@message.errors.full_messages.to_sentence)
       render json: @message.errors, status: :unprocessable_entity
     end
   end
