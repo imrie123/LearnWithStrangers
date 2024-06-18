@@ -2,7 +2,6 @@ class UsersController < ApplicationController
   before_action :verify_token
 
   def create
-
     @response = FirebaseService::SignUp.new(user_params[:email], user_params[:password]).call
     if @response["idToken"]
       @user = User.new(user_params)
@@ -57,6 +56,13 @@ class UsersController < ApplicationController
       if email
         @user = User.find_by(email: email)
         if @user.present?
+          @posts = @user.posts
+          @liked_posts = @user.liked_posts
+          @following_user_posts = @user.following_user_posts
+          @following_users = @user.followings
+          @followers = @user.followers
+          @user_rooms = @user.rooms
+
           render "me", formats: :json, handlers: :jbuilder, status: :ok
         else
           render json: { error: 'User not found' }, status: :not_found

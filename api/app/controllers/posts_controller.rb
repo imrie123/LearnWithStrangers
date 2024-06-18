@@ -6,7 +6,6 @@ class PostsController < ApplicationController
     unless @current_user
       return render json: { error: 'Unauthorized' }, status: :unauthorized
     end
-
     @post = @current_user.posts.build(post_params)
     if @post.save
       @post.image.attach(post_params[:image]) if post_params[:image].present?
@@ -34,6 +33,7 @@ class PostsController < ApplicationController
   end
 
   def index
+
     if @current_user.nil?
       render json: { error: 'Unauthorized' }, status: :unauthorized and return
     end
