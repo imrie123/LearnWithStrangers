@@ -21,7 +21,7 @@ json.user do
     end
   end
 
-  json.user_posts @user_posts do |post|
+  json.user_posts @posts do |post|
     json.extract! post, :id, :user_id, :image_url, :content, :created_at, :updated_at, :likes_count
     json.liked_by_current_user post.liked_by?(@current_user) if @current_user.present?
     json.comments post.comments do |comment|

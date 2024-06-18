@@ -59,3 +59,14 @@
 /frontend/yarn-error.log*
 /api/.env
 /node_modules
+
+api/.DS_Store
+api/config/credentials.yml.enc.backup
+api/config/credentials.yml.enc.bak
+api/config/master.key.backup
+api/config/certs/localhost.key
+api/private_key.pem
+api/public_key.pem
+/api/config/credentials.yml.enc
+/api/config/unicorn.rb
+
