@@ -24,6 +24,7 @@ gem "bcrypt"
 gem "counter_culture"
 gem "aws-sdk-s3"
 gem 'fog-aws'
+gem 'unicorn'
 
 group :development, :test do
   gem "debug", platforms: %i[ mri ]

@@ -241,6 +241,7 @@ GEM
     jmespath (1.6.2)
     json (2.7.1)
     jwt (2.7.1)
+    kgio (2.11.4)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -330,6 +331,7 @@ GEM
       rake (>= 12.2)
       thor (~> 1.0, >= 1.2.2)
       zeitwerk (~> 2.6)
+    raindrops (0.20.1)
     rake (13.1.0)
     rdoc (6.6.2)
       psych (>= 4.0.0)
@@ -383,6 +385,9 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uber (0.1.0)
+    unicorn (6.1.0)
+      kgio (~> 2.6)
+      raindrops (~> 0.7)
     webrick (1.8.1)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
@@ -424,6 +429,7 @@ DEPENDENCIES
   ruby-vips
   shoulda-matchers (~> 6.0)
   tzinfo-data
+  unicorn
 
 RUBY VERSION
    ruby 3.2.3p157
