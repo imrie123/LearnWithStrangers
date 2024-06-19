@@ -28,7 +28,6 @@ gem 'fog-aws'
 gem 'unicorn'
 gem 'active_model_serializers', '~> 0.10.0'
 
-
 group :development, :test do
   gem "debug", platforms: %i[ mri ]
   gem 'rspec-rails', '~> 6.0.0'
