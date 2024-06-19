@@ -1,7 +1,12 @@
 worker_processes Integer(ENV['WEB_CONCURRENCY'] || 2)
 timeout 15
 preload_app true
+
+listen "/home/ec2-user/LearnWithStrangers/api/tmp/sockets/unicorn.sock", backlog: 64
+pid "/home/ec2-user/LearnWithStrangers/api/tmp/pids/unicorn.pid"
+
 stderr_path File.expand_path('log/unicorn.stderr.log', ENV['RAILS_ROOT'])
+stdout_path File.expand_path('log/unicorn.stdout.log', ENV['RAILS_ROOT'])
 
 before_fork do |server, worker|
   Signal.trap 'TERM' do
@@ -21,3 +26,4 @@ after_fork do |server, worker|
   defined?(ActiveRecord::Base) and
     ActiveRecord::Base.establish_connection
 end
+
