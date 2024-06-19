@@ -25,6 +25,8 @@ gem "counter_culture"
 gem "aws-sdk-s3"
 gem 'fog-aws'
 gem 'unicorn'
+gem 'active_model_serializers'
+
 
 group :development, :test do
   gem "debug", platforms: %i[ mri ]
