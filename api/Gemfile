@@ -2,7 +2,6 @@
 source "https://rubygems.org"
 
 ruby '3.2.3'
-
 gem "rest-client"
 gem "ridgepole"
 gem "pry"
@@ -46,4 +45,3 @@ gem "bootsnap", require: false
 
 gem "factory_bot", "~> 6.4"
 
-gem "webpacker", "~> 5.4"
