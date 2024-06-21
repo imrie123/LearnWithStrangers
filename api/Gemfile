@@ -45,3 +45,5 @@ gem "tzinfo-data", platforms: %i[ x64_mingw jruby ]
 gem "bootsnap", require: false
 
 gem "factory_bot", "~> 6.4"
+
+gem "webpacker", "~> 5.4"
