@@ -33,7 +33,6 @@ import {
 } from '@chakra-ui/react'
 import {useDisclosure} from '@chakra-ui/hooks'
 import styles2 from '../styles/GroupChat.module.scss';
-import {FacebookIcon, FacebookShareButton, TwitterIcon, TwitterShareButton} from 'react-share';
 import {BiChat, BiShare} from 'react-icons/bi';
 
 
@@ -269,12 +268,6 @@ function MyProfile() {
                                                 <div
                                                     className={styles.comment_button}>{post.comments.length}Comments
                                                 </div>
-                                                <FacebookShareButton url={`http://localhost:3001/share/${post.id}`}>
-                                                    <FacebookIcon size={32} round={true}/>
-                                                </FacebookShareButton>
-                                                <TwitterShareButton url={`http://localhost:3001/share/${post.id}`}>
-                                                    <TwitterIcon size={32} round={true}/>
-                                                </TwitterShareButton>
                                                 <Link to={`/editpost/${post.post_id}`}>
                                                     <EditIcon/>
                                                 </Link>
