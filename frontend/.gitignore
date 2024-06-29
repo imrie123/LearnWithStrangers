@@ -25,3 +25,4 @@ yarn-error.log*
 src/firebase.ts
 .env.local
 .vercel
+.env
