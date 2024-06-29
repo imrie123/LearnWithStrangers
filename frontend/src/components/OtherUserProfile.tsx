@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
-import {useParams, useNavigate, Link} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 import styles from '../styles/Myprofile.module.scss';
 import {Card, CardBody, CardFooter, Flex, Text, Button, Image, Avatar} from '@chakra-ui/react';
-import {BiShare} from 'react-icons/bi';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddCommentButton from './AddCommentButton';
 import style from '../styles/OtherUserProfile.module.scss';
@@ -17,6 +15,7 @@ import {
     ModalFooter
 } from '@chakra-ui/react';
 import {useDisclosure} from '@chakra-ui/hooks';
+import axiosInstance from '../services/axiosInstance';
 
 interface Post {
     id: number;
@@ -91,7 +90,7 @@ const OtherUserProfile = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get(`http://127.0.0.1:3000/users/${custom_id}`, {
+        axiosInstance.get(`/users/${custom_id}`, {
             headers: {Authorization: `Bearer ${token}`},
         })
             .then((response) => {
@@ -109,7 +108,7 @@ const OtherUserProfile = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me`, {
+            axiosInstance.get(`/users/me`, {
                 headers: {Authorization: `Bearer ${token}`},
             })
                 .then((response) => {
@@ -124,7 +123,7 @@ const OtherUserProfile = () => {
 
     const handleStartChat = () => {
         const token = localStorage.getItem('token');
-        axios.post(`http://127.0.0.1:3000/users/${custom_id}/rooms`, {
+        axiosInstance.post(`/users/${custom_id}/rooms`, {
             room: {
                 name: user.name,
                 current_user_custom_id: currentUser.id,
@@ -142,8 +141,8 @@ const OtherUserProfile = () => {
 
     const handleFollow = () => {
         const token = localStorage.getItem('token');
-        axios.post(
-            `http://127.0.0.1:3000/users/${custom_id}/relationships`,
+        axiosInstance.post(
+            `/users/${custom_id}/relationships`,
             {},
             {headers: {Authorization: `Bearer ${token}`}}
         )
@@ -158,7 +157,7 @@ const OtherUserProfile = () => {
 
     const handleUnFollow = () => {
         const token = localStorage.getItem('token');
-        axios.delete(`http://127.0.0.1:3000/users/${custom_id}/relationships`, {
+        axiosInstance.delete(`/users/${custom_id}/relationships`, {
             headers: {Authorization: `Bearer ${token}`},
         })
             .then((response) => {
@@ -177,7 +176,7 @@ const OtherUserProfile = () => {
             return;
         }
 
-        axios.post(`http://127.0.0.1:3000/users/${post.custom_id}/posts/${post.id}/likes`, {}, {
+        axiosInstance.post(`/users/${post.custom_id}/posts/${post.id}/likes`, {}, {
             headers: {Authorization: `Bearer ${token}`},
         })
             .then((response) => {
@@ -204,7 +203,7 @@ const OtherUserProfile = () => {
             return;
         }
 
-        axios.delete(`http://127.0.0.1:3000/users/${post.custom_id}/posts/${post.id}/likes/${likeData}`, {
+        axiosInstance.delete(`/users/${post.custom_id}/posts/${post.id}/likes/${likeData}`, {
             headers: {Authorization: `Bearer ${token}`},
         })
             .then(() => {

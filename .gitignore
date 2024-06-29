@@ -68,5 +68,5 @@ api/config/certs/localhost.key
 api/private_key.pem
 api/public_key.pem
 /api/config/credentials.yml.enc
-/api/config/unicorn.rb
-
+/frontend/.env
+.env

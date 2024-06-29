@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 import styles from '../styles/Setting.module.scss';
 import {Button, Input} from '@chakra-ui/react';
 import {Select} from '@chakra-ui/react';
-
+import axiosInstance from '../services/axiosInstance';
 function Setting() {
 
     const [name, setName] = useState('');
@@ -35,7 +34,7 @@ function Setting() {
 
 
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me`, {
+            axiosInstance.get(`/users/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -61,7 +60,7 @@ function Setting() {
         const token = localStorage.getItem('token');
         console.log(`Learning Language: ${learningLanguage}`);
         console.log(`Spoken Language: ${spokenLanguage}`);
-        axios.post('http://127.0.0.1:3000/users/update', {
+        axiosInstance.post('/users/update', {
             name: name,
             learning_language: learningLanguage,
             spoken_language: spokenLanguage,
@@ -84,7 +83,7 @@ function Setting() {
 
     const upload = () => {
         const token = localStorage.getItem('token');
-        axios.post(`http://127.0.0.1:3000/users/avatar`, profileImage, {
+        axiosInstance.post(`/users/avatar`, profileImage, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`,

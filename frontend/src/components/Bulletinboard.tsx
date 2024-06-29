@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
 import {
     useDisclosure,
     Button,
@@ -19,6 +18,7 @@ import {
 import styles from '../styles/ChatRoom.module.scss';
 import style from '../styles/Bulletinboard.module.scss';
 import {Link} from "react-router-dom";
+import axiosInstance from '../services/axiosInstance';
 
 interface Bulletin {
     title: string;
@@ -34,8 +34,8 @@ function Bulletinboard() {
         e.preventDefault();
         const token = localStorage.getItem('token');
         if (token) {
-            axios.post(
-                'http://127.0.0.1:3000/bulletin',
+            axiosInstance.post(
+                '/bulletin',
                 {
                     title: title,
                     content: content
@@ -55,7 +55,7 @@ function Bulletinboard() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/bulletin`, {
+            axiosInstance.get(`/bulletin`, {
                 headers: {Authorization: `Bearer ${token}`}
             }).then((response) => {
                 console.log(response.data);

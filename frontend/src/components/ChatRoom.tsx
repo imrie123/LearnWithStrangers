@@ -1,5 +1,4 @@
 import React, {useEffect, useState, FormEvent} from 'react';
-import axios from 'axios';
 import {useParams} from 'react-router-dom';
 import styles from '../styles/ChatRoom.module.scss';
 import {
@@ -8,7 +7,7 @@ import {
     Button,
     Avatar
 } from '@chakra-ui/react';
-
+import axiosInstance from '../services/axiosInstance';
 
 interface Room {
     name: string;
@@ -35,7 +34,7 @@ function ChatRoom() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/rooms/${id}`, {
+            axiosInstance.get(`/rooms/${id}`, {
                 headers: {Authorization: `Bearer ${token}`}
             })
                 .then((response) => {
@@ -57,7 +56,7 @@ function ChatRoom() {
         const token = localStorage.getItem('token');
         if (token) {
             try {
-                const response = await axios.post(`http://127.0.0.1:3000/rooms/${id}/messages`, {
+                const response = await axiosInstance.post(`/rooms/${id}/messages`, {
                     message: {content: message},
                 }, {
                     headers: {Authorization: `Bearer ${token}`}
