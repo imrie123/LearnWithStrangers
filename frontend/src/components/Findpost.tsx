@@ -5,7 +5,6 @@ import {Image} from '@chakra-ui/image';
 import {Flex} from '@chakra-ui/layout';
 import {Text} from '@chakra-ui/layout';
 import {Card, CardBody, CardFooter, Avatar} from '@chakra-ui/react';
-import {BiShare} from 'react-icons/bi';
 import styles from '../styles/Findpost.module.scss';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddCommentButton from './AddCommentButton';
