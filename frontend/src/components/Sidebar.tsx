@@ -6,7 +6,7 @@ import {useDispatch} from "react-redux";
 import {clearToken} from "../redux/authSlice";
 import {Icon} from "@chakra-ui/react";
 import {MdQuestionAnswer} from "react-icons/md";
-
+import axiosInstance from '../services/axiosInstance.js';
 function Sidebar() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -21,7 +21,7 @@ function Sidebar() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me`, {
+            axiosInstance.get(`/users/me`, {
                 headers: {Authorization: `Bearer ${token}`}
             }).catch((error) => {
                 console.error("Error:", error);

@@ -16,7 +16,7 @@ import {
     Text
 } from "@chakra-ui/react";
 import styles from "../styles/Bulletin.module.scss";
-
+import axiosInstance from '../services/axiosInstance.js';
 
 interface Bulletin {
     title: string;
@@ -46,7 +46,7 @@ function Bulletin() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/bulletin/${id}`, {
+            axiosInstance.get(`/bulletin/${id}`, {
                 headers: {Authorization: `Bearer ${token}`}
             })
                 .then((response) => {
@@ -63,8 +63,8 @@ function Bulletin() {
         e.preventDefault();
         const token = localStorage.getItem('token');
         if (token) {
-            axios.post(
-                `http://127.0.0.1:3000/bulletin/${id}/replies`,
+            axiosInstance.post(
+                `/bulletin/${id}/replies`,
                 {
                     content: reply,
                     bulletin_id: id

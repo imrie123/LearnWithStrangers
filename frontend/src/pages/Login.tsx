@@ -5,7 +5,7 @@ import {Tabs, TabList, TabPanels, Tab, TabPanel, Input, Button} from '@chakra-ui
 import {useDispatch} from 'react-redux';
 import {setToken} from '../redux/authSlice';
 import {useNavigate} from 'react-router-dom';
-
+import axiosInstance from '../services/axiosInstance.js';
 const Login: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -34,7 +34,7 @@ const Login: React.FC = () => {
 
     const signUp = async () => {
         try {
-            const response = await axios.post('http://127.0.0.1:3000/users', {
+            const response = await axiosInstance.post('/users', {
                 user: {email, password, name, birthday, custom_id: customId}
             });
             localStorage.setItem('token', response.data.token);
@@ -46,7 +46,7 @@ const Login: React.FC = () => {
 
     const signIn = async () => {
         try {
-            const response = await axios.post('http://127.0.0.1:3000/users/sign_in', {
+            const response = await axiosInstance.post('/users/sign_in', {
                 user: {email: loginEmail, password: loginPassword}
             });
             localStorage.setItem('token', response.data.auth_token);
@@ -76,7 +76,7 @@ const Login: React.FC = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me`, {
+            axiosInstance.get(`/users/me`, {
                 headers: {Authorization: `Bearer ${token}`}
             })
                 .then((response) => {

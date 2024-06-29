@@ -9,6 +9,7 @@ import styles from '../styles/Findpost.module.scss';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddCommentButton from './AddCommentButton';
 import {Link} from 'react-router-dom';
+import axiosInstance from '../services/axiosInstance.js';
 interface Post {
     id: number;
     content: string;
@@ -36,7 +37,7 @@ function Findpost() {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const response = await axios.get(`http://127.0.0.1:3000/users/me`, {
+                    const response = await axiosInstance.get(`/users/me`, {
                         headers: {Authorization: `Bearer ${token}`}
                     });
                     setPosts(response.data.user.following_user_posts);
@@ -61,11 +62,11 @@ function Findpost() {
         try {
             let response;
             if (post.liked_by_current_user) {
-                response = await axios.delete(`http://127.0.0.1:3000/users/${post.custom_id}/posts/${post.id}/likes/${likeData}`, {
+                response = await axiosInstance.delete(`/users/${post.custom_id}/posts/${post.id}/likes/${likeData}`, {
                     headers: {Authorization: `Bearer ${token}`},
                 });
             } else {
-                response = await axios.post(`http://127.0.0.1:3000/users/${post.custom_id}/posts/${post.id}/likes`, {}, {
+                response = await axiosInstance.post(`/users/${post.custom_id}/posts/${post.id}/likes`, {}, {
                     headers: {Authorization: `Bearer ${token}`},
                 });
             }

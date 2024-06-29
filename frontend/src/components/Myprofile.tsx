@@ -34,7 +34,7 @@ import {
 import {useDisclosure} from '@chakra-ui/hooks'
 import styles2 from '../styles/GroupChat.module.scss';
 import {BiChat, BiShare} from 'react-icons/bi';
-
+import axiosInstance from '../services/axiosInstance.js';
 
 interface Post {
     id: number;
@@ -87,7 +87,7 @@ function MyProfile() {
             try {
                 const token = localStorage.getItem('token');
                 if (token) {
-                    const response = await axios.get(`http://127.0.0.1:3000/users/me`, {
+                    const response = await axiosInstance.get(`/users/me`, {
                         headers: {Authorization: `Bearer ${token}`}
                     });
                     setUser(response.data.user);
@@ -109,7 +109,7 @@ function MyProfile() {
         if (token) {
             const postToDelete = posts.find(post => post.post_id === id);
             if (postToDelete) {
-                axios.delete(`http://127.0.0.1:3000/posts/${postToDelete.id}`, {
+                axiosInstance.delete(`/posts/${postToDelete.id}`, {
                     headers: {Authorization: `Bearer ${token}`},
                 })
                     .then(() => {

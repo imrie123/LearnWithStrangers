@@ -6,6 +6,7 @@ import Findgroup from "./Findgroup";
 import {Card, CardHeader, CardBody, Stack, Heading} from '@chakra-ui/react'
 import styles from '../styles/Findgroup.module.scss';
 import {Link} from "react-router-dom";
+import axiosInstance from '../services/axiosInstance.js';
 
 interface Room {
     id: number;
@@ -22,7 +23,7 @@ function Message() {
             try {
                 const token = localStorage.getItem('token');
                 if (token) {
-                    const response = await axios.get(`http://127.0.0.1:3000/users/me`, {
+                    const response = await axiosInstance.get(`/users/me`, {
                         headers: {Authorization: `Bearer ${token}`}
                     });
                     setUserRooms(response.data.user.user_rooms);

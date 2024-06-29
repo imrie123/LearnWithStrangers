@@ -3,7 +3,7 @@ import axios from 'axios';
 import styles from '../styles/Findchat.module.scss';
 import {useNavigate} from "react-router-dom";
 import {Avatar} from '@chakra-ui/react';
-
+import axiosInstance from '../services/axiosInstance.js';
 
 interface User {
     id: number;
@@ -32,7 +32,7 @@ function Findchat() {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const response = await axios.get(`http://127.0.0.1:3000/users/random`);
+                    const response = await axiosInstance.get(`/users/random`);
                     setUsers(response.data);
                     console.log(response.data)
                 } catch (error) {

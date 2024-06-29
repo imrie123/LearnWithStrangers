@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react'
 import {useDisclosure} from '@chakra-ui/react'
 import style from '../styles/GroupChat.module.scss';
+import axiosInstance from '../services/axiosInstance.js';
 
 interface chatGroup {
     name: string;
@@ -57,7 +58,7 @@ function GroupChat() {
         const token = localStorage.getItem('token');
         if (token) {
             try {
-                const response = await axios.post(`http://127.0.0.1:3000/groups/${group_id}/groups_messages`, {
+                const response = await axiosInstance.post(`/groups/${group_id}/groups_messages`, {
                     groups_messages: {content: message},
                 }, {
                     headers: {Authorization: `Bearer ${token}`}
@@ -77,7 +78,7 @@ function GroupChat() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/groups/${id}`, {
+            axiosInstance.get(`/groups/${id}`, {
                 headers: {Authorization: `Bearer ${token}`}
             })
                 .then((response) => {

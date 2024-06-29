@@ -3,7 +3,7 @@ import axios from 'axios';
 import {useParams, useNavigate} from 'react-router-dom';
 import {Card, CardFooter, Avatar, Flex, Image, Text, Input, Button} from '@chakra-ui/react';
 import styles from '../styles/Editpost.module.scss';
-
+import axiosInstance from '../services/axiosInstance.js';
 interface Post {
     id: number;
     content: string;
@@ -31,7 +31,7 @@ function Editpost() {
         const token = localStorage.getItem('token');
 
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me?token=${token}`)
+            axiosInstance.get(`/users/me?token=${token}`)
                 .then((response) => {
                     const {user, avatar_url} = response.data; // Destructuring user and avatar_url from response.data
                     setUser(user);
@@ -47,7 +47,7 @@ function Editpost() {
         const token = localStorage.getItem('token');
 
         if (token && post_id) {
-            axios.get(`http://127.0.0.1:3000/users/:user_id/posts/${post_id}?token=${token}`)
+            axiosInstance.get(`/users/:user_id/posts/${post_id}?token=${token}`)
                 .then((response) => {
                     const postData = response.data.posts[0];
                     setInputContent(postData.content);
@@ -63,7 +63,7 @@ function Editpost() {
         e.preventDefault();
         const token = localStorage.getItem('token');
         if (token && post_id) {
-            axios.put(`http://127.0.0.1:3000/users/:user_id/posts/${post_id}?token=${token}`, {content: inputContent})
+            axiosInstance.put(`/users/:user_id/posts/${post_id}?token=${token}`, {content: inputContent})
                 .then((response) => {
                     setPost(response.data.posts); // Assuming response.data.posts contains the updated post
                     navigate('/'); // Redirecting to home page after successful submit

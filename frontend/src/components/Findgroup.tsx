@@ -20,7 +20,7 @@ import {Link} from 'react-router-dom';
 import {Card, CardHeader, CardBody} from '@chakra-ui/react'
 import {Heading, Stack} from '@chakra-ui/layout'
 import styles from '../styles/Findgroup.module.scss';
-
+import axiosInstance from '../services/axiosInstance.js';
 interface FollowingUser {
     name: string;
     custom_id: string;
@@ -62,7 +62,7 @@ function Findgroup() {
 
     const handleSave = () => {
         console.log("Selected users:", Array.from(selectedUsers));
-        axios.post(`http://127.0.0.1:3000/groups`, {
+        axiosInstance.post(`/groups`, {
             name: groupName,
             introduction: introduction,
             users: [...Array.from(selectedUsers), currentUserCustomId]
@@ -84,7 +84,7 @@ function Findgroup() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/users/me`, {
+            axiosInstance.get(`/users/me`, {
                 headers: {Authorization: `Bearer ${token}`}
             })
                 .then((response) => {
@@ -100,7 +100,7 @@ function Findgroup() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://127.0.0.1:3000/groups`, {
+            axiosInstance.get(`/groups`, {
                 headers: {Authorization: `Bearer ${token}`}
             })
                 .then((response) => {

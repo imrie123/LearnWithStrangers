@@ -2,7 +2,7 @@ import React, {useRef, useState, FormEventHandler} from 'react';
 import axios from 'axios';
 import {Input, FormControl} from '@chakra-ui/react';
 import styles from '../styles/AddCommentButton.module.scss';
-
+import axiosInstance from '../services/axiosInstance.js';
 interface AddCommentButtonProps {
     post_id: number;
 }
@@ -17,7 +17,7 @@ function AddCommentButton({post_id}: AddCommentButtonProps) {
             console.error('token is not found');
             return;
         }
-        axios.post(`http://127.0.0.1:3000/posts/${post_id}/comments`, {
+        axiosInstance.post(`/posts/${post_id}/comments`, {
             post_id: post_id,
             content: inputContent
         }, {

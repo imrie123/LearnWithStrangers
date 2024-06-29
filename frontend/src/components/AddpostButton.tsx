@@ -14,14 +14,14 @@ import {
 } from '@chakra-ui/react';
 import {useState} from 'react';
 import axios from 'axios';
-
+import axiosInstance from '../services/axiosInstance.js';
 const upload = (formData: FormData) => {
     const token = localStorage.getItem('token');
     if (!token) {
         console.error('token is not found');
         return;
     }
-    axios.post(`http://127.0.0.1:3000/posts`, formData, {
+    axiosInstance.post(`/posts`, formData, {
         headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
