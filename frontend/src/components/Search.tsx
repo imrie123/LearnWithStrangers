@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {Stack, Input, Select} from '@chakra-ui/react';
-import axios from 'axios';
 import styles from '../styles/Findchat.module.scss';
 import {useNavigate} from 'react-router-dom';
-
+import axiosInstance from '../services/axiosInstance';
 interface User {
     id: number;
     name: string;
@@ -32,7 +31,7 @@ function Search() {
         const performSearch = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`http://127.0.0.1:3000/users/search`, {
+                const response = await axiosInstance.get(`/users/search`, {
                     params: {query: inputValue, criteria: selectedCriteria},
                     headers: {Authorization: `Bearer ${token}`}
                 });

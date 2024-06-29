@@ -3,13 +3,13 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
 import styles from '../styles/AddpostPage.module.scss';
-
+import axiosInstance from '../services/axiosInstance';
 function AddpostPage() {
     const [inputContent, setInputContent] = useState('');
 
     const upload = (formData: FormData) => {
         const token = localStorage.getItem('token');
-        axios.post(`http://127.0.0.1:3000/users/:user_id/posts`, formData, {
+        axiosInstance.post(`/users/:user_id/posts`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'authorization': `Bearer ${token}`,
