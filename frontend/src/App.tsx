@@ -16,7 +16,6 @@ import ChatPage from "./pages/ChatPage";
 import GroupChatPage from "./pages/GroupChatPage";
 import MessagePage from "./pages/MessagePage";
 import SearchPage from "./pages/SearchPage";
-import SharePage from "./pages/SharePage";
 import BulletinBoardPage from "./pages/BulletinBoardPage";
 import BulletinPage from "./pages/BulletinPage";
 
@@ -37,7 +36,6 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/share/:id" element={<SharePage/>}/>
                 {token ? (
                     <Route path="*" element={<AuthenticatedRoutes/>}/>
                 ) : (

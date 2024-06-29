@@ -17,8 +17,6 @@ import {
     ModalFooter
 } from '@chakra-ui/react';
 import {useDisclosure} from '@chakra-ui/hooks';
-import {FacebookIcon, FacebookShareButton, TwitterIcon, TwitterShareButton} from "react-share";
-
 
 interface Post {
     id: number;
@@ -269,27 +267,6 @@ const OtherUserProfile = () => {
                 <ModalContent>
                     <ModalHeader>フォロー</ModalHeader>
                     <ModalCloseButton/>
-                    {/*<ModalBody>*/}
-                    {/*    {user.followers.map((user: any) => (*/}
-                    {/*        <Link to={`/user/${user.custom_id}`}>*/}
-                    {/*            <div key={user.id} className={styles2.following_user}>*/}
-
-                    {/*                <div key={user.custom_id} className={styles2.group_member}>*/}
-                    {/*                    <div><Avatar name={user.name} src={`http://localhost:3000${user.avatar_url}`}/>*/}
-                    {/*                    </div>*/}
-
-                    {/*                    <div><p>{user.name}</p></div>*/}
-
-
-                    {/*                </div>*/}
-
-                    {/*            </div>*/}
-                    {/*        </Link>*/}
-                    {/*    ))}*/}
-
-
-                    {/*</ModalBody>*/}
-
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={onCloseFollower}>
                             Close
@@ -371,14 +348,6 @@ const OtherUserProfile = () => {
                                                         <div className={style.comment_button}>
                                                             <QuestionAnswerOutlinedIcon/>{post.comments.length}Comments
                                                         </div>
-                                                        <FacebookShareButton
-                                                            url={`http://localhost:3001/share/${post.id}`}>
-                                                            <FacebookIcon size={32} round={true}/>
-                                                        </FacebookShareButton>
-                                                        <TwitterShareButton
-                                                            url={`http://localhost:3001/share/${post.id}`}>
-                                                            <TwitterIcon size={32} round={true}/>
-                                                        </TwitterShareButton>
                                                     </div>
                                                     <CardFooter p={3} className={style.footer_component}>
                                                         <div className={style.comment_component}>

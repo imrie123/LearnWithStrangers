@@ -10,8 +10,6 @@ import styles from '../styles/Findpost.module.scss';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddCommentButton from './AddCommentButton';
 import {Link} from 'react-router-dom';
-import {FacebookIcon, FacebookShareButton, TwitterIcon, TwitterShareButton} from "react-share";
-
 interface Post {
     id: number;
     content: string;
@@ -131,12 +129,6 @@ function Findpost() {
                                                 <div
                                                     className={styles.comment_button}>{post.comments.length}Comments
                                                 </div>
-                                                <FacebookShareButton url={`http://localhost:3001/share/${post.id}`}>
-                                                    <FacebookIcon size={32} round={true}/>
-                                                </FacebookShareButton>
-                                                <TwitterShareButton url={`http://localhost:3001/share/${post.id}`}>
-                                                    <TwitterIcon size={32} round={true}/>
-                                                </TwitterShareButton>
                                             </div>
                                         </div>
 
