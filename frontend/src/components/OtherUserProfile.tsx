@@ -278,7 +278,7 @@ const OtherUserProfile = () => {
                 <div className={styles.top}>
                     <div className={styles.introduce}>
                         {user.avatar_url ? (
-                            <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`}
+                            <img className={styles.avatar} src={`https://api.learnwithstranger.com${user.avatar_url}`}
                                  alt="avatar"/>
                         ) : (
                             <Avatar name={user.name} style={{width: '200px', height: '200px'}}/>
@@ -316,7 +316,7 @@ const OtherUserProfile = () => {
 
                                                         {user.avatar_url ? (
                                                             <img className={style.avatar}
-                                                                 src={`http://localhost:3000${user.avatar_url}`}
+                                                                 src={`https://api.learnwithstranger.com${user.avatar_url}`}
                                                                  alt="avatar"/>
                                                         ) : (
                                                             <Avatar name={user.name}/>

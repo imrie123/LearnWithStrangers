@@ -84,7 +84,7 @@ function ChatRoom() {
                         <li key={message.message_id}>
                             <div className={styles.message_list}>
                                 {message.user.avatar_url ? (
-                                    <Avatar src={`http://localhost:3000${message.user.avatar_url}`}
+                                    <Avatar src={`https://api.learnwithstranger.com${message.user.avatar_url}`}
                                             name={message.user.name}
                                             className={styles.avatar}/>
                                 ) : (

@@ -59,7 +59,7 @@ function Findchat() {
                                         <div>
                                             {user.avatar_url ? ( // Check if avatar_url exists
                                                 <img className={styles.avatar}
-                                                     src={`http://localhost:3000${user.avatar_url}`}
+                                                     src={`https://api.learnwithstranger.com${user.avatar_url}`}
                                                      alt="Avatar"/>
                                             ) : (
                                                 <Avatar name={user.name}

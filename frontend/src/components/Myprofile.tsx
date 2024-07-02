@@ -138,7 +138,7 @@ function MyProfile() {
                                 <div key={user.id} className={styles2.following_user}>
 
                                     <div key={user.custom_id} className={styles2.group_member}>
-                                        <div><Avatar name={user.name} src={`http://localhost:3000${user.avatar_url}`}/>
+                                        <div><Avatar name={user.name} src={`https://api.learnwithstranger.com${user.avatar_url}`}/>
                                         </div>
 
                                         <div><p>{user.name}</p></div>
@@ -171,7 +171,7 @@ function MyProfile() {
                                 <div key={user.id} className={styles2.following_user}>
 
                                     <div key={user.custom_id} className={styles2.group_member}>
-                                        <div><Avatar name={user.name} src={`http://localhost:3000${user.avatar_url}`}/>
+                                        <div><Avatar name={user.name} src={`https://api.learnwithstranger.com${user.avatar_url}`}/>
                                         </div>
 
                                         <div><p>{user.name}</p></div>
@@ -193,7 +193,7 @@ function MyProfile() {
             <div className={styles.component}>
                 <div className={styles.top}>
                     <div className={styles.introduce}>
-                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`} alt="avatar"/>
+                        <img className={styles.avatar} src={`https://api.learnwithstranger.com${user.avatar_url}`} alt="avatar"/>
                         <div className={styles.info}>
                             <div className={styles.follow}>
                                 <p onClick={onOpenFollowing}>Following:{user.following_count}</p>
@@ -234,7 +234,7 @@ function MyProfile() {
                                                 <div className={styles.post_top}>
                                                     <div>
 
-                                                        <Avatar src={`http://localhost:3000${user.avatar_url}`} mr={4}/>
+                                                        <Avatar src={`https://api.learnwithstranger.com${user.avatar_url}`} mr={4}/>
                                                         <div>
                                                             <Text fontWeight='bold'>{user.name}</Text>
                                                             @{user.custom_id}
@@ -281,7 +281,7 @@ function MyProfile() {
                                                         <div className={styles.comment_left}>
                                                             <Link to={`/user/${post.custom_id}`}>
                                                                 <img className={styles.comment_avatar}
-                                                                     src={`http://localhost:3000${comment.avatar_url}`}
+                                                                     src={`https://api.learnwithstranger.com${comment.avatar_url}`}
                                                                      alt="avatar"/>
                                                             </Link>
                                                         </div>
@@ -311,7 +311,7 @@ function MyProfile() {
                                                         <Link to={`/user/${post.custom_id}`}>
                                                             {post.avatar_url ? (
                                                                 <img className={styles.liked_post_avatar}
-                                                                     src={`http://localhost:3000${post.avatar_url}`}
+                                                                     src={`https://api.learnwithstranger.com${post.avatar_url}`}
                                                                      alt="avatar"/>
                                                             ) : (
                                                                 <Avatar name={post.name}/>
@@ -367,7 +367,7 @@ function MyProfile() {
                                                             <Link to={`/user/${comment.custom_id}`}>
                                                                 {comment.avatar_url ? (
                                                                     <img className={styles.liked_post_avatar}
-                                                                         src={`http://localhost:3000${comment.avatar_url}`}
+                                                                         src={`https://api.learnwithstranger.com${comment.avatar_url}`}
                                                                          alt="avatar"/>
                                                                 ) : (
                                                                     <Avatar name={post.name}/>

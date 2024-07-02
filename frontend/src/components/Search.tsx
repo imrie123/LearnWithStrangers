@@ -90,7 +90,7 @@ function Search() {
                             <div className={styles.component} onClick={() => handleUserClick(user)}>
                                 <div className={styles.top}>
                                     <div className={styles.introduce}>
-                                        <img className={styles.avatar} src={`http://localhost:3000${user.avatar_url}`}
+                                        <img className={styles.avatar} src={`https://api.learnwithstranger.com${user.avatar_url}`}
                                              alt="avatar"/>
                                         <div className={styles.info}>
                                             <div className={styles.follow}>

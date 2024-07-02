@@ -96,7 +96,7 @@ function Findpost() {
                                             <Link to={`/user/${post.custom_id}`}>
                                                 {post.avatar_url ? (
                                                     <img className={styles.avatar}
-                                                         src={`http://localhost:3000${post.avatar_url}`}
+                                                         src={`https://api.learnwithstranger.com${post.avatar_url}`}
                                                          alt="avatar"/>
                                                 ) : (
                                                     <Avatar name={post.name}/>

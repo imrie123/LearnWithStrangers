@@ -115,7 +115,7 @@ function Setting() {
                 <div className={styles.component}>
                     <div className={styles.top}>
                         <div className={styles.introduce}>
-                            <img className={styles.avatar} src={`http://localhost:3000${avatar_url}`} alt="avatar"/>
+                            <img className={styles.avatar} src={`https://api.learnwithstranger.com${avatar_url}`} alt="avatar"/>
                             <div className={styles.info}>
                                 <div className={styles.user}>
                                     <p>Name:{name}</p>

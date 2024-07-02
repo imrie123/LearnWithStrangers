@@ -81,7 +81,7 @@ function Editpost() {
                 <Card key={post.id} maxW='md' mb={4}>
                     <Flex direction="column" align="center" justify="center" p={4}>
                         <Flex align="flex-start" mb={4}>
-                            <Avatar src={`http://localhost:3000${avatar_url}`} mr={4}/>
+                            <Avatar src={`https://api.learnwithstranger.com${avatar_url}`} mr={4}/>
                             <Text fontWeight='bold'>{user.name}</Text>
                         </Flex>
                         <Image
